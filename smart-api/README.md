@@ -1,7 +1,31 @@
 # 🧠 Smart API
 ## 🤖 How to run
+### Prerequisites
+Ensure you have Python 3.x and pip installed on your system.
+
+#### On Linux (and macOS?):
 ```sh
-cd smart-api
+# Create and activate the virtual environment
+python3 -m venv venv 
+source venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run the Smart API
+python3 endpoints.py
+```
+
+#### On Windows:
+```sh
+# Create and activate the virtual environment
+python -m venv venv 
+.\venv\Scripts\activate
+
+# Install dependencies
+python -m pip install -r requirements.txt
+
+# Run the Smart API
 python endpoints.py
 ```
 Swagger UI available at: http://127.0.0.1:5000/apidocs
