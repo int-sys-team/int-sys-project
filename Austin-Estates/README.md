@@ -19,14 +19,14 @@ Student project done for Intelligent Systems subject at Faculty of Electronic En
 ```bash
 > # Clone repository
 > git clone https://github.com/int-sys-team/int-sys-project.git
-> cd Estates-main
+> cd Austin-Estates
 
 > # Server start
-> cd EstatesAPI
+> cd Austin-EstatesAPI
 > dotnet watch run
 
 > # Client start
-> cd ../EstatesApp
+> cd ../Austin-EstatesApp
 > npm install
 > npm start
 
