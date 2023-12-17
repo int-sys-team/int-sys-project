@@ -3,13 +3,11 @@ Estates is student project done for Advanced Databases subject at Faculty of Ele
 
 ## ✨ Contributors (Student, ID)
 
-* Emilija Ćojbašić, 18026
-* Matija Špeletić, 18043
-* Đorđe Antić, 17544
-
-<a href="https://github.com/djoleant/InternClix/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=djoleant/InternClix" />
-</a>
+* Milica Stojanović, 1701
+* Katarina Maksimović, 1599
+* Matija Špeletić, 1672
+* Aleksa Milić, 1610
+* Vuk Grujić, 1693
 
 ## 📦 Stack
 * MongoDB
@@ -20,8 +18,8 @@ Estates is student project done for Advanced Databases subject at Faculty of Ele
 
 ```bash
 > # Clone repository
-> git clone https://github.com/djoleant/Estates.git
-> cd Estates
+> git clone https://github.com/int-sys-team/int-sys-project.git
+> cd Estates-main
 
 > # Server start
 > cd EstatesAPI
@@ -42,7 +40,7 @@ Estates is student project done for Advanced Databases subject at Faculty of Ele
 
 | Environment variable name | Default value | 
 | ------------------------- | ------------- |
-| PORT | 27017 | 
-| DB NAME | EstatesDB |
+| PORT | ??? | 
+| DB NAME | real-estate-db |
 | MongoDB VERSION | 6.0 |
 
