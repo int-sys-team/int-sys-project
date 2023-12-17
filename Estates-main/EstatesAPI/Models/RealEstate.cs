@@ -7,8 +7,6 @@ namespace EstatesAPI.Models
 {
     public class RealEstate
     {
-        public int ID { get; set; }
-
         public int MedianStudentsPerTeacher { get; set; }
 
         public bool accessibility { get; set; }
@@ -78,9 +76,5 @@ namespace EstatesAPI.Models
         public int yearBuilt { get; set; }
 
         public int zipcode { get; set; }
-
-        public double price { get; set; }
-
-        public string description { get; set; }
     }
 }
