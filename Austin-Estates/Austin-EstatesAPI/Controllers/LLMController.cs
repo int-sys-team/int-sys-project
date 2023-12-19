@@ -7,6 +7,8 @@ using EstatesAPI.Models;
 using System.Text;
 using System.Text.Json;
 using System.Net.Http;
+using EstatesAPI.Services;
+using EstatesAPI.CustomExceptions;
 
 namespace EstatesAPI.Controllers
 {
@@ -14,12 +16,11 @@ namespace EstatesAPI.Controllers
     [Route("api/[controller]")]
     public class LLMController : Controller
     {
-        private readonly HttpClient _httpClient;
+        private readonly HttpClientService _httpClientService;
 
-        public LLMController(HttpClient httpClient)
+        public LLMController(HttpClientService httpClientService)
         {
-            _httpClient = httpClient;
-            //_httpClient.BaseAddress = new Uri("http://127.0.0.1:5000/apidocs");
+            _httpClientService = httpClientService;
         }
 
         [HttpPost]
@@ -28,31 +29,13 @@ namespace EstatesAPI.Controllers
         {
             try
             {
-                
-                _httpClient.BaseAddress = new Uri("http://127.0.0.1:5000/apidocs");
+                var response = await _httpClientService.GenerateDescription(data);
 
-                var jsonRequestData = JsonSerializer.Serialize(data);
-
-                using (var request = new HttpRequestMessage(HttpMethod.Post, "/llm/description"))
-                {
-                    request.Content = new StringContent(jsonRequestData, Encoding.UTF8, "application/json");
-
-                    HttpResponseMessage response = await _httpClient.SendAsync(request);
-
-                    if (response.IsSuccessStatusCode)
-                    {
-
-                        string responseBody = await response.Content.ReadAsStringAsync();
-
-                        var responseBodyDeserialized = JsonSerializer.Deserialize<RealEstateDescriptionApiModel>(responseBody);
-                    
-                        return Ok(responseBodyDeserialized);
-                    }
-                    else
-                    {
-                        return BadRequest($"Greška: {response.StatusCode}");
-                    }
-                }
+                 return Ok(response);
+            }
+            catch (CustomException ex)
+            {
+                return BadRequest(ex.Message);
             }
             catch (Exception ex)
             {
@@ -66,34 +49,13 @@ namespace EstatesAPI.Controllers
         {
             try
             {
+                var response = await _httpClientService.PredictPrice(realEstate);
 
-                _httpClient.BaseAddress = new Uri("http://127.0.0.1:5000/apidocs");
-
-                RealEstateApiModel realEstateApiModel = new RealEstateApiModel();
-                realEstateApiModel.data = realEstate;
-
-                var jsonRequestData = JsonSerializer.Serialize(realEstateApiModel);
-
-                using (var request = new HttpRequestMessage(HttpMethod.Post, "/price"))
-                {
-                    request.Content = new StringContent(jsonRequestData, Encoding.UTF8, "application/json");
-
-                    HttpResponseMessage response = await _httpClient.SendAsync(request);
-
-                    if (response.IsSuccessStatusCode)
-                    {
-
-                        string responseBody = await response.Content.ReadAsStringAsync();
-
-                        var responseBodyDeserialized = JsonSerializer.Deserialize<RealEstatePriceApiModel>(responseBody);
-
-                        return Ok(responseBodyDeserialized);
-                    }
-                    else
-                    {
-                        return BadRequest($"Greška: {response.StatusCode}");
-                    }
-                }
+                return Ok(response);
+            }
+            catch (CustomException ex)
+            {
+                return BadRequest(ex.Message);
             }
             catch (Exception ex)
             {

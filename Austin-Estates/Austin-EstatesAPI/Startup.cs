@@ -52,18 +52,14 @@ namespace Server
                 });
             });
 
-            services.AddHttpClient<LLMController>(client =>
-            {
+            services.AddHttpClient<HttpClientService>();
 
-                client.BaseAddress = new Uri("http://127.0.0.1:5000/apidocs");
-
-            });
-
+            services.Configure<ApiUrls>(Configuration.GetSection("ApiUrls"));
             services.Configure<EstateDatabaseSettings>(Configuration.GetSection("EstateDB"));
             services.AddSingleton<PropertyService>();
             services.AddSingleton<LandlordService>();
             services.AddSingleton<ClientService>();
-            services.AddSingleton<LLMController>();
+            services.AddSingleton<HttpClientService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
