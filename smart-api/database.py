@@ -22,10 +22,18 @@ def add_property(property):
     except Exception as e:
         print(e)
 
-def find_properties(query):
+def find_properties(query, limit=10):
     try:
         collection=client['realestate']['properties']
-        result = collection.find(query)
+        result = collection.find(query).limit(limit)
+        return result
+    except Exception as e:
+        print(e)
+
+def update_property(property):
+    try:
+        collection=client['realestate']['properties']
+        result = collection.update_one({"_id": property["_id"]}, {"$set": property})
         return result
     except Exception as e:
         print(e)

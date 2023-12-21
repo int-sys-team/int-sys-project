@@ -58,3 +58,4 @@ urllib3==2.1.0
 Werkzeug==3.0.1
 xgboost==2.0.2
 yarl==1.9.4
+flask_cors==4.0.0

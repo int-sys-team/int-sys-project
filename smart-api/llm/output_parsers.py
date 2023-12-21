@@ -20,6 +20,7 @@ class PropertyQueryParser(BaseOutputParser):
         super().__init__()
 
     def parse(self, output):
+        print(output)
         start = output.find('{')
         end = output.rfind('}')
         if start == -1 or end == -1:

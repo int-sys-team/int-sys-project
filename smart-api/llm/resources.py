@@ -79,9 +79,13 @@ class PropertyFetcher(Resource):
             return {"error": "Message must contain a query"}, 400
 
         try:
-            db_query = property_fetcher.invoke(
-                {"query": message.get("query")}
-            )
+            for i in range(3):
+              print(i)
+              db_query = property_fetcher.invoke(
+                  {"query": message.get("query")}
+              )
+              if "error" not in db_query:
+                  break
             print(db_query)
 
             db_result = db.find_properties(db_query)
