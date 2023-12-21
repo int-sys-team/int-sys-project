@@ -39,24 +39,75 @@ function Header(props) {
                 <MenuIcon />
               </IconButton>
             </Grid>
-            <Grid item xs />
+
             <Grid item>
               <Link
-                href="/"
-                variant="body2"
-                sx={{
-                  textDecoration: 'none',
-                  color: lightColor,
-                  '&:hover': {
-                    color: 'common.white',
-                  },
-                }}
-                rel="noopener noreferrer"
+                component="a"
+                href="https://github.com/int-sys-team/int-sys-project"
                 target="_blank"
+                rel="noopener noreferrer"
+                sx={{ textDecoration: 'none', color: 'inherit' }}
               >
-                Go to docs
+                <Button
+                  sx={{ borderColor: lightColor }}
+                  variant="outlined"
+                  color="inherit"
+                  size="medium"
+                >
+                  Web setup
+                </Button>
               </Link>
             </Grid>
+            <Grid item>
+              <Tooltip title="Github link where the frontend of this web app is made">
+                <IconButton color="inherit">
+                  <HelpIcon />
+                </IconButton>
+              </Tooltip>
+             </Grid>
+            
+            <Grid item xs container alignItems="center" justifyContent="center">
+              <Typography color="inherit" variant="h5" component="h1">
+                Austin Real Estate
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Button
+                href="/overview/signup"
+                variant="outlined"
+                color="inherit"
+                sx={{
+                  borderColor: lightColor,
+                  '&:hover': {
+                    color: 'common.white',
+                    borderColor: 'common.white',
+                  },
+                }}
+              >
+                <Typography variant="h7">
+                  Sign-up
+                </Typography>
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button
+                href="/signin"
+                variant="outlined"
+                color="inherit"
+                sx={{
+                  borderColor: lightColor,
+                  '&:hover': {
+                    color: 'common.white',
+                    borderColor: 'common.white',
+                  },
+                }}
+              >
+                <Typography variant="h7">
+                  Sign-in
+                </Typography>
+              </Button>
+            </Grid>
+            
             <Grid item>
               <Tooltip title="Alerts • No alerts">
                 <IconButton color="inherit">
@@ -72,46 +123,11 @@ function Header(props) {
           </Grid>
         </Toolbar>
       </AppBar>
-      <AppBar
-        component="div"
-        color="primary"
-        position="static"
-        elevation={0}
-        sx={{ zIndex: 0 }}
-      >
-        <Toolbar>
-          <Grid container alignItems="center" spacing={1}>
-            <Grid item xs>
-              <Typography color="inherit" variant="h5" component="h1">
-                Austin Real Estate
-              </Typography>
-            </Grid>
-            <Grid item>
-              <Button
-                sx={{ borderColor: lightColor }}
-                variant="outlined"
-                color="inherit"
-                size="small"
-              >
-                Web setup
-              </Button>
-            </Grid>
-            <Grid item>
-              <Tooltip title="Help">
-                <IconButton color="inherit">
-                  <HelpIcon />
-                </IconButton>
-              </Tooltip>
-            </Grid>
-          </Grid>
-        </Toolbar>
-      </AppBar>
+      
       <AppBar component="div" position="static" elevation={0} sx={{ zIndex: 0 }}>
         <Tabs value={0} textColor="inherit">
           <Tab label="Houses" />
-          <Tab label="Sign-in method" component={NavLink} to="/signin" sx={{ color: 'inherit', textDecoration: 'none' }} />
-          <Tab label="Sign-up method" component={NavLink} to="/signup" sx={{ color: 'inherit', textDecoration: 'none' }} />
-          <Tab label="About us" component={NavLink} to="/aboutus" sx={{ color: 'inherit', textDecoration: 'none' }} />
+          <Tab label="About us" component={NavLink} to="/overview/aboutus" sx={{ color: 'inherit', textDecoration: 'none' }} />
           <Tab label="Usage" />
         </Tabs>
       </AppBar>
