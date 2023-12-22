@@ -1,5 +1,5 @@
 from langchain.chat_models import ChatOllama
-from llm.prompt_templates import description_generator_prompt, property_fetcher_prompt
+from llm.prompt_templates import description_generator_prompt, property_fetcher_prompt, get_comparison_prompt_template
 from llm.output_parsers import DescriptionParser, PropertyQueryParser
 
 
@@ -11,3 +11,15 @@ ollama = ChatOllama(base_url=OLLAMA_BASE_URL, model_name=OLLAMA_MODEL_NAME)
 description_generator=description_generator_prompt|ollama|DescriptionParser()
 property_fetcher=property_fetcher_prompt|ollama|PropertyQueryParser()
 
+class PropertyComparisonChat():
+    def __init__(self, option1, option2, messages):
+        self.option1 = option1
+        self.option2 = option2
+        self.messages = messages
+        prompt = get_comparison_prompt_template(self.option1, self.option2, self.messages)
+        self.chain=prompt|ollama
+
+    def invoke(self):
+        response = self.chain.invoke({})
+        print(response)
+        return response

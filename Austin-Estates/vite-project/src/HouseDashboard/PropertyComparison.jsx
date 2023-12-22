@@ -23,57 +23,71 @@ import { useCompareProperties } from '../hooks/useCompareProperties';
 import RentalCard from './RentalCard';
 import { Typography } from '@mui/material';
 
-const conversation = [
-	{
-		sender: 'agent',
-		content: 'Hello! Welcome to ABC Realty. How can I assist you today?',
-	},
-	{
-		sender: 'client',
-		content:
-			"Hi there! I'm looking for a two-bedroom apartment in the downtown area.",
-	},
-	{
-		sender: 'agent',
-		content:
-			"Great! We have several options available. What's your budget range?",
-	},
-	{
-		sender: 'client',
-		content: "I'm looking to stay between $2,000 and $2,500 per month.",
-	},
-	{
-		sender: 'agent',
-		content:
-			'Perfect! We have a few listings that fit that criteria. When would you like to schedule a viewing?',
-	},
-	{
-		sender: 'client',
-		content:
-			"I'm available on weekdays after 5 PM. Do you have anything around that time?",
-	},
-	{
-		sender: 'agent',
-		content:
-			'Certainly! I can arrange a viewing for you on Thursday at 6:30 PM. How does that sound?',
-	},
-	{
-		sender: 'client',
-		content:
-			"That works for me. Please send me the address, and I'll be there.",
-	},
-	{
-		sender: 'agent',
-		content:
-			"Great! I'll email you all the details. Looking forward to meeting you on Thursday.",
-	},
-];
+
+const getDataFromProperty = (property) => {
+	return {
+		description: property.description,
+		cooling: property.hasCooling?'YES':'NO',
+		heating: property.hasHeating?'YES':'NO',
+		number_of_rooms: property.numOfBedrooms,
+		area: property.livingAreaSqFt,
+		parking: property.parkingSpaces>0?'YES':'NO',
+		price: property.price,
+	};
+};
 
 // TODO Try to open this in header
 export default function PropertyComparison() {
 	const theme = useTheme();
 	const [open, setOpen] = React.useState(false);
 	const { properties, getCount } = useCompareProperties();
+
+	const [conversation, setConversation] = React.useState([
+		{
+			sender: 'agent',
+			content: 'Hello! How can I assist you today?',
+		},
+	]);
+	const [responding, setResponding] = React.useState(false);
+
+	const [currentMessage, setCurrentMessage] = React.useState('');
+
+	const sendMessage = async (message) => {
+		console.log(message);
+		if (responding) return;
+		if (message === '') return;
+		if (properties.length < 2) return;
+
+		setResponding(true);
+		try {
+			const newConversation = [...conversation, message];
+			setConversation(newConversation);
+			const response = await fetch('http://127.0.0.1:5000/llm/compare', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					option1: getDataFromProperty(properties[0]),
+					option2: getDataFromProperty(properties[1]),
+					messages: newConversation,
+				}),
+			});
+			if (response.ok) {
+				const data = await response.json();
+				const responseMessage = data.response;
+				setConversation([...newConversation, {
+					sender: 'agent',
+					content: responseMessage,
+				}]);
+			}
+		} catch (err) {
+			console.log(err);
+		} finally {
+			setResponding(false);
+		}
+	};
+
 	return (
 		<Stack
 			useFlexGap
@@ -146,9 +160,9 @@ export default function PropertyComparison() {
 						))}
 					</Stack>
 					<Stack sx={{ width: '100%', p: 0 }}>
-						{conversation.map((message) => (
+						{conversation.map((message,index) => (
 							<Stack
-								key={message.content}
+								key={index}
 								direction="row"
 								spacing={2}
 								sx={{
@@ -240,17 +254,36 @@ export default function PropertyComparison() {
 							size="lg"
 							placeholder="Type a message..."
 							variant="outlined"
+							enabled={!responding}
 							sx={{ flexGrow: 1 }}
+							value={currentMessage}
+							onChange={(e) =>
+								setCurrentMessage(e.target.value)
+							}
 						/>
 						<IconButton
 							color="primary"
 							variant="solid"
 							size="large"
+							enabled={!responding}
 							sx={{
 								ml: 2,
 								width: 50,
 								height: 50,
 							}}
+							onClick={
+								() => {
+									console.log(currentMessage);
+									sendMessage({
+										sender: 'client',
+										content: currentMessage,
+									});
+								}
+								// sendMessage({
+								// 	sender: 'user',
+								// 	content: 'Hello!',
+								// })
+							}
 						>
 							<Send />
 						</IconButton>

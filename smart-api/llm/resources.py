@@ -1,7 +1,7 @@
 from flask import request
 from flask_restful import Resource
 import database as db
-from llm.chains import description_generator, property_fetcher
+from llm.chains import description_generator, property_fetcher, PropertyComparisonChat
 
 
 class DescriptionGenerator(Resource):
@@ -102,3 +102,72 @@ class PropertyFetcher(Resource):
                 "properties": [],
                 "details": str(e)
             }, 200
+        
+
+class PropertyComparison(Resource):
+      
+      def post(self):
+          """
+          Compares two properties and returns the better one.
+  
+          ---
+          parameters:
+            - name: body
+              in: body
+              required: true
+              description: The input to the LLM.
+              schema:
+                type: object
+                required:
+                  - option1
+                  - option2
+                  - messages
+                properties:
+                  option1:
+                    type: string
+                    description: The first option.
+                  option2:
+                    type: string
+                    description: The second option.
+                  messages:
+                    type: array
+                    description: The messages from the client.
+                    items:
+                      type: object
+                      properties:
+                        sender:
+                          type: string
+                          description: The sender of the message.
+                        content:
+                          type: string
+                          description: The content of the message.
+  
+          responses:
+            201:
+              description: The better option.
+          """
+          message: dict = request.get_json()
+          if not message:
+              return {"error": "Message cannot be empty"}, 400
+          if "option1" not in message:
+              return {"error": "Message must contain option1"}, 400
+          if "option2" not in message:
+              return {"error": "Message must contain option2"}, 400
+          if "messages" not in message:
+              return {"error": "Message must contain messages"}, 400
+  
+          try:
+              comparer=PropertyComparisonChat(
+                  message.get("option1"),
+                  message.get("option2"),
+                  message.get("messages")
+              )
+              response=comparer.invoke()
+              return {"response": str(response.content)}, 200
+
+          except Exception as e:
+              return {
+                  "error": "Property comparison failed.",
+                  "response": "Ollama failed",
+                  "details": str(e)
+              }, 200
