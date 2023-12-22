@@ -6,6 +6,10 @@ export const ComparisonProvider = ({ children }) => {
 	const [properties, setProperties] = React.useState([]);
 
 	const compareProperties = (property) => {
+		if (properties.map((p) => p._id).includes(property._id)) {
+			setProperties(properties.filter((p) => p._id !== property._id));
+			return;
+		}
 		if (properties.length === 2) return;
 		console.log(property);
 		setProperties([...properties, property]);
@@ -16,7 +20,9 @@ export const ComparisonProvider = ({ children }) => {
 	};
 
 	return (
-		<ComparisonContext.Provider value={{ properties, compareProperties, getCount }}>
+		<ComparisonContext.Provider
+			value={{ properties, compareProperties, getCount }}
+		>
 			{children}
 		</ComparisonContext.Provider>
 	);

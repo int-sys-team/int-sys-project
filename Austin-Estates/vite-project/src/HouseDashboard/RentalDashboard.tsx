@@ -12,6 +12,7 @@ import Filters from './Filters';
 import { Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { CircularProgress } from '@mui/joy';
+import PropertyComparison from './PropertyComparison';
 
 export default function RentalDashboard(props) {
 	const { category, title, rareFind = false, liked = false, image } = props;
@@ -126,7 +127,12 @@ export default function RentalDashboard(props) {
 					spacing={2}
 					sx={{ px: { xs: 2, md: 4 }, pt: 2, minHeight: 0 }}
 				>
-					<Filters />
+					<Box sx={{ display: 'flex', width: '100%', gap:1 }}>
+						<PropertyComparison />
+						<Box sx={{flexGrow:1}}>
+							<Filters />
+						</Box>
+					</Box>
 					{loading ? (
 						<Box
 							sx={{

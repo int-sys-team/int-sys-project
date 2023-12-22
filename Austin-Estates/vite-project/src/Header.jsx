@@ -82,7 +82,6 @@ function Header(props) {
 								</Badge>
 							</Tooltip>
 						</Grid>
-
 						<Grid
 							item
 							xs

@@ -199,9 +199,9 @@ export default function RentalCard(props: RentalCardProps) {
 							variant="plain"
 							size="sm"
 							color={
-								properties.includes(_id) ? 'warning' : 'neutral'
+								properties.map(p=>p._id).includes(_id) ? 'warning' : 'neutral'
 							}
-							onClick={() => compareProperties(_id)} // Add this line
+							onClick={() => compareProperties(props)} // Add this line
 							sx={{
 								display: { xs: 'none', sm: 'flex' },
 								borderRadius: '50%',
