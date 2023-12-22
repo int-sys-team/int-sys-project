@@ -16,10 +16,17 @@ class PropertyComparisonChat():
         self.option1 = option1
         self.option2 = option2
         self.messages = messages
-        prompt = get_comparison_prompt_template(self.option1, self.option2, self.messages)
-        self.chain=prompt|ollama
+        self.prompt = get_comparison_prompt_template(self.option1, self.option2, self.messages)
+        #self.chain=prompt|ollama
+        
 
     def invoke(self):
-        response = self.chain.invoke({})
+        response = (self.prompt|ollama).invoke({})
         print(response)
         return response
+    
+    def stream(self):
+        for chunk in ollama.stream(self.prompt.format()):
+            print(chunk)
+            yield chunk.content
+        yield "###DONE###"

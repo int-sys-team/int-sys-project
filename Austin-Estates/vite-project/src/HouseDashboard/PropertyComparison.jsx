@@ -22,16 +22,16 @@ import { Balance, Send } from '@mui/icons-material';
 import { useCompareProperties } from '../hooks/useCompareProperties';
 import RentalCard from './RentalCard';
 import { Typography } from '@mui/material';
-
+import { StreamHandler } from '../utils/StreamHandler';
 
 const getDataFromProperty = (property) => {
 	return {
 		description: property.description,
-		cooling: property.hasCooling?'YES':'NO',
-		heating: property.hasHeating?'YES':'NO',
+		cooling: property.hasCooling ? 'YES' : 'NO',
+		heating: property.hasHeating ? 'YES' : 'NO',
 		number_of_rooms: property.numOfBedrooms,
 		area: property.livingAreaSqFt,
-		parking: property.parkingSpaces>0?'YES':'NO',
+		parking: property.parkingSpaces > 0 ? 'YES' : 'NO',
 		price: property.price,
 	};
 };
@@ -59,33 +59,36 @@ export default function PropertyComparison() {
 		if (properties.length < 2) return;
 
 		setResponding(true);
+		console.log(conversation);
 		try {
-			const newConversation = [...conversation, message];
+
+			const newConversation = [...conversation, message,{
+				sender: 'agent',
+				content: '',
+			}];
 			setConversation(newConversation);
-			const response = await fetch('http://127.0.0.1:5000/llm/compare', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({
+			let stream = new StreamHandler('http://127.0.0.1:5000/llm/compare');
+			stream.invoke(
+				{
 					option1: getDataFromProperty(properties[0]),
 					option2: getDataFromProperty(properties[1]),
-					messages: newConversation,
-				}),
-			});
-			if (response.ok) {
-				const data = await response.json();
-				const responseMessage = data.response;
-				setConversation([...newConversation, {
-					sender: 'agent',
-					content: responseMessage,
-				}]);
-			}
+					messages: conversation,
+					stream: true,
+				},
+				(chunk) => {
+					console.log(chunk);
+					if (chunk === '###DONE###') {
+						setResponding(false);
+						return;
+					}
+					const lastMessage = newConversation[newConversation.length - 1];
+					lastMessage.content += chunk;
+					setConversation([...newConversation.slice(0, -1), lastMessage]);
+				}
+			);
 		} catch (err) {
-			console.log(err);
-		} finally {
-			setResponding(false);
-		}
+			console.log(err);setResponding(false);
+		} 
 	};
 
 	return (
@@ -97,14 +100,6 @@ export default function PropertyComparison() {
 			flexWrap="wrap"
 			sx={{ minWidth: 0 }}
 		>
-			{/* <Button
-				variant="outlined"
-				color="neutral"
-				startDecorator={<FilterAltOutlined />}
-				onClick={() => setOpen(true)}
-			>
-				Filters
-			</Button> */}
 			<Badge
 				badgeContent={getCount()}
 				color="danger"
@@ -128,22 +123,6 @@ export default function PropertyComparison() {
 						Compare properties
 					</DialogTitle>
 					<ModalClose />
-					{/* <Box
-						sx={{
-							display: 'flex',
-							justifyContent: 'center',
-							alignItems: 'center',
-							flexDirection: 'row',
-						}}
-					>
-						Chat layout...
-						<Avatar
-							sx={{	width: 200, height: 200, mb: 2 }}
-							src=''
-						>
-						</Avatar>
-						
-					</Box> */}
 					<Stack
 						spacing={2}
 						sx={{
@@ -160,11 +139,11 @@ export default function PropertyComparison() {
 						))}
 					</Stack>
 					<Stack sx={{ width: '100%', p: 0 }}>
-						{conversation.map((message,index) => (
+						{conversation.map((message, index) => (
 							<Stack
 								key={index}
 								direction="row"
-								spacing={2}
+								spacing={1}
 								sx={{
 									justifyContent: 'flex-start',
 									flexDirection:
@@ -172,7 +151,7 @@ export default function PropertyComparison() {
 											? 'row'
 											: 'row-reverse',
 									width: '100%',
-									alignItems: 'center',
+									alignItems: 'flex-end',
 									// backgroundColor:
 									// 	message.sender === 'agent'
 									// 		? 'primary.main'
@@ -188,6 +167,7 @@ export default function PropertyComparison() {
 											[sliderClasses.colorPrimary]:
 												'primary.main',
 										}),
+										
 									}}
 									src={
 										message.sender === 'agent'
@@ -254,18 +234,16 @@ export default function PropertyComparison() {
 							size="lg"
 							placeholder="Type a message..."
 							variant="outlined"
-							enabled={!responding}
+							disabled={responding}
 							sx={{ flexGrow: 1 }}
 							value={currentMessage}
-							onChange={(e) =>
-								setCurrentMessage(e.target.value)
-							}
+							onChange={(e) => setCurrentMessage(e.target.value)}
 						/>
 						<IconButton
 							color="primary"
 							variant="solid"
 							size="large"
-							enabled={!responding}
+							disabled={responding}
 							sx={{
 								ml: 2,
 								width: 50,

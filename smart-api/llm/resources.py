@@ -1,4 +1,4 @@
-from flask import request
+from flask import request, Response
 from flask_restful import Resource
 import database as db
 from llm.chains import description_generator, property_fetcher, PropertyComparisonChat
@@ -141,6 +141,10 @@ class PropertyComparison(Resource):
                         content:
                           type: string
                           description: The content of the message.
+                  stream:
+                    type: boolean
+                    description: Whether to stream the response or not.
+                    default: false
   
           responses:
             201:
@@ -162,8 +166,15 @@ class PropertyComparison(Resource):
                   message.get("option2"),
                   message.get("messages")
               )
-              response=comparer.invoke()
-              return {"response": str(response.content)}, 200
+              is_stream=message.get("stream", False)
+
+              if is_stream:
+                  return Response(comparer.stream(), mimetype='text/plain')
+              else:
+                  return {"response": str(comparer.invoke().content)}, 200
+              
+
+          
 
           except Exception as e:
               return {
