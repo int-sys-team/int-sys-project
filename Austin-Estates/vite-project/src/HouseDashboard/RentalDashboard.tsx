@@ -11,12 +11,14 @@ import Search from './Search';
 import Filters from './Filters';
 import { Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { CircularProgress } from '@mui/joy';
 
 export default function RentalDashboard(props) {
 	const { category, title, rareFind = false, liked = false, image } = props;
 	const navigate = useNavigate();
 
 	const [properties, setProperties] = useState<any[]>([]);
+	const [loading, setLoading] = useState<boolean>(false);
 
 	const handleClick = () => {
 		navigate('/blog', {
@@ -28,37 +30,57 @@ export default function RentalDashboard(props) {
 		const response = await fetch(
 			`http://127.0.0.1:5000/db/properties?page=${page}&count=${count}`
 		);
+		if (!response.ok) {
+			console.log(response);
+			return;
+		}
 		const data = await response.json();
 		return data;
 	};
 
 	useEffect(() => {
-		getProperties().then((data) => {
-			console.log(data);
-      setProperties(data.properties);
-		});
+		try {
+			setLoading(true);
+			getProperties().then((data) => {
+				console.log(data);
+				setProperties(data.properties);
+			});
+		} catch (e) {
+			console.log(e);
+		} finally {
+			setLoading(false);
+		}
 	}, []);
 
-  const naturalQueryProperties = async (query: string) => {
-    console.log(query);
-    const response = await fetch('http://127.0.0.1:5000/llm/properties', {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json',
-		},
-		body: JSON.stringify({
-			query: query,
-		}),
-	});
-    if(!response.ok) {
-      console.log(response);
-      return;
-    }
-    console.log(response);
-    const data = await response.json();
-    console.log(data);
-    setProperties(data.properties);
-  }
+	const naturalQueryProperties = async (query: string) => {
+		try {
+			setLoading(true);
+			const response = await fetch(
+				'http://127.0.0.1:5000/llm/properties',
+				{
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({
+						query: query,
+					}),
+				}
+			);
+			if (!response.ok) {
+				console.log(response);
+				return;
+			}
+			console.log(response);
+			const data = await response.json();
+			console.log(data);
+			setProperties(data.properties);
+		} catch (e) {
+			console.log(e);
+		} finally {
+			setLoading(false);
+		}
+	};
 
 	return (
 		<CssVarsProvider disableTransitionOnChange>
@@ -83,12 +105,12 @@ export default function RentalDashboard(props) {
 					}}
 				>
 					<HeaderSection />
-					<Search 
-            onSearch={(query:string) => {
-              console.log(query);
-              naturalQueryProperties(query);
-            }}
-          />
+					<Search
+						onSearch={(query: string) => {
+							console.log(query);
+							naturalQueryProperties(query);
+						}}
+					/>
 				</Stack>
 				<Box
 					sx={{
@@ -105,14 +127,23 @@ export default function RentalDashboard(props) {
 					sx={{ px: { xs: 2, md: 4 }, pt: 2, minHeight: 0 }}
 				>
 					<Filters />
-					<Stack spacing={2} sx={{ overflow: 'auto' }}>
-            {properties.map((property) => (
-              <RentalCard
-                key={property._id}
-                {...property}
-              />
-            ))}
-					</Stack>
+					{loading ? (
+						<Box
+							sx={{
+								display: 'flex',
+								justifyContent: 'center',
+								width: 1,
+							}}
+						>
+							<CircularProgress size="lg" variant="soft" />
+						</Box>
+					) : (
+						<Stack spacing={2} sx={{ overflow: 'auto' }}>
+							{properties.map((property) => (
+								<RentalCard key={property._id} {...property} />
+							))}
+						</Stack>
+					)}
 				</Stack>
 			</Box>
 		</CssVarsProvider>

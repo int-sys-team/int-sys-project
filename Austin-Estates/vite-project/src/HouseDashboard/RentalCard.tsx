@@ -8,6 +8,7 @@ import IconButton from '@mui/joy/IconButton';
 import Link from '@mui/joy/Link';
 import Stack from '@mui/joy/Stack';
 import Typography from '@mui/joy/Typography';
+import { Box } from '@mui/joy';
 import WorkspacePremiumRoundedIcon from '@mui/icons-material/WorkspacePremiumRounded';
 import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded';
 import FmdGoodRoundedIcon from '@mui/icons-material/FmdGoodRounded';
@@ -16,6 +17,7 @@ import WifiRoundedIcon from '@mui/icons-material/WifiRounded';
 import Star from '@mui/icons-material/Star';
 import {
 	AcUnit,
+	Balance,
 	Bathroom,
 	Bathtub,
 	LocalParking,
@@ -24,9 +26,11 @@ import {
 	SquareFoot,
 	Thermostat,
 } from '@mui/icons-material';
+import { useCompareProperties } from '../hooks/useCompareProperties';
 
 type RentalCardProps = {
-  description: string;
+	_id: string;
+	description: string;
 	category: React.ReactNode;
 	homeImage: string;
 	liked?: boolean;
@@ -47,7 +51,8 @@ type RentalCardProps = {
 
 export default function RentalCard(props: RentalCardProps) {
 	const {
-    description,
+		_id,
+		description,
 		category,
 		title,
 		rareFind = false,
@@ -66,6 +71,7 @@ export default function RentalCard(props: RentalCardProps) {
 		streetAddress,
 	} = props;
 	const [isLiked, setIsLiked] = React.useState(liked);
+	const { properties, compareProperties } = useCompareProperties();
 	return (
 		<Card
 			variant="outlined"
@@ -123,20 +129,36 @@ export default function RentalCard(props: RentalCardProps) {
 								Rare find
 							</Chip>
 						)}
-						<IconButton
-							variant="plain"
-							size="sm"
-							color={isLiked ? 'danger' : 'neutral'}
-							onClick={() => setIsLiked((prev) => !prev)}
-							sx={{
-								display: { xs: 'flex', sm: 'none' },
-								ml: 'auto',
-								borderRadius: '50%',
-								zIndex: '20',
-							}}
-						>
-							<FavoriteRoundedIcon />
-						</IconButton>
+						<Box>
+							<IconButton
+								variant="plain"
+								size="sm"
+								color={isLiked ? 'danger' : 'neutral'}
+								onClick={() => setIsLiked((prev) => !prev)}
+								sx={{
+									display: { xs: 'flex', sm: 'none' },
+									ml: 'auto',
+									borderRadius: '50%',
+									zIndex: '20',
+								}}
+							>
+								<FavoriteRoundedIcon />
+							</IconButton>
+							<IconButton
+								variant="plain"
+								size="sm"
+								color={isLiked ? 'danger' : 'neutral'}
+								onClick={() => setIsLiked((prev) => !prev)}
+								sx={{
+									display: { xs: 'flex', sm: 'none' },
+									ml: 'auto',
+									borderRadius: '50%',
+									zIndex: '20',
+								}}
+							>
+								<Balance />
+							</IconButton>
+						</Box>
 					</Stack>
 				</AspectRatio>
 			</CardOverflow>
@@ -160,18 +182,34 @@ export default function RentalCard(props: RentalCardProps) {
 							</Link>
 						</Typography>
 					</div>
-					<IconButton
-						variant="plain"
-						size="sm"
-						color={isLiked ? 'danger' : 'neutral'}
-						onClick={() => setIsLiked((prev) => !prev)}
-						sx={{
-							display: { xs: 'none', sm: 'flex' },
-							borderRadius: '50%',
-						}}
-					>
-						<FavoriteRoundedIcon />
-					</IconButton>
+					<Box sx={{ display: 'flex', flexDirection: 'row-reverse' }}>
+						<IconButton
+							variant="plain"
+							size="sm"
+							color={isLiked ? 'danger' : 'neutral'}
+							onClick={() => setIsLiked((prev) => !prev)}
+							sx={{
+								display: { xs: 'none', sm: 'flex' },
+								borderRadius: '50%',
+							}}
+						>
+							<FavoriteRoundedIcon />
+						</IconButton>
+						<IconButton
+							variant="plain"
+							size="sm"
+							color={
+								properties.includes(_id) ? 'warning' : 'neutral'
+							}
+							onClick={() => compareProperties(_id)} // Add this line
+							sx={{
+								display: { xs: 'none', sm: 'flex' },
+								borderRadius: '50%',
+							}}
+						>
+							<Balance />
+						</IconButton>
+					</Box>
 				</Stack>
 				<Stack
 					spacing="0.25rem 1rem"
@@ -199,7 +237,7 @@ export default function RentalCard(props: RentalCardProps) {
 					{livingAreaSqFt && (
 						<Typography
 							level="body-xs"
-							startDecorator={<SquareFoot color='primary' />}
+							startDecorator={<SquareFoot color="primary" />}
 						>
 							{livingAreaSqFt} sq ft
 						</Typography>
@@ -217,7 +255,7 @@ export default function RentalCard(props: RentalCardProps) {
 							Heating
 						</Typography>
 					)}
-					{hasSpa!=0 && (
+					{hasSpa != 0 && (
 						<Typography level="body-xs" startDecorator={<Spa />}>
 							Spa
 						</Typography>
@@ -238,7 +276,7 @@ export default function RentalCard(props: RentalCardProps) {
 							{numOfBathrooms} Bath
 						</Typography>
 					)}
-					{parkingSpaces!=0 && (
+					{parkingSpaces != 0 && (
 						<Typography
 							level="body-xs"
 							startDecorator={<LocalParking />}
@@ -268,7 +306,7 @@ export default function RentalCard(props: RentalCardProps) {
 							level="h2"
 							sx={{ flexGrow: 1, textAlign: 'right' }}
 						>
-							<strong>${Math.round(price/1000)}K</strong>{' '}
+							<strong>${Math.round(price / 1000)}K</strong>{' '}
 						</Typography>
 					)}
 				</Stack>

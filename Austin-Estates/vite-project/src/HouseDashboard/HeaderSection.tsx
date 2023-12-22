@@ -6,10 +6,10 @@ export default function HeaderSection() {
   return (
     <Stack sx={{ mb: 2 }}>
       <Stack direction="row" justifyContent="space-between" sx={{ width: '100%' }}>
-        <Typography level="h2">Rental properties</Typography>
+        <Typography level="h2">Real Estate Properties</Typography>
       </Stack>
       <Typography level="body-md" color="neutral">
-        Book your next stay at one of our properties.
+        Find your dream home
       </Typography>
     </Stack>
   );
