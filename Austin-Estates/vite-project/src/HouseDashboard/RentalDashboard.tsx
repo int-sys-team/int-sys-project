@@ -13,6 +13,13 @@ import { Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { CircularProgress } from '@mui/joy';
 import PropertyComparison from './PropertyComparison';
+import PropertyMap from './PropertyMap';
+
+const locations = [
+	{ name: 'Location 1', lat: 37.7749, lon: -122.4194 },
+	{ name: 'Location 2', lat: 34.0522, lon: -118.2437 },
+	// Add more locations as needed
+];
 
 export default function RentalDashboard(props) {
 	const { category, title, rareFind = false, liked = false, image } = props;
@@ -117,12 +124,19 @@ export default function RentalDashboard(props) {
 					sx={{
 						gridRow: 'span 3',
 						display: { xs: 'none', md: 'flex' },
-						backgroundColor: 'background.level1',
-						backgroundSize: 'cover',
-						backgroundImage:
-							'url("https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3731&q=80")',
+						pl:1,
 					}}
-				/>
+				>
+					{properties.length>0&&<PropertyMap 
+						locations={properties.map((property) => {
+							return {
+								name: property.address,
+								lat: property.latitude,
+								lon: property.longitude,
+							};
+						})}
+					/>}
+				</Box>
 				<Stack
 					spacing={2}
 					sx={{ px: { xs: 2, md: 4 }, pt: 2, minHeight: 0 }}

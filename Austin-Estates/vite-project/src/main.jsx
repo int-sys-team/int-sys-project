@@ -10,6 +10,9 @@ import App from './Intro/App';
 import Blog from './HouseDetails/Blog';
 import { ComparisonProvider } from './context/ComparisonProvider';
 
+import 'leaflet/dist/leaflet.css';
+
+
 ReactDOM.createRoot(document.getElementById('root')).render(
 	<ComparisonProvider>
 		<Router>
