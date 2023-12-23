@@ -24,8 +24,6 @@ import TwitterIcon from "@mui/icons-material/Twitter";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import YouTubeIcon from "@mui/icons-material/YouTube";
 
-
-
 function TeamMember({ role, name, imageUrl, description }) {
     return (
       <Grid
@@ -56,7 +54,7 @@ function TeamMember({ role, name, imageUrl, description }) {
         >
           {name}
         </Typography>
-        <Typography>{description}</Typography>
+        <Typography style={{ textAlign: "center" }}>{description}</Typography>
         <SocialMediaButtons />
       </Grid>
     );
@@ -79,7 +77,7 @@ function TeamMember({ role, name, imageUrl, description }) {
         <Button
           sx={{ m: 1, borderRadius: 50, backgroundColor: "#f50057" }}
           variant="contained"
-          href="https://yahoo.com"
+          href="https://github.com/int-sys-team/int-sys-project"
         >
           {" "}
           <FacebookIcon />{" "}
@@ -87,7 +85,7 @@ function TeamMember({ role, name, imageUrl, description }) {
         <Button
           sx={{ m: 1, borderRadius: 50, backgroundColor: "#f50057" }}
           variant="contained"
-          href="https://yahoo.com"
+          href="https://github.com/int-sys-team/int-sys-project"
         >
           {" "}
           <InstagramIcon />{" "}
@@ -95,7 +93,7 @@ function TeamMember({ role, name, imageUrl, description }) {
         <Button
           sx={{ m: 1, borderRadius: 50, backgroundColor: "#f50057" }}
           variant="contained"
-          href="https://yahoo.com"
+          href="https://github.com/int-sys-team/int-sys-project"
         >
           {" "}
           <TwitterIcon />{" "}
@@ -118,7 +116,7 @@ export default function AboutUsPage(props) {
               align="center"
               sx={{ fontSize: 40, color: "#bbbbbb" }}
             >
-              GET TO KNOW{" "}
+              GET TO KNOW AUSTIN{" "}
               <Link style={{ color: "#618fba", textDecoration: "none" }}>
                 ESTATES
               </Link>
@@ -142,80 +140,56 @@ export default function AboutUsPage(props) {
               align="center"
               sx={{ m: 2, color: "#bbbbbb" }}
             >
-              Estates is beautiful. Estates is beautiful. Estates is
-              beautiful. Estates is beautiful. Estates is beautiful.
-              Estates is beautiful. Estates is beautiful. Estates is
-              beautiful. Estates is beautiful. Estates is beautiful.
-              Estates is beautiful. Estates is beautiful.
+              Welcome to Austin Estates, the future of real estate. Leveraging the power of AI, we provide a seamless and personalized experience for buying and selling properties. Discover the perfect home with our webiste.
             </Typography>
           </Box>
 
           <Box sx={{ mb: 3 }} variant="outlined">
             <Divider sx={{ mt: 3, mb: 3 }}> WHAT DO WE OFFER? </Divider>
 
-            <Chip sx={{ m: 1 }} label="FIND PAPERS" />
-            <Chip sx={{ m: 1 }} label="PUBLISH PAPERS" />
-            <Chip sx={{ m: 1 }} label="FIND PROCEEDINGS" />
-            <Chip sx={{ m: 1 }} label="FIND AUTHORS" />
-            <Chip sx={{ m: 1 }} label="EXPAND YOUR KNOWLEDGE" />
-            <Chip sx={{ m: 1 }} label="LET OTHERS SEE YOUR WORK" />
-            <Chip sx={{ m: 1 }} label="FREE FOREVER" />
+            <Chip sx={{ m: 1 }} label="FIND YOUR DREAM HOME" />
+            <Chip sx={{ m: 1 }} label="SELL YOUR PROPERTY" />
+            <Chip sx={{ m: 1 }} label="AI-POWERED RECOMMENDATIONS" />
+            <Chip sx={{ m: 1 }} label="COMPARE PROPERTY PRICES" />
+            <Chip sx={{ m: 1 }} label="EXPLORE NEIGHBORHOODS" />
+            <Chip sx={{ m: 1 }} label="DISCOVER HOUSING TRENDS" />
+            <Chip sx={{ m: 1 }} label="FREE TO USE" />
           </Box>
 
           <Box sx={{ mb: 3 }} variant="outlined">
             <Divider sx={{ mt: 3, mb: 3 }}> WHO ARE OUR TEAM MEMBERS? </Divider>
             <Grid style={{display: "flex", flexDirection: "row",justifyContent: "space-around",}}>
-
                 <Grid style={{display: "flex",flexDirection: "row",justifyContent: "space-around", }}>
-                    <TeamMember
-                    role="Head Back Developer"
-                    name="Katarina Maksimovic"
-                    imageUrl="/house-price-predict.jpg"
-                    description="Emilija is one of the five lead developers of Estates. She
-                    has been a valuable member of the RuntimeTerror team since it
-                    first started out in 2022."
-                    />
-                    <TeamMember
-                    role="Team Leader"
-                    name="Aleksa Milic"
-                    imageUrl="/house-price-predict.jpg"
-                    description="Djordje is one of the five lead developers of Estates. He
-                    has been a valuable member of the RuntimeTerror team since it
-                    first started out in 2022."
-                    />
-                    <TeamMember
-                    role="Head Front Developer"
-                    name="Milica Stojanović"
-                    imageUrl="/house-price-predict.jpg"
-                    description="Matija is one of the five lead developers of Estates. He
-                    has been a valuable member of the RuntimeTerror team since it
-                    first started out in 2022."
-                    />
-                    
-                </Grid>
-                
-            </Grid>
-
-            <Grid style={{display: "flex", flexDirection: "row",justifyContent: "space-around",}}>
-
-                <Grid style={{display: "flex",flexDirection: "row",justifyContent: "space-around", }}>
-                    <TeamMember
-                    role="LLM Developer"
-                    name="Matija Speletic"
-                    imageUrl="/house-price-predict.jpg"
-                    description="Emilija is one of the five lead developers of Estates. She
-                    has been a valuable member of the RuntimeTerror team since it
-                    first started out in 2022."
-                    />
-                    <TeamMember
-                    role="AI researcher"
-                    name="Vuk Grujic"
-                    imageUrl="/house-price-predict.jpg"
-                    description="Djordje is one of the five lead developers of Estates. He
-                    has been a valuable member of the RuntimeTerror team since it
-                    first started out in 2022."
-                    />
-                    
+              <TeamMember
+                role="Head Back Developer"
+                name="Katarina Maksimovic"
+                imageUrl="https://github.com/KatarinaM14.png"
+                description="Katarina is the backbone of our development team, specializing in backend development. Her expertise in server-side programming has been instrumental in building the robust infrastructure of A-Estates."
+              />
+              <TeamMember
+                role="Top G"
+                name="Aleksa Milic"
+                imageUrl="https://github.com/AsinaMilic.png"
+                description="Aleksa, our team leader, the Top G, is the driving force behind A-Estates. His leadership and strategic planning have been key in turning our vision into reality."
+              />
+              <TeamMember
+                role="Head Front Developer"
+                name="Milica Stojanović"
+                imageUrl="https://github.com/15Milica.png"
+                description="Milica, our head front developer, is responsible for the sleek and intuitive user interface of Estates. Her eye for design and user experience makes A-Estates a joy to use."
+              />
+              <TeamMember
+                role="LLM Developer"
+                name="Matija Speletic"
+                imageUrl="https://github.com/matija-speletic.png"
+                description="Matija, our LLM developer, ensures that our platform is always learning and improving. His work on large language model has made A-Estates smarter and more efficient."
+              />
+              <TeamMember
+                role="AI researcher"
+                name="Vuk Grujic"
+                imageUrl="https://github.com/VukGr.png"
+                description="Vuk, our AI researcher, is the brain behind the AI capabilities of A-Estates. His innovative research has allowed us to provide personalized and intelligent property recommendations."
+              />
                 </Grid>
                 
             </Grid>
@@ -240,7 +214,7 @@ export default function AboutUsPage(props) {
               <Button
                 sx={{ m: 1, borderRadius: 50 }}
                 variant="contained"
-                href="https://yahoo.com"
+                href="https://github.com/int-sys-team/int-sys-project"
               >
                 {" "}
                 <FacebookIcon />{" "}
@@ -248,7 +222,7 @@ export default function AboutUsPage(props) {
               <Button
                 sx={{ m: 1, borderRadius: 50 }}
                 variant="contained"
-                href="https://yahoo.com"
+                href="https://github.com/int-sys-team/int-sys-project"
               >
                 {" "}
                 <InstagramIcon />{" "}
@@ -256,7 +230,7 @@ export default function AboutUsPage(props) {
               <Button
                 sx={{ m: 1, borderRadius: 50 }}
                 variant="contained"
-                href="https://yahoo.com"
+                href="https://github.com/int-sys-team/int-sys-project"
               >
                 {" "}
                 <TwitterIcon />{" "}
@@ -264,7 +238,7 @@ export default function AboutUsPage(props) {
               <Button
                 sx={{ m: 1, borderRadius: 50 }}
                 variant="contained"
-                href="https://yahoo.com"
+                href="https://github.com/int-sys-team/int-sys-project"
               >
                 {" "}
                 <LinkedInIcon />{" "}
@@ -272,7 +246,7 @@ export default function AboutUsPage(props) {
               <Button
                 sx={{ m: 1, borderRadius: 50 }}
                 variant="contained"
-                href="https://yahoo.com"
+                href="https://github.com/int-sys-team/int-sys-project"
               >
                 {" "}
                 <YouTubeIcon />{" "}

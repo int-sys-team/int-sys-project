@@ -157,6 +157,7 @@ function Header(props) {
 			>
 				<Tabs value={0} textColor="inherit">
 					<Tab label="Houses" />
+					<Tab label="Sell Houses"/>
 					<Tab
 						label="About us"
 						component={NavLink}
