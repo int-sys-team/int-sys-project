@@ -16,9 +16,9 @@ import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 
 import { NavLink } from 'react-router-dom';
-import { Balance } from '@mui/icons-material';
+import { Balance, GitHub } from '@mui/icons-material';
 import { Badge } from '@mui/material';
-import {useCompareProperties} from './hooks/useCompareProperties.jsx';
+import { useCompareProperties } from './hooks/useCompareProperties.jsx';
 
 const lightColor = 'rgba(255, 255, 255, 0.7)';
 
@@ -30,7 +30,12 @@ function Header(props) {
 		<React.Fragment>
 			<AppBar color="primary" position="sticky" elevation={0}>
 				<Toolbar>
-					<Grid container spacing={1} alignItems="center">
+					<Grid
+						container
+						spacing={1}
+						alignItems="center"
+						width="100%"
+					>
 						<Grid
 							sx={{ display: { sm: 'none', xs: 'block' } }}
 							item
@@ -45,7 +50,7 @@ function Header(props) {
 							</IconButton>
 						</Grid>
 
-						{/* <Grid item>
+						<Grid item>
 							<Link
 								component="a"
 								href="https://github.com/int-sys-team/int-sys-project"
@@ -56,47 +61,19 @@ function Header(props) {
 									color: 'inherit',
 								}}
 							>
-								<Button
-									sx={{ borderColor: lightColor }}
-									variant="outlined"
-									color="inherit"
-									size="medium"
-								>
-									Web setup
-								</Button>
+								<IconButton color="inherit">
+									<GitHub />
+								</IconButton>
 							</Link>
-						</Grid> */}
-						<Grid item>
-							<Tooltip title="Compare Properties">
-								<Badge
-									badgeContent={getCount()}
-									color="error"
-									anchorOrigin={{
-										vertical: 'bottom',
-										horizontal: 'right',
-									}}
-								>
-									<IconButton color="inherit">
-										<Balance />
-									</IconButton>
-								</Badge>
-							</Tooltip>
 						</Grid>
+
 						<Grid
 							item
 							xs
 							container
 							alignItems="center"
 							justifyContent="center"
-						>
-							<Typography
-								color="inherit"
-								variant="h5"
-								component="h1"
-							>
-								Austin Real Estate
-							</Typography>
-						</Grid>
+						></Grid>
 						<Grid item>
 							<Button
 								href="/overview/signup"
@@ -130,14 +107,14 @@ function Header(props) {
 							</Button>
 						</Grid>
 
-						<Grid item>
+						{/* <Grid item>
 							<Tooltip title="Alerts • No alerts">
 								<IconButton color="inherit">
 									<NotificationsIcon />
 								</IconButton>
 							</Tooltip>
-						</Grid>
-						<Grid item>
+						</Grid> */}
+						<Grid item justifyContent="flex-end">
 							<IconButton color="inherit" sx={{ p: 0.5 }}>
 								<Avatar
 									src="/static/images/avatar/1.jpg"
@@ -149,7 +126,7 @@ function Header(props) {
 				</Toolbar>
 			</AppBar>
 
-			<AppBar
+			{/* <AppBar
 				component="div"
 				position="static"
 				elevation={0}
@@ -157,7 +134,7 @@ function Header(props) {
 			>
 				<Tabs value={0} textColor="inherit">
 					<Tab label="Houses" />
-					<Tab label="Sell Houses"/>
+					<Tab label="Sell Houses" />
 					<Tab
 						label="About us"
 						component={NavLink}
@@ -166,7 +143,7 @@ function Header(props) {
 					/>
 					<Tab label="Usage" />
 				</Tabs>
-			</AppBar>
+			</AppBar> */}
 		</React.Fragment>
 	);
 }

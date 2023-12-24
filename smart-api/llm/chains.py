@@ -30,3 +30,18 @@ class PropertyComparisonChat():
             print(chunk)
             yield chunk.content
         yield "###DONE###"
+
+
+class DescriptionGeneratorStream():
+    def __init__(self,data):
+        self.data = data
+    
+    def stream(self):
+        start_streaming=False
+        for chunk in ollama.stream(description_generator_prompt.format(data=self.data)):
+            print(chunk)
+            if '\n' in chunk.content:
+                start_streaming=True
+            if start_streaming and not ('"' in chunk.content or '\n' in chunk.content):
+                yield chunk.content
+        yield "###DONE###"

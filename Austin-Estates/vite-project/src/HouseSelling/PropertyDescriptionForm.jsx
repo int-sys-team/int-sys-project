@@ -6,10 +6,12 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 
 import PropertyContext from '../context/PropertyContext';
+import { StreamHandler } from '../utils/StreamHandler';
 
 export default function PropertyDescriptionForm() {
   const [description, setDescription] = React.useState('');
   const [price, setPrice] = React.useState('');
+  const [responding, setResponding] = React.useState(false);
 
   const { propertyData, setPropertyData } = useContext(PropertyContext);
 
@@ -20,13 +22,46 @@ export default function PropertyDescriptionForm() {
     });
   };
 
-  const generateDescription = () => {
-    // Here you can call your AI function to generate a description
-    setDescription('Generated description...');
-  };
+  	const generateDescription = async () => {
+		console.log(propertyData);
+		if (responding) return;
+		if (!propertyData) return;
+    if(Object.keys(propertyData).length === 0) return;
+
+		setResponding(true);
+		try {
+      let newDescription='';
+			setDescription('');
+			let stream = new StreamHandler('http://127.0.0.1:5000/llm/description');
+			stream.invoke(
+				{
+					data: propertyData,
+					stream: true,
+				},
+				(chunk) => {
+					console.log(chunk);
+					if (chunk === '###DONE###') {
+						setPropertyData({
+							...propertyData,
+							['description']: newDescription,
+						});
+            setResponding(false);
+            console.log(propertyData)
+						return;
+					}
+          newDescription+=chunk;
+					setDescription(newDescription);
+				}
+			);
+		} catch (err) {
+			console.log(err);
+			setResponding(false);
+		}
+	};
 
   const generatePrice = () => {
     // Here you can call your AI function to generate a price
+    console.log(propertyData)
     setPrice('Generated price...');
   };
 
@@ -64,7 +99,7 @@ export default function PropertyDescriptionForm() {
             name="description"
             label="Description"
             multiline
-            rows={4}
+            rows={10}
             value={description}
             fullWidth
             variant="outlined"
@@ -84,7 +119,7 @@ export default function PropertyDescriptionForm() {
         </Grid>
         <Grid item xs={12}>
           <Tooltip title="Our AI will generate the description">
-            <Button variant="contained" color="primary" onClick={generateDescription}>
+            <Button variant="contained" color="primary" onClick={generateDescription}disabled={responding}> 
               Generate Description
             </Button>
           </Tooltip>

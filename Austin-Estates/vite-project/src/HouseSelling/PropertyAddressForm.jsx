@@ -48,13 +48,13 @@ export default function PropertyAddressForm() {
             onChange={handleFieldChange}
           />
         </Grid>
-        <Grid item xs={12}>
+        {/* <Grid item xs={12}>
           <Box mt={2}>
             <Divider>
               <Chip label="OR" />
             </Divider>
           </Box>
-        </Grid>
+        </Grid> */}
         <Grid item xs={12}>
           <TextField
             id="address"
@@ -112,13 +112,13 @@ export default function PropertyAddressForm() {
             onChange={handleFieldChange}
           />
         </Grid>
-        <Grid item xs={12}>
+        {/* <Grid item xs={12}>
           <FormControlLabel
             control={<Checkbox color="secondary" name="saveAddress" value="yes" />}
             label="Use this address for contract details"
           />
-        </Grid>
-      </Grid>
+        </Grid>*/}
+      </Grid> 
     </>
   );
 }

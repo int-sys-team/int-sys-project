@@ -11,6 +11,8 @@ import Blog from './HouseDetails/Blog';
 import { ComparisonProvider } from './context/ComparisonProvider';
 
 import 'leaflet/dist/leaflet.css';
+import RentalDashboard from './HouseDashboard/RentalDashboard';
+import Checkout from './HouseSelling/Checkout';
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
@@ -21,7 +23,14 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 				<Route path="/overview/signin" element={<SignInSide />} />
 				<Route path="/overview/aboutus" element={<AboutUsPage />} />
 				<Route path="/overview/blog" element={<Blog />} />
-				<Route path="/overview/" element={<Paperbase />} />
+				<Route
+					path="/explore"
+					element={<Paperbase Page={RentalDashboard} />}
+				/>
+				<Route
+					path="/newPost"
+					element={<Paperbase Page={Checkout} />}
+				/>
 				<Route path="/" element={<App />} />
 			</Routes>
 		</Router>

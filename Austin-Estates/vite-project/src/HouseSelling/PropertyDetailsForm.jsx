@@ -148,12 +148,12 @@ export default function PropertyDetailsForm() {
 
           />
         </Grid>
-        <Grid item xs={12}>
+        {/* <Grid item xs={12}>
           <FormControlLabel
             control={<Checkbox color="secondary" name="agreeTerms" value="yes" />}
             label="I agree to the Terms and Conditions"
           />
-        </Grid>
+        </Grid> */}
       </Grid>
     </>
   );

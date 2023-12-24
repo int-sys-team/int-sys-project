@@ -1,7 +1,7 @@
 from flask import request, Response
 from flask_restful import Resource
 import database as db
-from llm.chains import description_generator, property_fetcher, PropertyComparisonChat
+from llm.chains import description_generator, property_fetcher, PropertyComparisonChat,DescriptionGeneratorStream
 
 
 class DescriptionGenerator(Resource):
@@ -24,6 +24,10 @@ class DescriptionGenerator(Resource):
                 data:
                   type: string
                   description: The data about the property.
+                stream:
+                  type: boolean
+                  description: Whether to stream the response or not.
+                  default: false
 
         responses:
           201:
@@ -35,10 +39,16 @@ class DescriptionGenerator(Resource):
         if "data" not in data:
             return {"error": "Request body must contain data"}, 400
         try:
-            response = description_generator.invoke(
-                {"data": data.get("data")}
-            )
-            return {"description": response}, 200
+            is_stream = data.get("stream", False)
+            if is_stream:
+                return Response(
+                    DescriptionGeneratorStream(data.get("data")).stream(), 
+                    mimetype='text/plain')
+            else:
+                response = description_generator.invoke(
+                    {"data": data.get("data")}
+                )
+                return {"description": response}, 200
         except Exception as e:
             return {
                 "error": "Description generator failed.",
@@ -80,12 +90,12 @@ class PropertyFetcher(Resource):
 
         try:
             for i in range(3):
-              print(i)
-              db_query = property_fetcher.invoke(
-                  {"query": message.get("query")}
-              )
-              if "error" not in db_query:
-                  break
+                print(i)
+                db_query = property_fetcher.invoke(
+                    {"query": message.get("query")}
+                )
+                if "error" not in db_query:
+                    break
             print(db_query)
 
             db_result = db.find_properties(db_query)
@@ -102,83 +112,80 @@ class PropertyFetcher(Resource):
                 "properties": [],
                 "details": str(e)
             }, 200
-        
+
 
 class PropertyComparison(Resource):
-      
-      def post(self):
-          """
-          Compares two properties and returns the better one.
-  
-          ---
-          parameters:
-            - name: body
-              in: body
-              required: true
-              description: The input to the LLM.
-              schema:
-                type: object
-                required:
-                  - option1
-                  - option2
-                  - messages
-                properties:
-                  option1:
-                    type: string
-                    description: The first option.
-                  option2:
-                    type: string
-                    description: The second option.
-                  messages:
-                    type: array
-                    description: The messages from the client.
-                    items:
-                      type: object
-                      properties:
-                        sender:
-                          type: string
-                          description: The sender of the message.
-                        content:
-                          type: string
-                          description: The content of the message.
-                  stream:
-                    type: boolean
-                    description: Whether to stream the response or not.
-                    default: false
-  
-          responses:
-            201:
-              description: The better option.
-          """
-          message: dict = request.get_json()
-          if not message:
-              return {"error": "Message cannot be empty"}, 400
-          if "option1" not in message:
-              return {"error": "Message must contain option1"}, 400
-          if "option2" not in message:
-              return {"error": "Message must contain option2"}, 400
-          if "messages" not in message:
-              return {"error": "Message must contain messages"}, 400
-  
-          try:
-              comparer=PropertyComparisonChat(
-                  message.get("option1"),
-                  message.get("option2"),
-                  message.get("messages")
-              )
-              is_stream=message.get("stream", False)
 
-              if is_stream:
-                  return Response(comparer.stream(), mimetype='text/plain')
-              else:
-                  return {"response": str(comparer.invoke().content)}, 200
-              
+    def post(self):
+        """
+        Compares two properties and returns the better one.
 
-          
+        ---
+        parameters:
+          - name: body
+            in: body
+            required: true
+            description: The input to the LLM.
+            schema:
+              type: object
+              required:
+                - option1
+                - option2
+                - messages
+              properties:
+                option1:
+                  type: string
+                  description: The first option.
+                option2:
+                  type: string
+                  description: The second option.
+                messages:
+                  type: array
+                  description: The messages from the client.
+                  items:
+                    type: object
+                    properties:
+                      sender:
+                        type: string
+                        description: The sender of the message.
+                      content:
+                        type: string
+                        description: The content of the message.
+                stream:
+                  type: boolean
+                  description: Whether to stream the response or not.
+                  default: false
 
-          except Exception as e:
-              return {
-                  "error": "Property comparison failed.",
-                  "response": "Ollama failed",
-                  "details": str(e)
-              }, 200
+        responses:
+          201:
+            description: The better option.
+        """
+        message: dict = request.get_json()
+        if not message:
+            return {"error": "Message cannot be empty"}, 400
+        if "option1" not in message:
+            return {"error": "Message must contain option1"}, 400
+        if "option2" not in message:
+            return {"error": "Message must contain option2"}, 400
+        if "messages" not in message:
+            return {"error": "Message must contain messages"}, 400
+
+        try:
+            comparer = PropertyComparisonChat(
+                message.get("option1"),
+                message.get("option2"),
+                message.get("messages")
+            )
+            is_stream = message.get("stream", False)
+
+            if is_stream:
+                return Response(comparer.stream(), mimetype='text/plain')
+            else:
+                return {"response": str(comparer.invoke().content)}, 200
+
+        except Exception as e:
+            return {
+                "error": "Property comparison failed.",
+                "response": "Ollama failed",
+                "details": str(e)
+            }, 200
