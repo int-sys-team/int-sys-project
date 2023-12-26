@@ -76,7 +76,7 @@ function Header(props) {
 						></Grid>
 						<Grid item>
 							<Button
-								href="/overview/signup"
+								href="/explore/signup"
 								variant="outlined"
 								color="inherit"
 								sx={{

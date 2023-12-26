@@ -9,18 +9,8 @@ import Navigator from './Navigator';
 import Header from './Header';
 import RentalDashboard from './HouseDashboard/RentalDashboard';
 import Checkout from './HouseSelling/Checkout';
+import Footer from './footer/Footer'; 
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}.
-    </Typography>
-  );
-}
 
 let theme = createTheme({
   palette: {
@@ -204,8 +194,8 @@ export default function Paperbase({Page}) {
             {/*<RentalDashboard/>*/}
             <Page/>
           </Box>
-          <Box component="footer" sx={{ p: 2, bgcolor: '#eaeff1' }}>
-            <Copyright />
+          <Box component="footer" sx={{ p: 1, bgcolor: '#eaeff1' }}>
+            <Footer />
           </Box>
         </Box>
       </Box>

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
 import AspectRatio from '@mui/joy/AspectRatio';
 import Card from '@mui/joy/Card';
 import CardContent from '@mui/joy/CardContent';
@@ -70,8 +71,16 @@ export default function RentalCard(props: RentalCardProps) {
 		city,
 		streetAddress,
 	} = props;
+	const navigate = useNavigate();
 	const [isLiked, setIsLiked] = React.useState(liked);
 	const { properties, compareProperties } = useCompareProperties();
+
+	const handleCardClick = () => {
+		navigate(`/explore/blog/${_id}`, {
+		  state: { ...props },
+		});
+	  };
+
 	return (
 		<Card
 			variant="outlined"
@@ -86,6 +95,7 @@ export default function RentalCard(props: RentalCardProps) {
 						'var(--joy-palette-neutral-outlinedDisabledBorder)',
 				},
 			}}
+			onClick={handleCardClick} 
 		>
 			<CardOverflow
 				sx={{
@@ -175,7 +185,7 @@ export default function RentalCard(props: RentalCardProps) {
 							<Link
 								overlay
 								underline="none"
-								href="#interactive-card"
+								//href="#interactive-card"
 								sx={{ color: 'text.primary' }}
 							>
 								{description.substring(0, 50)}

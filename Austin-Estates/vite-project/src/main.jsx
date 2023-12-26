@@ -19,14 +19,15 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 	<ComparisonProvider>
 		<Router>
 			<Routes>
-				<Route path="/overview/signup" element={<SignUp />} />
-				<Route path="/overview/signin" element={<SignInSide />} />
-				<Route path="/overview/aboutus" element={<AboutUsPage />} />
-				<Route path="/overview/blog" element={<Blog />} />
+				<Route path="/explore/signup" element={<SignUp />} />
+				<Route path="/explore/signin" element={<SignInSide />} />
+				<Route path="/explore/aboutus" element={<AboutUsPage />} />
+				
 				<Route
 					path="/explore"
 					element={<Paperbase Page={RentalDashboard} />}
 				/>
+				<Route path="/explore/blog/:id" element={<Paperbase Page={Blog} />} />
 				<Route
 					path="/newPost"
 					element={<Paperbase Page={Checkout} />}

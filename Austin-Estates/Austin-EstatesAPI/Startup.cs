@@ -44,7 +44,7 @@ namespace Server
                     "http://localhost:3000",
                     "http://localhost:5100",
                     "https://localhost:5100",
-                    "https://127.0.0.1:5100"
+                    "https://127.0.0.1:5100",
                 }).AllowAnyHeader()
                 .AllowAnyMethod()
                 .AllowCredentials();

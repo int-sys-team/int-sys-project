@@ -37,7 +37,7 @@ export default function HeroLeft03() {
         <Button size="lg" variant="outlined" color="neutral" component="a" href="https://github.com/int-sys-team/int-sys-project">
           Learn More
         </Button>
-        <Button size="lg" endDecorator={<ArrowForward fontSize="large" />} component={NavLink} to="/overview/">
+        <Button size="lg" endDecorator={<ArrowForward fontSize="large" />} component={NavLink} to="/explore">
           Get Started
         </Button>
       </Box>
