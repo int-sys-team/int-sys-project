@@ -63,29 +63,11 @@ class PriceRegressor(Resource):
                       type: integer
                     waterfront:
                       type: integer
-                    windowfeatures:
-                      type: integer
-                    community:
-                      type: integer
                     lotSizeSqFt:
                       type: number
                     livingAreaSqFt:
                       type: number
-                    numOfPrimarySchools:
-                      type: integer
-                    numOfElementarySchools:
-                      type: integer
-                    numOfMiddleSchools:
-                      type: integer
-                    numOfHighSchools:
-                      type: integer
-                    avgSchoolDistance:
-                      type: number
-                    avgSchoolRating:
-                      type: number
-                    avgSchoolSize:
-                      type: integer
-                    MedianStudentsPerTeacher:
+                    numOfSchools:
                       type: integer
                     numOfBathrooms:
                       type: number
@@ -102,7 +84,7 @@ class PriceRegressor(Resource):
                   type: object
                   properties:
                     price:
-                      type: float
+                      type: number
                       description: The predicted price.
         """
         data: dict = request.get_json()

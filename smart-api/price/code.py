@@ -5,19 +5,7 @@ import numpy as np
 # TODO Get relative to this file?
 price_model = joblib.load('./price/model.pkl')
 
-# TODO Maybe ship this with the model?
-param_order = [
-    'zipcode', 'latitude', 'longitude', 'garageSpaces', 'hasAssociation',
-    'hasCooling', 'hasGarage', 'hasHeating', 'hasSpa', 'hasView',
-    'homeType', 'parkingSpaces', 'yearBuilt', 'numOfPhotos',
-    'accessibility', 'numOfAppliances', 'numOfParkingFeatures',
-    'patioporch', 'security', 'waterfront', 'windowfeatures', 'community',
-    'lotSizeSqFt', 'livingAreaSqFt', 'numOfPrimarySchools',
-    'numOfElementarySchools', 'numOfMiddleSchools', 'numOfHighSchools',
-    'avgSchoolDistance', 'avgSchoolRating', 'avgSchoolSize',
-    'MedianStudentsPerTeacher', 'numOfBathrooms', 'numOfBedrooms',
-    'numOfStories'
-]
+param_order = price_model.feature_names_in_
 
 def predict_price(data:dict)->float:
     """

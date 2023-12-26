@@ -17,7 +17,6 @@ api.add_resource(PropertyFetcher, '/llm/properties')
 api.add_resource(DescriptionGenerator, '/llm/description')
 api.add_resource(PropertyComparison, '/llm/compare')
 
-
 # Price Prediction API
 api.add_resource(PriceRegressor, '/price')
 
