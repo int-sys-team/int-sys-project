@@ -8,8 +8,8 @@ from db.resources import Property
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app)
-app.config['CORS_HEADERS'] = 'Content-Type'
+cors = CORS(app, resources={r"/*": {"origins": "*"}})
+
 api = Api(app)
 swagger = Swagger(app)
 
@@ -29,5 +29,3 @@ api.add_resource(Property, '/db/properties')
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-# Open: http://127.0.0.1:5000/apidocs

@@ -25,7 +25,7 @@ const Footer = () => {
   const BoxRow = styled(Box) (({ theme }) => ({
     display: 'flex',
     flexDirection: 'row',
-    backgroundColor: '#ededed',
+    backgroundColor: '#d3d3d3',
     flex: 1,
     [theme.breakpoints.down('sm')]: {
       flexDirection: 'column',
@@ -38,39 +38,39 @@ const Footer = () => {
     <BoxRow 
     component = 'footer'
     sx={{
-      py: 4,
+      py: 10,
       px: 2,
     }}
     >
       <StackColumn>
         <FooterTitle text={'address'} />
         <FooterLink 
-        text={'15th Louis St, london 92382, eng'} 
+        text={'Aleksandra Medvedeva 14. 18104 Niš'} 
         />
         <FooterLink 
-        text={'25 999-345-10800'} 
+        text={'Serbia Phone: +381 (18) 529-105 Fax: +381 (18) 588-399'} 
         />
         <FooterLink 
-        text={'info@housesales.com'} 
+        text={'efinfo@elfak.ni.ac.rs'} 
         />
       </StackColumn>
       
       <StackColumn>
-        <FooterTitle text={'our services'} />
-        <FooterLink text={'buy house'} />
-        <FooterLink text={'sell house'} />
-        <FooterLink text={'rent house'} />
-        <FooterLink text={'build house'} />
+      <FooterTitle text={'our services'} />
+        <FooterLink text={'AI property valuation'} />
+        <FooterLink text={'AI property recommendation'} />
+        <FooterLink text={'sell house with AI'} />
+        <FooterLink text={'buy house with AI'} />
       </StackColumn>
       <StackColumn>
-        <FooterTitle text={'our company'} />
-        <FooterLink text={'reporting'} />
-        <FooterLink text={'get in touch'} />
-        <FooterLink text={'management'} />
+        <FooterTitle text={'our "company"'} />
+        <FooterLink text={'about us'} />
+        <FooterLink text={'our team'} />
+        <FooterLink text={'contact us'} />
       </StackColumn>
 
       <StackColumn>
-        <FooterTitle text={'hBSales'} />
+        <FooterTitle text={'AI Estates'} />
         <Stack 
         direction='row' 
         width= '70px'
@@ -102,7 +102,7 @@ const Footer = () => {
         variant='caption'
         component='p' 
         >
-          &copy; 2022 HBSales Inc.
+          &copy; 2024 AI Austin Estates Inc.
         </Typography>
       </StackColumn>
     </BoxRow>

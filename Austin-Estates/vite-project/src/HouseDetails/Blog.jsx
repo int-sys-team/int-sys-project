@@ -8,7 +8,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import Hero from "./Hero";
 import Section from "./Section";
-import Testimonial from "./Testimonial";
+import Recommendation from "./Recommendation";
 import AboutUs from "./AboutUs";
 
 const theme = createTheme({
@@ -44,11 +44,10 @@ export default function Blog() {
       <CssBaseline />
       <Container maxWidth="lg">
         <>
-          <Hero />
-          <Section />
-          <AboutUs />
-          <Testimonial />
-
+        <Hero property={location.state} />
+        <Section property={location.state} />
+        {/*<AboutUs property={location.state} />*/}
+        <Recommendation property={location.state} />
         </>
       </Container>
     </ThemeProvider>

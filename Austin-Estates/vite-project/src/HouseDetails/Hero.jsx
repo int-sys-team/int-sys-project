@@ -4,7 +4,10 @@ import React from 'react';
 import { Grid, Typography, Button, Box } from '@mui/material';
 import house from "../../public/house-price-predict.jpg";
 
-const Hero = () => {
+const Hero = (props) => {
+  const { _id, description, homeType, homeImage, liked, rareFind, title, hasCooling, hasHeating, hasSpa, numOfBedrooms, numOfBathrooms, livingAreaSqFt, parkingSpaces, price, city, streetAddress } = props.property;
+
+
   return (
     <Box
       sx={{
@@ -17,24 +20,23 @@ const Hero = () => {
     >
       <Grid container spacing={6} sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <Grid item xs={12} md={7}>
-          <Typography variant="h3" fontWeight={700}>
-            Let's scale your business
+          <Typography variant="h3" fontWeight={700} sx={{ mb: 3 }}>
+            {title? title: "Nije fetchovan title"}
           </Typography>
-          <Typography variant="h6">
-            Hire professionals who will help your business make 10X your
-            previous income. With over 5 years of experience in Marketing & Business
-            strategy, we are your best client.
+          <Typography variant="h6" sx={{ mb: 3 }}>
+            {description}
           </Typography>
           <Button variant="contained" color="primary" sx={{ width: '200px', fontSize: '16px' }}>
-            HIRE US
+            buy this property
           </Button>
         </Grid>
         <Grid item xs={12} md={5}>
-          <img src={house} alt="My Team" sx={{ width: '100%' }} />
+          <img src={homeImage} alt="My Team" sx={{ width: '100%' }} />
         </Grid>
       </Grid>
     </Box>
   );
+
 };
 
 export default Hero;

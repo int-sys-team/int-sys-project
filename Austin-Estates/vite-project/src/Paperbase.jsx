@@ -190,9 +190,9 @@ export default function Paperbase({Page}) {
         <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
           <Header onDrawerToggle={handleDrawerToggle} />
           <Box component="main" sx={{ flex: 1, py: 6, px: 4, bgcolor: '#eaeff1' }}>
-            {/* <Checkout/> */}
-            {/*<RentalDashboard/>*/}
+
             <Page/>
+          
           </Box>
           <Box component="footer" sx={{ p: 1, bgcolor: '#eaeff1' }}>
             <Footer />
