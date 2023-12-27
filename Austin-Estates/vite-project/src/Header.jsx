@@ -50,6 +50,8 @@ function Header(props) {
 							</IconButton>
 						</Grid>
 
+
+							
 						<Grid item>
 							<Link
 								component="a"
@@ -73,7 +75,14 @@ function Header(props) {
 							container
 							alignItems="center"
 							justifyContent="center"
-						></Grid>
+						>
+							  
+							<Typography variant="h7" align="center">
+								Austin Real Estates
+							</Typography>
+
+						</Grid>
+						
 						<Grid item>
 							<Button
 								href="/explore/signup"

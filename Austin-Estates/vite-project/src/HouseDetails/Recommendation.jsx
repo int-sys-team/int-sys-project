@@ -1,8 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Typography, Box, Card, CardContent, Grid } from '@mui/material';
-import { Avatar } from '@mui/material';
+import JoyCard from '@mui/joy/Card';
+import JoyBox from '@mui/joy/Box';
+import JoyTypography from '@mui/joy/Typography';
+import JoyGrid from '@mui/joy/Grid';
+import { CssVarsProvider } from '@mui/joy/styles';
+import CssBaseline from '@mui/joy/CssBaseline';
 import RentalCard from '../HouseDashboard/RentalCard';
-import { Recommend } from '@mui/icons-material';
+import { Stack } from '@mui/joy';
+
+
 
 const Recommendation = (props) => {
   const { _id, description, homeType, homeImage, liked, rareFind, title, hasCooling, hasHeating, hasSpa, numOfBedrooms, numOfBathrooms, livingAreaSqFt, parkingSpaces, price, city, streetAddress } = props.property;
@@ -33,32 +39,37 @@ const Recommendation = (props) => {
   };
 
   useEffect(() => {
-    // Koristi _id trenutne nekretnine kao targetPropertyId
     fetchSimilarProperties(_id);
-  }, [_id]); // Dodaj _id kao zavisnost, tako da će useEffect ponoviti poziv kada se promeni _id
-
+  }, [_id]);
+  
+  
   return (
-    <Box
-      sx={{
-        flexGrow: 1,
-        padding: '20px',
-        alignItems: 'center',
-        justifyContent: 'center',
-        minHeight: '300px',
-      }}
-    >
-      <Typography variant="h4" component="div" gutterBottom sx={{ fontWeight: 'bold', color: '#3f51b5', textAlign: 'left' }}>
-        AI-Powered recommendations for you
-      </Typography>
-
-      <Grid container spacing={2}>
-        {similarHouses.map((house) => (
-          <Grid item sm={12} md={4} key={house._id}>
-            <RentalCard  key={house._id} {...house} />
-          </Grid>
-        ))}
-      </Grid>
-    </Box>
+    <CssVarsProvider disableTransitionOnChange>
+      <CssBaseline />
+      <JoyBox
+        sx={{
+          flexGrow: 1,
+          padding: '20px',
+          alignItems: 'center',
+          justifyContent: 'center',
+          minHeight: '300px',
+        }}
+      >
+        <JoyTypography variant="h4" component="div" gutterBottom sx={{ fontWeight: 'bold', color: '#3f51b5', textAlign: 'left' }}>
+          AI-Powered recommendations for you
+        </JoyTypography>
+  
+        <Stack
+					spacing={3}
+					sx={{  pt: 2, minHeight: 0, overflow: 'auto'  }}
+          direction="row"
+				>
+          {similarHouses.map((house) => (
+              <RentalCard key={house._id} {...house} />
+          ))}
+        </Stack>
+      </JoyBox>
+    </CssVarsProvider>
   );
 };
 

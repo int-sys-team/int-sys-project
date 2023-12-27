@@ -83,8 +83,8 @@ export default function Navigator(props) {
 				>
 					Austin Estates
 				</ListItem>
-				<ListItem sx={{ ...item, ...itemCategory }}>
-					<ListItemIcon>
+				<ListItem sx={{ ...item, ...itemCategory }} onClick={() => navigate('/')}>
+					<ListItemIcon >
 						<HomeIcon />
 					</ListItemIcon>
 					<ListItemText>Home</ListItemText>

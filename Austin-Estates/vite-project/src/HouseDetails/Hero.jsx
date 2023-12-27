@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { Grid, Typography, Button, Box } from '@mui/material';
-import house from "../../public/house-price-predict.jpg";
 
 const Hero = (props) => {
   const { _id, description, homeType, homeImage, liked, rareFind, title, hasCooling, hasHeating, hasSpa, numOfBedrooms, numOfBathrooms, livingAreaSqFt, parkingSpaces, price, city, streetAddress } = props.property;
@@ -26,8 +25,8 @@ const Hero = (props) => {
           <Typography variant="h6" sx={{ mb: 3 }}>
             {description}
           </Typography>
-          <Button variant="contained" color="primary" sx={{ width: '200px', fontSize: '16px' }}>
-            buy this property
+          <Button variant="contained" color="primary" sx={{ width: '250px', fontSize: '18px' }}>
+            Contact this seller
           </Button>
         </Grid>
         <Grid item xs={12} md={5}>

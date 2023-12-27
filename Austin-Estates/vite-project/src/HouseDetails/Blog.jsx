@@ -11,6 +11,7 @@ import Section from "./Section";
 import Recommendation from "./Recommendation";
 import AboutUs from "./AboutUs";
 
+
 const theme = createTheme({
   typography: {
     fontFamily: ['Poppins', 'sans-serif'].join(','),
@@ -21,8 +22,7 @@ export default function Blog() {
   const location = useLocation();
   const { id } = useParams();
   const [property, setProperty] = useState(null);
-  console.log(location) //ajde probaj da ne printas 500 puta ovo nego sam jednom a???
-  // MRZIM REACT
+  console.log(location) 
  
   if (!location) {
     console.log("Property is null");

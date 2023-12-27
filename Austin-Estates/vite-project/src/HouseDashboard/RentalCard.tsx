@@ -10,6 +10,8 @@ import Link from '@mui/joy/Link';
 import Stack from '@mui/joy/Stack';
 import Typography from '@mui/joy/Typography';
 import { Box } from '@mui/joy';
+import Button from '@mui/joy/Button';
+import OpenInNew from '@mui/icons-material/OpenInNew';
 import WorkspacePremiumRoundedIcon from '@mui/icons-material/WorkspacePremiumRounded';
 import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded';
 import FmdGoodRoundedIcon from '@mui/icons-material/FmdGoodRounded';
@@ -47,7 +49,7 @@ type RentalCardProps = {
 	price?: number;
 	city?: string;
 	streetAddress?: string;
-	onClick: () => void; // Add this line
+	onClick: () => void; 
 };
 
 export default function RentalCard(props: RentalCardProps) {
@@ -76,6 +78,7 @@ export default function RentalCard(props: RentalCardProps) {
 	const { properties, compareProperties } = useCompareProperties();
 
 	const handleCardClick = () => {
+		window.scrollTo(0, 0); 
 		navigate(`/explore/blog/${_id}`, {
 		  state: { ...props },
 		});
@@ -94,8 +97,8 @@ export default function RentalCard(props: RentalCardProps) {
 					borderColor:
 						'var(--joy-palette-neutral-outlinedDisabledBorder)',
 				},
+				minWidth: '50%'
 			}}
-			onClick={handleCardClick} 
 		>
 			<CardOverflow
 				sx={{
@@ -296,7 +299,7 @@ export default function RentalCard(props: RentalCardProps) {
 					)}
 				</Stack>
 				<Stack direction="row" sx={{ mt: 'auto' }}>
-					<Typography
+					{/*<Typography
 						level="title-sm"
 						startDecorator={
 							<React.Fragment>
@@ -310,7 +313,10 @@ export default function RentalCard(props: RentalCardProps) {
 						sx={{ display: 'flex', gap: 1 }}
 					>
 						4.0
-					</Typography>
+					</Typography>*/}
+					 <Button component="a" startDecorator={<OpenInNew />} size = 'sm' variant='soft' onClick={handleCardClick}>
+						Details
+					</Button>
 					{price && (
 						<Typography
 							level="h2"
