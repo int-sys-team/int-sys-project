@@ -72,7 +72,7 @@ export default function PropertyComparison() {
 				{
 					option1: getDataFromProperty(properties[0]),
 					option2: getDataFromProperty(properties[1]),
-					messages: conversation,
+					messages: newConversation.slice(0, -1),
 					stream: true,
 				},
 				(chunk) => {
@@ -107,15 +107,29 @@ export default function PropertyComparison() {
 					vertical: 'top',
 					horizontal: 'left',
 				}}
+				size='sm'
+				// sx={{
+				// 	mt:2
+				// }}
 			>
-				<Button
+				{/* <Button
 					variant="outlined"
 					color="neutral"
 					startDecorator={<Balance />}
 					onClick={() => setOpen(true)}
 				>
-					Compare
-				</Button>
+				</Button> */}
+				<IconButton
+					size="small"
+					onClick={() => setOpen(true)}
+					sx={{
+						color:'white',
+						borderRadius: '50%',
+					}}
+					color='primary'
+				>
+					<Balance />
+				</IconButton>
 			</Badge>
 			<Drawer open={open} onClose={() => setOpen(false)} size="lg">
 				<Stack useFlexGap spacing={3} sx={{ p: 0 }}>
@@ -131,7 +145,6 @@ export default function PropertyComparison() {
 							top: 10,
 							width: '100%',
 							zIndex: 10,
-							backgroundColor: theme.palette.neutral[50],
 						}}
 					>
 						{properties.map((property) => (
@@ -204,11 +217,11 @@ export default function PropertyComparison() {
 									>
 										<Typography
 											variant="body2"
-											color={
-												message.sender === 'agent'
-													? 'black'
-													: 'white'
-											}
+											// color={
+											// 	message.sender === 'agent'
+											// 		? 'black'
+											// 		: 'white'
+											// }
 										>
 											{message.content}
 										</Typography>
@@ -223,7 +236,6 @@ export default function PropertyComparison() {
 							bottom: 0,
 							width: '100%',
 							p: 2,
-							backgroundColor: theme.palette.neutral[50],
 							display: 'flex',
 							alignItems: 'center',
 						}}
@@ -252,6 +264,7 @@ export default function PropertyComparison() {
 							onClick={
 								() => {
 									console.log(currentMessage);
+									setCurrentMessage('');
 									sendMessage({
 										sender: 'client',
 										content: currentMessage,

@@ -8,23 +8,25 @@ OLLAMA_MODEL_NAME = 'llama2'
 
 ollama = ChatOllama(base_url=OLLAMA_BASE_URL, model_name=OLLAMA_MODEL_NAME)
 
-description_generator=description_generator_prompt|ollama|DescriptionParser()
-property_fetcher=property_fetcher_prompt|ollama|PropertyQueryParser()
+description_generator = description_generator_prompt | ollama | DescriptionParser()
+property_fetcher = property_fetcher_prompt | ollama | PropertyQueryParser()
+
 
 class PropertyComparisonChat():
     def __init__(self, option1, option2, messages):
         self.option1 = option1
         self.option2 = option2
         self.messages = messages
-        self.prompt = get_comparison_prompt_template(self.option1, self.option2, self.messages)
-        #self.chain=prompt|ollama
-        
+        print(self.messages)
+        self.prompt = get_comparison_prompt_template(
+            self.option1, self.option2, self.messages)
+        # self.chain=prompt|ollama
 
     def invoke(self):
-        response = (self.prompt|ollama).invoke({})
+        response = (self.prompt | ollama).invoke({})
         print(response)
         return response
-    
+
     def stream(self):
         for chunk in ollama.stream(self.prompt.format()):
             print(chunk)
@@ -33,15 +35,15 @@ class PropertyComparisonChat():
 
 
 class DescriptionGeneratorStream():
-    def __init__(self,data):
+    def __init__(self, data):
         self.data = data
-    
+
     def stream(self):
-        start_streaming=False
+        start_streaming = False
         for chunk in ollama.stream(description_generator_prompt.format(data=self.data)):
             print(chunk)
             if '\n' in chunk.content:
-                start_streaming=True
+                start_streaming = True
             if start_streaming and not ('"' in chunk.content or '\n' in chunk.content):
                 yield chunk.content
         yield "###DONE###"

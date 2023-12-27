@@ -130,7 +130,7 @@ export default function RentalDashboard(props) {
 					{properties.length>0&&<PropertyMap 
 						locations={properties.map((property) => {
 							return {
-								name: property.address,
+								name: property.streetAddress,
 								lat: property.latitude,
 								lon: property.longitude,
 							};
@@ -142,7 +142,7 @@ export default function RentalDashboard(props) {
 					sx={{ px: { xs: 2, md: 4 }, pt: 2, minHeight: 0 }}
 				>
 					<Box sx={{ display: 'flex', width: '100%', gap:1 }}>
-						<PropertyComparison />
+						{/* <PropertyComparison /> */}
 						<Box sx={{flexGrow:1}}>
 							<Filters />
 						</Box>

@@ -7,6 +7,8 @@ import Tooltip from '@mui/material/Tooltip';
 
 import PropertyContext from '../context/PropertyContext';
 import { StreamHandler } from '../utils/StreamHandler';
+import { Card } from '@mui/material';
+import { useTheme } from '@emotion/react';
 
 export default function PropertyDescriptionForm() {
   const [description, setDescription] = React.useState('');
@@ -64,72 +66,117 @@ export default function PropertyDescriptionForm() {
     console.log(propertyData)
     setPrice('Generated price...');
   };
+  const theme=useTheme();
 
   return (
-    <>
-      <Typography variant="h6" gutterBottom>
-        Property Description
-      </Typography>
-      <Grid container spacing={3}>
-        <Grid item xs={12}>
-          <TextField
-            required
-            id="imageLink"
-            name="imageLink"
-            label="Image Link"
-            fullWidth
-            variant="standard"
-            onChange={handleFieldChange}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            required
-            id="propertyTitle"
-            name="propertyTitle"
-            label="Property Title"
-            fullWidth
-            variant="standard"
-            onChange={handleFieldChange}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            id="description"
-            name="description"
-            label="Description"
-            multiline
-            rows={10}
-            value={description}
-            fullWidth
-            variant="outlined"
-            onChange={handleFieldChange}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            id="price"
-            name="price"
-            label="Price"
-            value={price}
-            fullWidth
-            variant="outlined"
-            onChange={handleFieldChange}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <Tooltip title="Our AI will generate the description">
-            <Button variant="contained" color="primary" onClick={generateDescription}disabled={responding}> 
-              Generate Description
-            </Button>
-          </Tooltip>
-          <Tooltip title="Our AI will generate the price" style={{marginLeft: '10px'}}>
-            <Button variant="contained" color="primary" onClick={generatePrice}>
-              Generate Price
-            </Button>
-          </Tooltip>
-        </Grid>
-      </Grid>
-    </>
+		<>
+			<Typography variant="h6" gutterBottom>
+				Property Description
+			</Typography>
+			<Grid container spacing={3}>
+				<Grid item xs={12}>
+					<TextField
+						required
+						id="imageLink"
+						name="imageLink"
+						label="Image Link"
+						fullWidth
+						variant="standard"
+						onChange={handleFieldChange}
+					/>
+				</Grid>
+				<Grid item xs={12}>
+					<TextField
+						required
+						id="propertyTitle"
+						name="propertyTitle"
+						label="Property Title"
+						fullWidth
+						variant="standard"
+						onChange={handleFieldChange}
+					/>
+				</Grid>
+				<Grid item xs={12}>
+					<TextField
+						id="description"
+						name="description"
+						label="Description"
+						multiline
+						rows={10}
+						value={description}
+						fullWidth
+						variant="outlined"
+						onChange={handleFieldChange}
+					/>
+				</Grid>
+				<Grid item xs={12}>
+					<Tooltip title="Our AI will generate the description">
+						<Button
+							variant="contained"
+							color="primary"
+							onClick={generateDescription}
+							disabled={responding}
+						>
+							Generate Description
+						</Button>
+					</Tooltip>
+				</Grid>
+				<Grid
+					item
+					xs={12}
+					sx={{
+						display: 'flex',
+					}}
+				>
+					<TextField
+						id="price"
+						name="price"
+						label="Price"
+						value={price}
+						variant="outlined"
+						onChange={handleFieldChange}
+            sx={{
+              flexGrow: 1,
+            }}
+					/>
+					<Tooltip
+						title="Our AI will generate the price"
+						style={{ marginLeft: '10px' }}
+					>
+						<Button
+							variant="contained"
+							color="primary"
+							onClick={generatePrice}
+						>
+							Predict Price
+						</Button>
+					</Tooltip>
+				</Grid>
+				{/* <Grid item xs={12}>
+					<Tooltip title="Our AI will generate the description">
+						<Button
+							variant="contained"
+							color="primary"
+							onClick={generateDescription}
+							disabled={responding}
+						>
+							Generate Description
+						</Button>
+					</Tooltip>
+					<Tooltip
+						title="Our AI will generate the price"
+						style={{ marginLeft: '10px' }}
+					>
+						<Button
+							variant="contained"
+							color="primary"
+							onClick={generatePrice}
+						>
+							Generate Price
+						</Button>
+					</Tooltip>
+				</Grid> */}
+			</Grid>
+		</>
   );
 }

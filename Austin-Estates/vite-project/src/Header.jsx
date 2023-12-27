@@ -19,6 +19,9 @@ import { NavLink } from 'react-router-dom';
 import { Balance, GitHub } from '@mui/icons-material';
 import { Badge } from '@mui/material';
 import { useCompareProperties } from './hooks/useCompareProperties.jsx';
+import ColorSchemeToggle from './ColorThemeToggle.jsx';
+import { CssVarsProvider } from '@mui/joy';
+import PropertyComparison from './HouseDashboard/PropertyComparison.jsx';
 
 const lightColor = 'rgba(255, 255, 255, 0.7)';
 
@@ -50,10 +53,8 @@ function Header(props) {
 							</IconButton>
 						</Grid>
 
-
-							
 						<Grid item>
-							<Link
+							{/* <Link
 								component="a"
 								href="https://github.com/int-sys-team/int-sys-project"
 								target="_blank"
@@ -66,7 +67,10 @@ function Header(props) {
 								<IconButton color="inherit">
 									<GitHub />
 								</IconButton>
-							</Link>
+							</Link> */}
+							<CssVarsProvider>
+								<PropertyComparison />
+							</CssVarsProvider>
 						</Grid>
 
 						<Grid
@@ -76,13 +80,11 @@ function Header(props) {
 							alignItems="center"
 							justifyContent="center"
 						>
-							  
 							<Typography variant="h7" align="center">
 								Austin Real Estates
 							</Typography>
-
 						</Grid>
-						
+
 						<Grid item>
 							<Button
 								href="/explore/signup"
@@ -123,6 +125,11 @@ function Header(props) {
 								</IconButton>
 							</Tooltip>
 						</Grid> */}
+						<Grid item justifyContent="flex-end">
+							<CssVarsProvider>
+								<ColorSchemeToggle />
+							</CssVarsProvider>
+						</Grid>
 						<Grid item justifyContent="flex-end">
 							<IconButton color="inherit" sx={{ p: 0.5 }}>
 								<Avatar

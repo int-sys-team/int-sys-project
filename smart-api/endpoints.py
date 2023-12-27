@@ -29,3 +29,5 @@ api.add_resource(Property, '/db/properties')
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+# Open: http://127.0.0.1:5000/apidocs

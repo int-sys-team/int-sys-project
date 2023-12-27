@@ -29,7 +29,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 				/>
 				<Route path="/explore/blog/:id" element={<Paperbase Page={Blog} />} />
 				<Route
-					path="/:id"
+					path="/newPost"
 					element={<Paperbase Page={Checkout} />}
 				/>
 				<Route path="/" element={<App />} />

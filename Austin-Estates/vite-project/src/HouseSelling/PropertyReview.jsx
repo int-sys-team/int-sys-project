@@ -13,7 +13,6 @@ export default function PropertyReview() {
       <>
         <Slide direction="down" in={true} mountOnEnter unmountOnExit>
             <Typography variant="h4" gutterBottom style={{ 
-              fontFamily: 'Roboto', 
               fontSize: '2rem', 
               padding: '10px', 
               borderRadius: '3px', 
@@ -22,7 +21,7 @@ export default function PropertyReview() {
               boxShadow: '0 3px 5px 2px rgba(33, 150, 243, .3)', // shadow with a light blue color
               color: 'white',
             }}>
-            Selling summary
+            Summary
           </Typography>
       </Slide>  
       <Grid container spacing={2}>

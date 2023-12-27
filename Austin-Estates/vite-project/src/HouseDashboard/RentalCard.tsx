@@ -89,7 +89,6 @@ export default function RentalCard(props: RentalCardProps) {
 			variant="outlined"
 			orientation="horizontal"
 			sx={{
-				bgcolor: 'neutral.softBg',
 				display: 'flex',
 				flexDirection: { xs: 'column', sm: 'row' },
 				'&:hover': {

@@ -12,6 +12,7 @@ import Recommendation from "./Recommendation";
 import AboutUs from "./AboutUs";
 
 
+
 const theme = createTheme({
   typography: {
     fontFamily: ['Poppins', 'sans-serif'].join(','),
@@ -23,6 +24,8 @@ export default function Blog() {
   const { id } = useParams();
   const [property, setProperty] = useState(null);
   console.log(location) 
+
+ 
  
   if (!location) {
     console.log("Property is null");
@@ -42,7 +45,7 @@ export default function Blog() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Container maxWidth="lg">
+      <Container>
         <>
         <Hero property={location.state} />
         <Section property={location.state} />
