@@ -33,6 +33,7 @@ namespace Server
             services.AddControllers();
 
             services.AddSwaggerGen();
+           
             services.AddCors(options => {
                 options.AddPolicy("Cors", builder => {
 

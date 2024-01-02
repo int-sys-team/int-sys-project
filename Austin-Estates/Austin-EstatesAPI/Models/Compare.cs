@@ -5,9 +5,13 @@ using System.Threading.Tasks;
 
 namespace EstatesAPI.Models
 {
-    public class LLMInput
+    public class Compare
     {
-        public string data { get; set; }
+        public List<Message> messages { get; set; }
+
+        public string option1 { get; set; }
+
+        public string option2 { get; set; }
 
         public bool stream { get; set; }
     }

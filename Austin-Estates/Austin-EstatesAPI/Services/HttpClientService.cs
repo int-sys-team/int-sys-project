@@ -21,7 +21,49 @@ namespace EstatesAPI.Services
             _httpClient.BaseAddress = new Uri(apiUrlsOptions.Value.LLMApiUrl);
         }
 
-        public async Task<RealEstateDescriptionApiModel> GenerateDescription(LLMInput data)
+        public async Task<string> CompareTwoProperties(Compare data)
+        {
+            try
+            {
+                var jsonRequestData = JsonSerializer.Serialize(data);
+
+                using (var request = new HttpRequestMessage(HttpMethod.Post, "/llm/compare"))
+                {
+                    request.Content = new StringContent(jsonRequestData, Encoding.UTF8, "application/json");
+
+                    HttpResponseMessage response = await _httpClient.SendAsync(request);
+
+                    string responseBody = string.Empty;
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        responseBody = await response.Content.ReadAsStringAsync();
+
+                        if (data.stream == false)
+                        {
+                            var responseBodyDeserialized = new CompareResponseApiModel();
+
+                            responseBodyDeserialized = JsonSerializer.Deserialize<CompareResponseApiModel>(responseBody);
+
+                            responseBody = responseBodyDeserialized.response;
+                        }
+                    }
+                    else
+                    {
+                        throw new CustomException($"An error occurred while comparing two properties: {response.StatusCode}");
+                    }
+
+                    return responseBody;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new CustomException(ex.Message);
+            }
+        }
+
+
+        public async Task<string> GenerateDescription(LLMInput data)
         {
             try
             {
@@ -33,13 +75,56 @@ namespace EstatesAPI.Services
 
                     HttpResponseMessage response = await _httpClient.SendAsync(request);
 
-                    var responseBodyDeserialized = new RealEstateDescriptionApiModel();
+                    string responseBody = string.Empty;
 
                     if (response.IsSuccessStatusCode)
                     {
-                        string responseBody = await response.Content.ReadAsStringAsync();
+                        responseBody = await response.Content.ReadAsStringAsync();
 
-                        responseBodyDeserialized = JsonSerializer.Deserialize<RealEstateDescriptionApiModel>(responseBody);
+                        if (data.stream == false)
+                        {
+                            var responseBodyDeserialized = new RealEstateDescriptionApiModel();
+
+                            responseBodyDeserialized = JsonSerializer.Deserialize<RealEstateDescriptionApiModel>(responseBody);
+
+                            responseBody = responseBodyDeserialized.description;
+                        }
+                    }
+                    else
+                    {
+                        throw new CustomException($"An error occurred while generating description: {response.StatusCode}");
+                    }
+
+                    return responseBody;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new CustomException(ex.Message);
+            }
+        }
+
+        public async Task<Properties> GetPropertiesBasedOnQuery(Query data)
+        {
+            try
+            {
+                var jsonRequestData = JsonSerializer.Serialize(data);
+
+                using (var request = new HttpRequestMessage(HttpMethod.Post, "/llm/properties"))
+                {
+                    request.Content = new StringContent(jsonRequestData, Encoding.UTF8, "application/json");
+
+                    HttpResponseMessage response = await _httpClient.SendAsync(request);
+
+                    string responseBody = string.Empty;
+                    
+                    var responseBodyDeserialized = new Properties();
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        responseBody = await response.Content.ReadAsStringAsync();
+
+                        responseBodyDeserialized = JsonSerializer.Deserialize<Properties>(responseBody); 
                     }
                     else
                     {
@@ -84,6 +169,41 @@ namespace EstatesAPI.Services
                     }
 
                     return responseBodyDeserialized; 
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new CustomException(ex.Message);
+            }
+        }
+
+        public async Task<SimilarPropertyApiModel> GetSimilarProperties(SimilarPropertyInput id)
+        {
+            try
+            {
+
+                var jsonRequestData = JsonSerializer.Serialize(id);
+
+                using (var request = new HttpRequestMessage(HttpMethod.Post, "/similar"))
+                {
+                    request.Content = new StringContent(jsonRequestData, Encoding.UTF8, "application/json");
+
+                    HttpResponseMessage response = await _httpClient.SendAsync(request);
+
+                    var responseBodyDeserialized = new SimilarPropertyApiModel();
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string responseBody = await response.Content.ReadAsStringAsync();
+
+                        responseBodyDeserialized = JsonSerializer.Deserialize<SimilarPropertyApiModel>(responseBody);
+                    }
+                    else
+                    {
+                        throw new CustomException($"An error occurred while predicting price: {response.StatusCode}");
+                    }
+
+                    return responseBodyDeserialized;
                 }
             }
             catch (Exception ex)

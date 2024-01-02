@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 
 namespace EstatesAPI.Models
 {
-    public class LLMInput
+    public class Message
     {
-        public string data { get; set; }
+        public string content { get; set; }
 
-        public bool stream { get; set; }
+        public string sender { get; set; }
     }
 }
