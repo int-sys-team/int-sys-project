@@ -7,6 +7,6 @@ namespace EstatesAPI.Models
 {
     public class Properties
     {
-        public List<PropertyApiModel> properties { get; set; }
+        public List<Property> properties { get; set; }
     }
 }

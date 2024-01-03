@@ -58,7 +58,6 @@ namespace Server
             services.Configure<ApiUrls>(Configuration.GetSection("ApiUrls"));
             services.Configure<EstateDatabaseSettings>(Configuration.GetSection("EstateDB"));
             services.AddSingleton<PropertyService>();
-            services.AddSingleton<LandlordService>();
             services.AddSingleton<ClientService>();
             services.AddSingleton<HttpClientService>();
         }

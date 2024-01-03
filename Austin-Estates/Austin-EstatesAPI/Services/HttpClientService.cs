@@ -21,6 +21,37 @@ namespace EstatesAPI.Services
             _httpClient.BaseAddress = new Uri(apiUrlsOptions.Value.LLMApiUrl);
         }
 
+        public async Task<Properties> GetProperties(int page, int count)
+        {
+            try
+            {
+
+                string responseBody = string.Empty;
+                var responseBodyDeserialized = new Properties();
+
+                var url = $"/db/properties?page={page}&count={count}";
+
+                HttpResponseMessage response = await _httpClient.GetAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    responseBody = await response.Content.ReadAsStringAsync();
+
+                    responseBodyDeserialized = JsonSerializer.Deserialize<Properties>(responseBody);
+                }
+                else
+                {
+                    throw new CustomException($"An error occurred while getting properties: {response.StatusCode}");
+                }
+
+                return responseBodyDeserialized;
+            }
+            catch (Exception ex)
+            {
+                throw new CustomException(ex.Message);
+            }
+        }
+
         public async Task<string> CompareTwoProperties(Compare data)
         {
             try
@@ -128,7 +159,7 @@ namespace EstatesAPI.Services
                     }
                     else
                     {
-                        throw new CustomException($"An error occurred while generating description: {response.StatusCode}");
+                        throw new CustomException($"An error occurred while getting properties based on query: {response.StatusCode}");
                     }
 
                     return responseBodyDeserialized;
@@ -200,7 +231,7 @@ namespace EstatesAPI.Services
                     }
                     else
                     {
-                        throw new CustomException($"An error occurred while predicting price: {response.StatusCode}");
+                        throw new CustomException($"An error occurred while getting similar properties: {response.StatusCode}");
                     }
 
                     return responseBodyDeserialized;

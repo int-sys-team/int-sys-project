@@ -23,6 +23,26 @@ namespace EstatesAPI.Controllers
             _httpClientService = httpClientService;
         }
 
+        [HttpGet]
+        [Route("GetProperties/{page}/{count}")]
+        public async Task<IActionResult> GetProperties(int page, int count)
+        {
+            try
+            {
+                var response = await _httpClientService.GetProperties(page, count);
+
+                return Ok(response);
+            }
+            catch (CustomException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
         [HttpPost]
         [Route("CompareTwoProperties")]
         public async Task<IActionResult> CompareTwoProperties([FromBody] Compare data)

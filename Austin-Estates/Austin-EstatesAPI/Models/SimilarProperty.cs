@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace EstatesAPI.Models
 {
-    public class SimilarProperty : PropertyApiModel
+    public class SimilarProperty : Property
     {
         public int numOfSchools { get; set; }
 

@@ -22,20 +22,36 @@ namespace EstatesAPI.Services
 
         public IMongoCollection<Property> Collection { get { return _propertyCollection; } }
 
-        public async Task<List<Property>> GetAsync() =>
-           await _propertyCollection.Find(_ => true).ToListAsync();
+        public async Task<List<Property>> GetAllPropertiesAsync()
+        {
+            var filter = Builders<Property>.Filter.Empty;
 
-        public async Task<Property> GetAsync(string id) =>
-            await _propertyCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
+            var properties = await _propertyCollection.Find(filter).ToListAsync();
 
-        public async Task CreateAsync(Property newProperty) =>
+            return properties;
+        }
+
+        public async Task<Property> GetPropertyByIdAsync(string id)
+        {
+            var property = await _propertyCollection.Find(x => x._id == id).FirstOrDefaultAsync();
+
+            return property;
+        }
+
+        public async Task AddPropertyAsync(Property newProperty)
+        {
             await _propertyCollection.InsertOneAsync(newProperty);
+        }
 
-        public async Task UpdateAsync(string id, Property updatedProperty) =>
-            await _propertyCollection.ReplaceOneAsync(x => x.Id == id, updatedProperty);
+        public async Task UpdatePropertyAsync(string id, Property updatedProperty)
+        { 
+            await _propertyCollection.ReplaceOneAsync(x => x._id == id, updatedProperty);
+        }
 
-        public async Task RemoveAsync(string id) =>
-            await _propertyCollection.DeleteOneAsync(x => x.Id == id);
+         public async Task RemovePropertyAsync(string id)
+         {
+             await _propertyCollection.DeleteOneAsync(x => x._id == id);
+         }
 
     }
 }
