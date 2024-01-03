@@ -14,22 +14,35 @@ namespace EstatesAPI.Controllers
     public class PropertyController : ControllerBase
     {
         private readonly PropertyService _propertyService;
+        private readonly ClientService _clientService;
 
-        public PropertyController(PropertyService propertyService) =>
+        public PropertyController(PropertyService propertyService, ClientService clientService)
+        {
             _propertyService = propertyService;
+            _clientService = clientService;
+        }
 
         // Get:
 
         [HttpGet]
         [Route("GetAllProperties")]
-        public async Task<List<Property>> Get() =>
-            await _propertyService.GetAsync();
+        public async Task<IActionResult> GetAllPropertiesAsync()
+        {
+            var properties = await _propertyService.GetAllPropertiesAsync();
+           
+            if (properties == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(properties);
+        }
 
         [HttpGet]
-        [Route("GetProperty/{id:length(24)}")]
-        public async Task<IActionResult> Get(string id)
+        [Route("GetPropertyById/{id:length(24)}")]
+        public async Task<IActionResult> GetPropertyById(string id)
         {
-            var property = await _propertyService.GetAsync(id);
+            var property = await _propertyService.GetPropertyByIdAsync(id);
 
             if (property is null)
             {
@@ -39,66 +52,52 @@ namespace EstatesAPI.Controllers
             return Ok(property);
         }
 
-        [HttpGet]
-        [Route("FilterProperties")]
-        public async Task<IActionResult> Filter([FromQuery] string city, decimal? minArea, decimal? maxArea, PropertyType? propertyType, decimal? minPrice, decimal? maxPrice, bool? petFriendly)
-        {
-            var builder = Builders<Property>.Filter;
-            FilterDefinition<Property> filter = builder.Empty;//builder.Eq(p=>p.CityName,city) & builder.Gte(p=>p.Area, minArea);
-            if (!string.IsNullOrEmpty(city))
-                filter = filter & builder.Eq(p => p.CityName, city);
-            if (minArea != null)
-                filter = filter & builder.Gte(p => p.Area, minArea);
-            if (maxArea != null)
-                filter = filter & builder.Lte(p => p.Area, maxArea);
-            if (propertyType != null)
-                filter = filter & builder.Eq(p => p.PropertyType, propertyType);
-            if (minPrice != null)
-                filter = filter & builder.Gte(p => p.Price, minPrice);
-            if (maxPrice != null)
-                filter = filter & builder.Lte(p => p.Price, maxPrice);
-            if (petFriendly != null)
-                filter = filter & builder.Eq(p => p.PetFriendly, petFriendly);
-
-            var properties = _propertyService.Collection.Find(filter);
-            return Ok(await properties.ToListAsync());
-        }
-
-        [HttpGet]
-        [Route("Top")]
-        public async Task<IActionResult> GetTopProperties()
-        {
-            var properties = _propertyService.Collection.Find(_ => true).Limit(6);
-            return Ok(await properties.ToListAsync());
-        }
-
         // Post:
 
         [HttpPost]
-        [Route("AddProperty")]
-        public async Task<IActionResult> Post(Property newProperty)
+        [Route("AddProperty/{idClient:length(24)}")]
+        public async Task<IActionResult> AddProperty([FromBody] Property newProperty, string idClient)
         {
-            await _propertyService.CreateAsync(newProperty);
+            if (newProperty == null)
+            {
+                return BadRequest("Invalid data");
+            }
 
-            return CreatedAtAction(nameof(Get), new { id = newProperty.Id }, newProperty);
+            var client = await _clientService.GetClientByIdAsync(idClient);
 
+            if (client is null)
+            {
+                return NotFound("Client not found!");
+            }
+
+            if (client.Properties is null)
+            {
+                client.Properties = new List<Property>();
+            }
+
+            client.Properties.Add(newProperty);
+
+            await _propertyService.AddPropertyAsync(newProperty);
+            await _clientService.UpdateClientAsync(idClient, client);
+
+            return CreatedAtAction(nameof(GetPropertyById), new { id = newProperty._id }, newProperty);
         }
 
         // Put:
 
         [HttpPut]
         [Route("EditProperty/{id:length(24)}")]
-        public async Task<IActionResult> Update(string id, Property updatedProperty)
+        public async Task<IActionResult> EditProperty(string id, [FromBody] Property updatedProperty)
         {
-            var property = await _propertyService.GetAsync(id);
+            var property = await _propertyService.GetPropertyByIdAsync(id);
             if (property is null)
             {
-                return NotFound();
+                return NotFound("Property not found!");
             }
 
-            updatedProperty.Id = property.Id;
+            updatedProperty._id = property._id;
 
-            await _propertyService.UpdateAsync(id, updatedProperty);
+            await _propertyService.UpdatePropertyAsync(id, updatedProperty);
 
             return NoContent();
         }
@@ -106,20 +105,31 @@ namespace EstatesAPI.Controllers
         // Delete:
 
         [HttpDelete]
-        [Route("DeleteProperty/{id:length(24)}")]
-        public async Task<IActionResult> Delete(string id)
+        [Route("DeleteProperty/{idProperty:length(24)}/{idClient:length(24)}")]
+        public async Task<IActionResult> DeleteProperty(string idProperty, string idClient)
         {
-            var property = await _propertyService.GetAsync(id);
+            var property = await _propertyService.GetPropertyByIdAsync(idProperty);
             if (property is null)
             {
-                return NotFound();
+                return NotFound("Property not found!");
             }
 
-            await _propertyService.RemoveAsync(id);
+            var client = await _clientService.GetClientByIdAsync(idClient);
+            if (client is null)
+            {
+                return NotFound("Client not found!");
+            }
+
+            var clientProperty = client.Properties.Find(p => p._id == property._id);
+            if (clientProperty != null)
+            {
+                client.Properties.Remove(clientProperty);
+            }
+
+            await _propertyService.RemovePropertyAsync(idProperty);
+            await _clientService.UpdateClientAsync(idClient, client);
 
             return NoContent();
         }
-
-
     }
 }

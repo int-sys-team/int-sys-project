@@ -8,32 +8,47 @@ namespace EstatesAPI.Services
 {
     public class ClientService
     {
-        private readonly IMongoCollection<Client> _clientCollection;
+        private readonly IMongoCollection<Person> _clientCollection;
 
         public ClientService(IOptions<EstateDatabaseSettings> estateDatabaseSettings)
         {
             var mongoClient = new MongoClient(estateDatabaseSettings.Value.ConnectionString);
             var mongoDatabase = mongoClient.GetDatabase(estateDatabaseSettings.Value.DatabaseName);
 
-            _clientCollection = mongoDatabase.GetCollection<Client>(
+            _clientCollection = mongoDatabase.GetCollection<Person>(
                 estateDatabaseSettings.Value.ClientsCollectionName);
         }
 
-        public async Task<List<Client>> GetAsync() =>
-           await _clientCollection.Find(_ => true).ToListAsync();
+        public async Task<List<Person>> GetAllClientsAsync()
+        {
+            var filter = Builders<Person>.Filter.Empty;
 
-        public async Task<Client> GetAsync(string id) =>
-            await _clientCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
+            var clients = await _clientCollection.Find(filter).ToListAsync();
 
-        public async Task CreateAsync(Client newClient) =>
+            return clients;
+        }
+
+        public async Task<Person> GetClientByIdAsync(string id)
+        {
+            var client = await _clientCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
+
+            return client;
+        }
+
+        public async Task CreateClientAsync(Person newClient)
+        {
             await _clientCollection.InsertOneAsync(newClient);
+        }
 
-        public async Task UpdateAsync(string id, Client updatedClient) =>
+        public async Task UpdateClientAsync(string id, Person updatedClient)
+        {
             await _clientCollection.ReplaceOneAsync(x => x.Id == id, updatedClient);
+        }
 
-        public async Task RemoveAsync(string id) =>
+        public async Task RemoveClientAsync(string id)
+        {
             await _clientCollection.DeleteOneAsync(x => x.Id == id);
-
+        }
     }
 }
 

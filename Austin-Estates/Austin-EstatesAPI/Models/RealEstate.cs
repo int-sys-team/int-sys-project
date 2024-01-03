@@ -7,17 +7,7 @@ namespace EstatesAPI.Models
 {
     public class RealEstate
     {
-        public int MedianStudentsPerTeacher { get; set; }
-
         public bool accessibility { get; set; }
-
-        public double avgSchoolDistance { get; set; }
-
-        public double avgSchoolRating { get; set; }
-
-        public int avgSchoolSize { get; set; }
-
-        public int community { get; set; }
 
         public int garageSpaces { get; set; }
 
@@ -49,17 +39,11 @@ namespace EstatesAPI.Models
 
         public int numOfBedrooms { get; set; }
 
-        public int numOfElementarySchools { get; set; }
-
-        public int numOfHighSchools { get; set; }
-
-        public int numOfMiddleSchools { get; set; }
-
         public int numOfParkingFeatures { get; set; }
 
         public int numOfPhotos { get; set; }
 
-        public int numOfPrimarySchools { get; set; }
+        public int numOfSchools { get; set; }
 
         public int numOfStories { get; set; }
 
@@ -70,8 +54,6 @@ namespace EstatesAPI.Models
         public bool security { get; set; }
 
         public bool waterfront { get; set; }
-
-        public bool windowfeatures { get; set; }
 
         public int yearBuilt { get; set; }
 

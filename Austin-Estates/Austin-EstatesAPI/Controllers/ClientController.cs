@@ -12,28 +12,39 @@ namespace EstatesAPI.Controllers
     public class ClientController : ControllerBase
     {
         private readonly ClientService _clientService;
+        private readonly PropertyService _propertyService;
 
-        public ClientController(ClientService clientService)
+        public ClientController(ClientService clientService, PropertyService propertyService)
         {
             _clientService = clientService;
+            _propertyService = propertyService;
         }
 
         // Get:
 
         [HttpGet]
         [Route("GetAllClients")]
-        public async Task<List<Client>> Get() =>
-            await _clientService.GetAsync();
+        public async Task<IActionResult> GetAllClients()
+        { 
+            var clients = await _clientService.GetAllClientsAsync();
+
+            if (clients == null)
+            {
+                NotFound("No clients!");
+            }
+
+            return Ok(clients);
+        }
 
         [HttpGet]
-        [Route("GetClient/{id:length(24)}")]
-        public async Task<IActionResult> Get(string id)
+        [Route("GetClientById/{id:length(24)}")]
+        public async Task<IActionResult> GetClientById(string id)
         {
-            var client = await _clientService.GetAsync(id);
+            var client = await _clientService.GetClientByIdAsync(id);
 
             if (client is null)
             {
-                return NotFound();
+                return NotFound("Client not found!");
             }
 
             return Ok(client);
@@ -43,29 +54,67 @@ namespace EstatesAPI.Controllers
 
         [HttpPost]
         [Route("AddClient")]
-        public async Task<IActionResult> Post(Client newClient)
+        public async Task<IActionResult> AddClient([FromBody] Person newClient)
         {
-            await _clientService.CreateAsync(newClient);
+            if (newClient == null)
+            {
+                return BadRequest("Invalid data");
+            }
 
-            return CreatedAtAction(nameof(Get), new { id = newClient.Id }, newClient);
+            await _clientService.CreateClientAsync(newClient);
 
+            return CreatedAtAction(nameof(GetClientById), new { id = newClient.Id }, newClient);
+        }
+
+        [HttpPost]
+        [Route("AddWish/{idClient:length(24)}/{idProperty:length(24)}")]
+        public async Task<IActionResult> AddWish(string idClient, string idProperty)
+        {
+            if (idClient is null || idProperty is null)
+            {
+                return BadRequest("Invalid data");
+            }
+
+            var client = await _clientService.GetClientByIdAsync(idClient);
+            if (client is null)
+            {
+                return NotFound("Client not found!");
+            }
+
+            var property = await _propertyService.GetPropertyByIdAsync(idProperty);
+            if (property is null)
+            {
+                return NotFound("Property not found!");
+            }
+
+            if (client.Wishes is null)
+            {
+                client.Wishes = new List<string>();
+            }
+
+            client.Wishes.Add(idProperty);
+
+            await _clientService.UpdateClientAsync(idClient, client);
+
+            return Ok(client);
         }
 
         // Put:
 
         [HttpPut]
         [Route("EditClient/{id:length(24)}")]
-        public async Task<IActionResult> Update(string id, Client updatedClient)
+        public async Task<IActionResult> UpdateClient(string id, Person updatedClient)
         {
-            var client = await _clientService.GetAsync(id);
+            var client = await _clientService.GetClientByIdAsync(id);
+
             if (client is null)
             {
-                return NotFound();
+                return NotFound("Client not found!");
             }
 
             updatedClient.Id = client.Id;
 
-            await _clientService.UpdateAsync(id, updatedClient);
+            await _clientService.UpdateClientAsync(id, updatedClient);
 
             return NoContent();
         }
@@ -77,17 +126,16 @@ namespace EstatesAPI.Controllers
         [Route("DeleteClient/{id:length(24)}")]
         public async Task<IActionResult> Delete(string id)
         {
-            var client = await _clientService.GetAsync(id);
+            var client = await _clientService.GetClientByIdAsync(id);
+
             if (client is null)
             {
-                return NotFound();
+                return NotFound("Client not found!");
             }
 
-            await _clientService.RemoveAsync(id);
+            await _clientService.RemoveClientAsync(id);
 
             return NoContent();
         }
-
-
     }
 }

@@ -5,10 +5,8 @@ using System.Threading.Tasks;
 
 namespace EstatesAPI.Models
 {
-    public class LLMInput
+    public class SimilarPropertyInput
     {
-        public string data { get; set; }
-
-        public bool stream { get; set; }
+        public string id { get; set; }
     }
 }
