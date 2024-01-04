@@ -1,5 +1,6 @@
 ﻿using EstatesAPI.Models;
 using EstatesAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -56,6 +57,7 @@ namespace EstatesAPI.Controllers
 
         [HttpPost]
         [Route("AddProperty/{idClient:length(24)}")]
+        [Authorize(Roles = "Administrator,User")]
         public async Task<IActionResult> AddProperty([FromBody] Property newProperty, string idClient)
         {
             if (newProperty == null)
@@ -87,6 +89,7 @@ namespace EstatesAPI.Controllers
 
         [HttpPut]
         [Route("EditProperty/{id:length(24)}")]
+        [Authorize(Roles = "Administrator,User")]
         public async Task<IActionResult> EditProperty(string id, [FromBody] Property updatedProperty)
         {
             var property = await _propertyService.GetPropertyByIdAsync(id);
@@ -106,6 +109,7 @@ namespace EstatesAPI.Controllers
 
         [HttpDelete]
         [Route("DeleteProperty/{idProperty:length(24)}/{idClient:length(24)}")]
+        [Authorize(Roles = "Administrator,User")]
         public async Task<IActionResult> DeleteProperty(string idProperty, string idClient)
         {
             var property = await _propertyService.GetPropertyByIdAsync(idProperty);
