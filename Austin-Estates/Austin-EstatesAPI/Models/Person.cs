@@ -22,6 +22,8 @@ namespace EstatesAPI.Models
 
         public string Role { get; set; }
 
+        public bool IsLoggedIn { get; set; }
+
         public string City { get; set; }
 
         public string Contact { get; set; }

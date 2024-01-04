@@ -9,6 +9,7 @@ using System.Text.Json;
 using System.Net.Http;
 using EstatesAPI.Services;
 using EstatesAPI.CustomExceptions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EstatesAPI.Controllers
 {
@@ -45,6 +46,7 @@ namespace EstatesAPI.Controllers
 
         [HttpPost]
         [Route("CompareTwoProperties")]
+        [Authorize(Roles = "Administrator,User")]
         public async Task<IActionResult> CompareTwoProperties([FromBody] Compare data)
         {
             try
@@ -65,6 +67,7 @@ namespace EstatesAPI.Controllers
 
         [HttpPost]
         [Route("GenerateDescription")]
+        [Authorize(Roles = "Administrator,User")]
         public async Task<IActionResult> GenerateDescription([FromBody] LLMInput data)
         {
             try
@@ -85,6 +88,7 @@ namespace EstatesAPI.Controllers
 
         [HttpPost]
         [Route("GetPropertiesBasedOnQuery")]
+        [Authorize(Roles = "Administrator,User")]
         public async Task<IActionResult> GetPropertiesBasedOnQuery([FromBody] Query data)
         {
             try
@@ -105,6 +109,7 @@ namespace EstatesAPI.Controllers
 
         [HttpPost]
         [Route("PredictPrice")]
+        [Authorize(Roles = "Administrator,User")]
         public async Task<IActionResult> PredictPrice([FromBody] RealEstate realEstate)
         {
             try
@@ -125,6 +130,7 @@ namespace EstatesAPI.Controllers
 
         [HttpPost]
         [Route("GetSimilarProperties")]
+        [Authorize(Roles = "Administrator,User")]
         public async Task<IActionResult> GetSimilarProperties([FromBody] SimilarPropertyInput id)
         {
             try

@@ -35,6 +35,13 @@ namespace EstatesAPI.Services
             return client;
         }
 
+        public Person GetClientByUsername(string username)
+        {
+            var client = _clientCollection.Find(x => x.Username == username).FirstOrDefault();
+
+            return client;
+        }
+
         public async Task CreateClientAsync(Person newClient)
         {
             await _clientCollection.InsertOneAsync(newClient);
