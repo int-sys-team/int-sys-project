@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -12,13 +13,17 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import Alert from '@mui/material/Alert';
+import Snackbar from '@mui/material/Snackbar';
+import { UserContext } from './context/UserContext';
+
 
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
       <Link color="inherit" href="https://mui.com/">
-        Your Website
+        Our Website
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -31,13 +36,50 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function SignUp() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+  const { user, setUser } = React.useContext(UserContext);
+  let navigate = useNavigate();
+
+  const [successOpen, setSuccessOpen] = React.useState(false);
+  const [successMessage, setSuccessMessage] = React.useState('');
+  const [errorOpen, setErrorOpen] = React.useState(false);
+  const [errorMessage, setErrorMessage] = React.useState('');
+
+  const handleSubmit = async (event) => {
+   event.preventDefault();
+   const data = new FormData(event.currentTarget);
+   const email = data.get('email');
+   const password = data.get('password');
+   const firstName = data.get('firstName');
+   const lastName = data.get('lastName');
+   const username = firstName + " " + lastName
+   const role = "User"
+
+   const response = await fetch('http://localhost:5100/api/Client/Register', {
+     method: 'POST',
+     headers: {
+       'Content-Type': 'application/json',
+       'Origin': 'http://localhost:5173',
+     },
+     body: JSON.stringify({ firstName,lastName, username, email, password, role }),
+   });
+
+   if (!response.ok) {
+    const errorData = await response.text();
+    console.error('Error response from server:', errorData);
+    setErrorMessage('Registration failed');
+    setErrorOpen(true);
+    throw new Error(`HTTP error! status: ${response.status}`);
+   } else {
+    setSuccessMessage('Registered successfully! Redirecting to homepage');
+    setSuccessOpen(true);
+     const jsonResponse = await response.json();
+     const token = jsonResponse.token;
+     localStorage.setItem('token', token);
+     setUser({ firstName,lastName, email, password, token });
+     setTimeout(() => {
+      navigate('/explore');
+    }, 2500);
+   }
   };
 
   return (
@@ -128,6 +170,26 @@ export default function SignUp() {
         </Box>
         <Copyright sx={{ mt: 5 }} />
       </Container>
+      <Snackbar 
+        open={successOpen} 
+        autoHideDuration={4000} 
+        onClose={() => setSuccessOpen(false)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        >
+        <Alert onClose={() => setSuccessOpen(false)} severity="success" sx={{ width: '100%' }}>
+          {successMessage}
+        </Alert>
+      </Snackbar>
+      <Snackbar 
+        open={errorOpen} 
+        autoHideDuration={4000} 
+        onClose={() => setErrorOpen(false)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        >
+        <Alert onClose={() => setErrorOpen(false)} severity="error" sx={{ width: '100%' }}>
+        {errorMessage}
+        </Alert>
+      </Snackbar>
     </ThemeProvider>
   );
 }

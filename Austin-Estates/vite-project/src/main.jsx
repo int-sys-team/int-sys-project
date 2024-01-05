@@ -13,27 +13,29 @@ import { ComparisonProvider } from './context/ComparisonProvider';
 import 'leaflet/dist/leaflet.css';
 import RentalDashboard from './HouseDashboard/RentalDashboard';
 import Checkout from './HouseSelling/Checkout';
-
+import { UserProvider } from './context/UserProvider';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
 	<ComparisonProvider>
-		<Router>
-			<Routes>
-				<Route path="/explore/signup" element={<SignUp />} />
-				<Route path="/explore/signin" element={<SignInSide />} />
-				<Route path="/explore/aboutus" element={<AboutUsPage />} />
-				
-				<Route
-					path="/explore"
-					element={<Paperbase Page={RentalDashboard} />}
-				/>
-				<Route path="/explore/blog/:id" element={<Paperbase Page={Blog} />} />
-				<Route
-					path="/newPost"
-					element={<Paperbase Page={Checkout} />}
-				/>
-				<Route path="/" element={<App />} />
-			</Routes>
-		</Router>
+		<UserProvider>
+			<Router>
+				<Routes>
+					<Route path="/explore/signup" element={<SignUp />} />
+					<Route path="/explore/signin" element={<SignInSide />} />
+					<Route path="/explore/aboutus" element={<AboutUsPage />} />
+					
+					<Route
+						path="/explore"
+						element={<Paperbase Page={RentalDashboard} />}
+					/>
+					<Route path="/explore/blog/:id" element={<Paperbase Page={Blog} />} />
+					<Route
+						path="/newPost"
+						element={<Paperbase Page={Checkout} />}
+					/>
+					<Route path="/" element={<App />} />
+				</Routes>
+			</Router>
+		</UserProvider>
 	</ComparisonProvider>
 );

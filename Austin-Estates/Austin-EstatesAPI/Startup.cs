@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.WebRequestMethods;
 
 namespace Server
 {
@@ -86,6 +87,10 @@ namespace Server
                     "http://localhost:5100",
                     "https://localhost:5100",
                     "https://127.0.0.1:5100",
+
+                    "http://localhost:5173",
+                    "http://127.0.0.1:5173",
+
                 }).AllowAnyHeader()
                 .AllowAnyMethod()
                 .AllowCredentials();

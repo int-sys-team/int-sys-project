@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -9,9 +10,14 @@ import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
+import Alert from '@mui/material/Alert';
+import Snackbar from '@mui/material/Snackbar';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { UserContext } from './context/UserContext';
+
+
 
 function Copyright(props) {
   return (
@@ -31,13 +37,56 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function SignInSide() {
-  const handleSubmit = (event) => {
+  const { user, setUser } = React.useContext(UserContext);
+  const [open, setOpen] = React.useState(false);
+  const [message, setMessage] = React.useState('');
+  const [successOpen, setSuccessOpen] = React.useState(false);
+  const [successMessage, setSuccessMessage] = React.useState('');
+  let navigate = useNavigate();
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+   
+    setOpen(false);
+  };
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
+    const email = data.get('email');
+    const password = data.get('password');
+    // TODO: change username for email and remove username
+    const username = email
+ 
+    const response = await fetch('http://localhost:5100/api/Client/Login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Origin': 'http://localhost:5173',
+      },
+      //body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ username, password }),
     });
+ 
+    if (!response.ok) {
+      const errorData = await response.text();
+      console.error('Error response from server:', errorData);
+      setMessage('Invalid email or password');
+      setOpen(true);
+      throw new Error(`HTTP error! status: ${response.status}`);
+    } else {
+      setSuccessMessage('Logged in successfully! Redirecting to homepage');
+      setSuccessOpen(true);
+      const jsonResponse = await response.json();
+      const token = jsonResponse.token;
+      localStorage.setItem('token', token);
+      setUser({ email, password, token });
+      setTimeout(() => {
+        navigate('/explore');
+      }, 2500);
+    }
   };
 
   return (
@@ -123,6 +172,21 @@ export default function SignInSide() {
             </Box>
           </Box>
         </Grid>
+        <Snackbar open={open} autoHideDuration={4000} onClose={handleClose} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} >
+          <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
+            {message}
+          </Alert>
+        </Snackbar>
+        <Snackbar 
+          open={successOpen} 
+          autoHideDuration={4000} 
+          onClose={() => setSuccessOpen(false)}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          >
+          <Alert onClose={() => setSuccessOpen(false)} severity="success" sx={{ width: '100%' }}>
+            {successMessage}
+          </Alert>
+          </Snackbar>
       </Grid>
     </ThemeProvider>
   );

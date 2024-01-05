@@ -4,164 +4,124 @@ import AppBar from '@mui/material/AppBar';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
-import HelpIcon from '@mui/icons-material/Help';
 import IconButton from '@mui/material/IconButton';
-import Link from '@mui/material/Link';
 import MenuIcon from '@mui/icons-material/Menu';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import Tab from '@mui/material/Tab';
-import Tabs from '@mui/material/Tabs';
 import Toolbar from '@mui/material/Toolbar';
-import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
-
-import { NavLink } from 'react-router-dom';
-import { Balance, GitHub } from '@mui/icons-material';
-import { Badge } from '@mui/material';
 import { useCompareProperties } from './hooks/useCompareProperties.jsx';
 import ColorSchemeToggle from './ColorThemeToggle.jsx';
 import { CssVarsProvider } from '@mui/joy';
 import PropertyComparison from './HouseDashboard/PropertyComparison.jsx';
+import { UserContext } from './context/UserContext.js';
 
 const lightColor = 'rgba(255, 255, 255, 0.7)';
 
 function Header(props) {
 	const { onDrawerToggle } = props;
 	const { getCount } = useCompareProperties();
+	const { user } = React.useContext(UserContext);
 
 	return (
 		<React.Fragment>
-			<AppBar color="primary" position="sticky" elevation={0}>
-				<Toolbar>
-					<Grid
-						container
-						spacing={1}
-						alignItems="center"
-						width="100%"
-					>
-						<Grid
-							sx={{ display: { sm: 'none', xs: 'block' } }}
-							item
-						>
-							<IconButton
-								color="inherit"
-								aria-label="open drawer"
-								onClick={onDrawerToggle}
-								edge="start"
-							>
-								<MenuIcon />
-							</IconButton>
-						</Grid>
-
-						<Grid item>
-							{/* <Link
-								component="a"
-								href="https://github.com/int-sys-team/int-sys-project"
-								target="_blank"
-								rel="noopener noreferrer"
-								sx={{
-									textDecoration: 'none',
-									color: 'inherit',
-								}}
-							>
-								<IconButton color="inherit">
-									<GitHub />
-								</IconButton>
-							</Link> */}
-							<CssVarsProvider>
-								<PropertyComparison />
-							</CssVarsProvider>
-						</Grid>
-
-						<Grid
-							item
-							xs
-							container
-							alignItems="center"
-							justifyContent="center"
-						>
-							<Typography variant="h7" align="center">
-								Austin Real Estates
-							</Typography>
-						</Grid>
-
-						<Grid item>
-							<Button
-								href="/explore/signup"
-								variant="outlined"
-								color="inherit"
-								sx={{
-									borderColor: lightColor,
-									'&:hover': {
-										color: 'common.white',
-										borderColor: 'common.white',
-									},
-								}}
-							>
-								<Typography variant="h7">Sign-up</Typography>
-							</Button>
-						</Grid>
-						<Grid item>
-							<Button
-								href="/signin"
-								variant="outlined"
-								color="inherit"
-								sx={{
-									borderColor: lightColor,
-									'&:hover': {
-										color: 'common.white',
-										borderColor: 'common.white',
-									},
-								}}
-							>
-								<Typography variant="h7">Sign-in</Typography>
-							</Button>
-						</Grid>
-
-						{/* <Grid item>
-							<Tooltip title="Alerts • No alerts">
-								<IconButton color="inherit">
-									<NotificationsIcon />
-								</IconButton>
-							</Tooltip>
-						</Grid> */}
-						<Grid item justifyContent="flex-end">
-							<CssVarsProvider>
-								<ColorSchemeToggle />
-							</CssVarsProvider>
-						</Grid>
-						<Grid item justifyContent="flex-end">
-							<IconButton color="inherit" sx={{ p: 0.5 }}>
-								<Avatar
-									src="/static/images/avatar/1.jpg"
-									alt="My Avatar"
-								/>
-							</IconButton>
-						</Grid>
+		  <AppBar color="primary" position="sticky" elevation={0}>
+			<Toolbar>
+			  <Grid
+				container
+				spacing={1}
+				alignItems="center"
+				width="100%"
+			  >
+				<Grid
+				  sx={{ display: { sm: 'none', xs: 'block' } }}
+				  item
+				>
+				  <IconButton
+					color="inherit"
+					aria-label="open drawer"
+					onClick={onDrawerToggle}
+					edge="start"
+				  >
+					<MenuIcon />
+				  </IconButton>
+				</Grid>
+	 
+				<Grid item>
+				  <CssVarsProvider>
+					<PropertyComparison />
+				  </CssVarsProvider>
+				</Grid>
+	 
+				<Grid
+				  item
+				  xs
+				  container
+				  alignItems="center"
+				  justifyContent="center"
+				>
+				  <Typography variant="h7" align="center">
+					Austin Real Estates
+				  </Typography>
+				</Grid>
+	 
+				{!user && (
+				  <>
+					<Grid item>
+					 <Button
+					   href="/explore/signup"
+					   variant="outlined"
+					   color="inherit"
+					   sx={{
+						 borderColor: lightColor,
+						 '&:hover': {
+						   color: 'common.white',
+						   borderColor: 'common.white',
+						 },
+					   }}
+					 >
+					   <Typography variant="h7">Sign-up</Typography>
+					 </Button>
 					</Grid>
-				</Toolbar>
-			</AppBar>
-
-			{/* <AppBar
-				component="div"
-				position="static"
-				elevation={0}
-				sx={{ zIndex: 0 }}
-			>
-				<Tabs value={0} textColor="inherit">
-					<Tab label="Houses" />
-					<Tab label="Sell Houses" />
-					<Tab
-						label="About us"
-						component={NavLink}
-						to="/overview/aboutus"
-						sx={{ color: 'inherit', textDecoration: 'none' }}
-					/>
-					<Tab label="Usage" />
-				</Tabs>
-			</AppBar> */}
+					<Grid item>
+					 <Button
+					   href="/explore/signin"
+					   variant="outlined"
+					   color="inherit"
+					   sx={{
+						 borderColor: lightColor,
+						 '&:hover': {
+						   color: 'common.white',
+						   borderColor: 'common.white',
+						 },
+					   }}
+					 >
+					   <Typography variant="h7">Sign-in</Typography>
+					 </Button>
+					</Grid>
+				  </>
+				)}
+	 
+				<Grid item justifyContent="flex-end">
+				  <CssVarsProvider>
+					<ColorSchemeToggle />
+				  </CssVarsProvider>
+				</Grid>
+				{user && (
+				<Grid item justifyContent="flex-end">
+				<IconButton color="inherit" sx={{ p: 0.5 }}>
+					<Avatar
+					src="/static/images/avatar/1.jpg" //src={user.avatarUrl} //UKOLIKO IMAMO SLIKU KORISNIKA
+					alt={user.email.charAt(0)}
+					>
+					{user.userName}
+					</Avatar>
+				</IconButton>
+				</Grid>
+				)}
+			  </Grid>
+			</Toolbar>
+		  </AppBar>
 		</React.Fragment>
-	);
+	  );
 }
 
 Header.propTypes = {
