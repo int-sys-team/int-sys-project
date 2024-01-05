@@ -35,9 +35,9 @@ namespace EstatesAPI.Services
             return client;
         }
 
-        public Person GetClientByUsername(string username)
+        public Person GetClientByEmail(string email)
         {
-            var client = _clientCollection.Find(x => x.Username == username).FirstOrDefault();
+            var client = _clientCollection.Find(x => x.Email == email).FirstOrDefault();
 
             return client;
         }

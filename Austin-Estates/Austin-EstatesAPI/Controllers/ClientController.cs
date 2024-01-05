@@ -1,6 +1,7 @@
 ﻿using EstatesAPI.Models;
 using EstatesAPI.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -20,12 +21,14 @@ namespace EstatesAPI.Controllers
     {
         private readonly ClientService _clientService;
         private readonly PropertyService _propertyService;
+        private readonly CurrentUserService _currentUserService;
         private readonly IConfiguration _config;
 
-        public ClientController(ClientService clientService, PropertyService propertyService, IConfiguration config)
+        public ClientController(ClientService clientService, PropertyService propertyService, CurrentUserService currentUserService, IConfiguration config)
         {
             _clientService = clientService;
             _propertyService = propertyService;
+            _currentUserService = currentUserService;
             _config = config;
         }
 
@@ -36,15 +39,15 @@ namespace EstatesAPI.Controllers
         [Route("Register")]
         public async Task<ActionResult> Register([FromBody] Person user)
         {
-            var userExist = Authenticate(user.Username);
+            var userExist = Authenticate(user.Email);
 
             if (userExist != null)
-                return BadRequest("User with that username already exists");
+                return BadRequest("User with that email already exists");
 
             var hashedPassword = BCrypt.Net.BCrypt.HashPassword(user.Password);
 
             user.Password = hashedPassword;
-            user.IsLoggedIn = false;
+            user.IsLoggedIn = true;
             await _clientService.CreateClientAsync(user);
 
             var token = Generate(user);
@@ -61,7 +64,7 @@ namespace EstatesAPI.Controllers
         [Route("LogIn")]
         public async Task<ActionResult> LogIn([FromBody] UserLogIn userLogIn)
         {
-            var user = Authenticate(userLogIn.Username);
+            var user = Authenticate(userLogIn.Email);
 
             if (user == null)
                 return NotFound("User not found");
@@ -83,23 +86,20 @@ namespace EstatesAPI.Controllers
         }
 
         [HttpPost]
-        [Route("LogOut/{id:length(24)}")]
+        [Route("LogOut")]
         [Authorize(Roles = "Administrator,User")]
-        public async Task<ActionResult> LogOut(string id)
+        public async Task<ActionResult> LogOut()
         {
-            if (id.IsNullOrEmpty())
-            {
-                return BadRequest("Invalid data");
-            }
+            var currentUserId = _currentUserService.GetCurrentUserId();
 
-            var client = await _clientService.GetClientByIdAsync(id);
+            var client = await _clientService.GetClientByIdAsync(currentUserId);
             if (client is null)
             {
                 return NotFound("Client not found!");
             }
 
             client.IsLoggedIn = false;
-            await _clientService.UpdateClientAsync(id, client);
+            await _clientService.UpdateClientAsync(currentUserId, client);
 
             return NoContent();
         }
@@ -137,37 +137,69 @@ namespace EstatesAPI.Controllers
             return Ok(client);
         }
 
-        // Post:
-
-        [HttpPost]
-        [Route("AddClient")]
-        [Authorize(Roles = "Administrator")]
-        public async Task<IActionResult> AddClient([FromBody] Person newClient)
-        {
-            if (newClient == null)
-            {
-                return BadRequest("Invalid data");
-            }
-
-            await _clientService.CreateClientAsync(newClient);
-
-            return CreatedAtAction(nameof(GetClientById), new { id = newClient.Id }, newClient);
-        }
-
-        [HttpPost]
-        [Route("AddWish/{idClient:length(24)}/{idProperty:length(24)}")]
+        [HttpGet]
+        [Route("GetWishes")]
         [Authorize(Roles = "Administrator,User")]
-        public async Task<IActionResult> AddWish(string idClient, string idProperty)
+        public async Task<IActionResult> GetWishes()
         {
-            if (idClient is null || idProperty is null)
-            {
-                return BadRequest("Invalid data");
-            }
+            var currentUserId = _currentUserService.GetCurrentUserId();
 
-            var client = await _clientService.GetClientByIdAsync(idClient);
+            var client = await _clientService.GetClientByIdAsync(currentUserId);
             if (client is null)
             {
                 return NotFound("Client not found!");
+            }
+
+            var wishes = new List<Property>();
+            foreach (var wish in client.Wishes)
+            {
+                var property = await _propertyService.GetPropertyByIdAsync(wish);
+                if (property != null)
+                {
+                    wishes.Add(property);
+                }
+            }
+
+            return Ok(new
+            {
+                wishes = wishes
+            });
+        }
+
+        // Post:
+
+        //[HttpPost]
+        //[Route("AddClient")]
+        //[Authorize(Roles = "Administrator")]
+        //public async Task<IActionResult> AddClient([FromBody] Person newClient)
+        //{
+        //    if (newClient == null)
+        //    {
+        //        return BadRequest("Invalid data");
+        //    }
+
+        //    await _clientService.CreateClientAsync(newClient);
+
+        //    return CreatedAtAction(nameof(GetClientById), new { id = newClient.Id }, newClient);
+        //}
+
+        [HttpPost]
+        [Route("AddWish/{idProperty:length(24)}")]
+        [Authorize(Roles = "Administrator,User")]
+        public async Task<IActionResult> AddWish(string idProperty)
+        {
+
+            if (idProperty is null)
+            {
+                return BadRequest("Invalid data");
+            }
+
+            var currentUserId = _currentUserService.GetCurrentUserId();
+
+            var client = await _clientService.GetClientByIdAsync(currentUserId);
+            if (client is null)
+            {
+                 return NotFound("Client not found!");
             }
 
             var property = await _propertyService.GetPropertyByIdAsync(idProperty);
@@ -183,7 +215,42 @@ namespace EstatesAPI.Controllers
 
             client.Wishes.Add(idProperty);
 
-            await _clientService.UpdateClientAsync(idClient, client);
+            await _clientService.UpdateClientAsync(currentUserId, client);
+
+            return Ok(client);
+        }
+
+        [HttpPost]
+        [Route("RemoveWish/{idProperty:length(24)}")]
+        [Authorize(Roles = "Administrator,User")]
+        public async Task<IActionResult> RemoveWish(string idProperty)
+        {
+            if (idProperty is null)
+            {
+                return BadRequest("Invalid data");
+            }
+
+            var property = await _propertyService.GetPropertyByIdAsync(idProperty);
+            if (property is null)
+            {
+                return NotFound("Property not found!");
+            }
+
+            var currentUserId = _currentUserService.GetCurrentUserId();
+            var client = await _clientService.GetClientByIdAsync(currentUserId);
+            if (client is null)
+            {
+                return NotFound("Client not found!");
+            }
+
+            if (client.Wishes is null || client.Wishes.Count == 0)
+            {
+                return BadRequest("There's no wishes!");
+            }
+
+            client.Wishes.Remove(idProperty);
+
+            await _clientService.UpdateClientAsync(currentUserId, client);
 
             return Ok(client);
         }
@@ -191,20 +258,20 @@ namespace EstatesAPI.Controllers
         // Put:
 
         [HttpPut]
-        [Route("EditClient/{id:length(24)}")]
+        [Route("EditClient")]
         [Authorize(Roles = "Administrator,User")]
-        public async Task<IActionResult> UpdateClient(string id, Person updatedClient)
+        public async Task<IActionResult> UpdateClient(Person updatedClient)
         {
-            var client = await _clientService.GetClientByIdAsync(id);
-
-            if (client is null)
+            var currentUserId = _currentUserService.GetCurrentUserId();
+            var client = await _clientService.GetClientByIdAsync(currentUserId);
+            if (client is null && !client.Role.Equals("Administrator"))
             {
                 return NotFound("Client not found!");
             }
 
             updatedClient.Id = client.Id;
 
-            await _clientService.UpdateClientAsync(id, updatedClient);
+            await _clientService.UpdateClientAsync(currentUserId, updatedClient);
 
             return NoContent();
         }
@@ -231,9 +298,9 @@ namespace EstatesAPI.Controllers
 
         //private
 
-        private Person Authenticate(string username)
+        private Person Authenticate(string email)
         {
-            var client =  _clientService.GetClientByUsername(username);
+            var client =  _clientService.GetClientByEmail(email);
 
             return client;
         }
@@ -245,7 +312,7 @@ namespace EstatesAPI.Controllers
 
             var claims = new[]
             {
-                   new Claim(ClaimTypes.NameIdentifier, user.Username),
+                   new Claim(ClaimTypes.NameIdentifier, user.Id),
                    new Claim(ClaimTypes.Email, user.Email),
                    new Claim(ClaimTypes.GivenName, user.FirstName),
                    new Claim(ClaimTypes.Surname, user.LastName),

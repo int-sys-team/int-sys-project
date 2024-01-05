@@ -99,12 +99,14 @@ namespace Server
             });
 
             services.AddHttpClient<HttpClientService>();
-
+            services.AddHttpContextAccessor();
             services.Configure<ApiUrls>(Configuration.GetSection("ApiUrls"));
             services.Configure<EstateDatabaseSettings>(Configuration.GetSection("EstateDB"));
             services.AddSingleton<PropertyService>();
             services.AddSingleton<ClientService>();
             services.AddSingleton<HttpClientService>();
+            services.AddScoped<CurrentUserService>();
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

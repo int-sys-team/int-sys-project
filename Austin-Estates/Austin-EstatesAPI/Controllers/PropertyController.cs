@@ -16,11 +16,13 @@ namespace EstatesAPI.Controllers
     {
         private readonly PropertyService _propertyService;
         private readonly ClientService _clientService;
+        private readonly CurrentUserService _currentUserService;
 
-        public PropertyController(PropertyService propertyService, ClientService clientService)
+        public PropertyController(PropertyService propertyService, ClientService clientService, CurrentUserService currentUserService)
         {
             _propertyService = propertyService;
             _clientService = clientService;
+            _currentUserService = currentUserService;
         }
 
         // Get:
@@ -56,17 +58,17 @@ namespace EstatesAPI.Controllers
         // Post:
 
         [HttpPost]
-        [Route("AddProperty/{idClient:length(24)}")]
+        [Route("AddProperty")]
         [Authorize(Roles = "Administrator,User")]
-        public async Task<IActionResult> AddProperty([FromBody] Property newProperty, string idClient)
+        public async Task<IActionResult> AddProperty([FromBody] Property newProperty)
         {
             if (newProperty == null)
             {
                 return BadRequest("Invalid data");
             }
 
-            var client = await _clientService.GetClientByIdAsync(idClient);
-
+            var currentUserId = _currentUserService.GetCurrentUserId();
+            var client = await _clientService.GetClientByIdAsync(currentUserId);
             if (client is null)
             {
                 return NotFound("Client not found!");
@@ -80,7 +82,7 @@ namespace EstatesAPI.Controllers
             client.Properties.Add(newProperty);
 
             await _propertyService.AddPropertyAsync(newProperty);
-            await _clientService.UpdateClientAsync(idClient, client);
+            await _clientService.UpdateClientAsync(currentUserId, client);
 
             return CreatedAtAction(nameof(GetPropertyById), new { id = newProperty._id }, newProperty);
         }
@@ -88,19 +90,36 @@ namespace EstatesAPI.Controllers
         // Put:
 
         [HttpPut]
-        [Route("EditProperty/{id:length(24)}")]
+        [Route("EditProperty/{idProperty:length(24)}")]
         [Authorize(Roles = "Administrator,User")]
-        public async Task<IActionResult> EditProperty(string id, [FromBody] Property updatedProperty)
+        public async Task<IActionResult> EditProperty(string idProperty, [FromBody] Property updatedProperty)
         {
-            var property = await _propertyService.GetPropertyByIdAsync(id);
+            if (idProperty is null)
+            {
+                return BadRequest("Invalid data");
+            }
+
+            var property = await _propertyService.GetPropertyByIdAsync(idProperty);
             if (property is null)
             {
                 return NotFound("Property not found!");
             }
 
+            var currentUserId = _currentUserService.GetCurrentUserId();
+            var client = await _clientService.GetClientByIdAsync(currentUserId);
+            if (client is null)
+            {
+                return NotFound("Client not found!");
+            }
+            var clientProperty = client.Properties.Find(p => p._id == property._id);
+            if (clientProperty is null && !client.Role.Equals("Administrator"))
+            {
+                return BadRequest("You are not allowed to edit this property!");
+            }
+
             updatedProperty._id = property._id;
 
-            await _propertyService.UpdatePropertyAsync(id, updatedProperty);
+            await _propertyService.UpdatePropertyAsync(idProperty, updatedProperty);
 
             return NoContent();
         }
@@ -108,30 +127,42 @@ namespace EstatesAPI.Controllers
         // Delete:
 
         [HttpDelete]
-        [Route("DeleteProperty/{idProperty:length(24)}/{idClient:length(24)}")]
+        [Route("DeleteProperty/{idProperty:length(24)}")]
         [Authorize(Roles = "Administrator,User")]
-        public async Task<IActionResult> DeleteProperty(string idProperty, string idClient)
+        public async Task<IActionResult> DeleteProperty(string idProperty)
         {
+
+            if (idProperty is null)
+            {
+                return BadRequest("Invalid data");
+            }
+
             var property = await _propertyService.GetPropertyByIdAsync(idProperty);
             if (property is null)
             {
                 return NotFound("Property not found!");
             }
 
-            var client = await _clientService.GetClientByIdAsync(idClient);
+            var currentUserId = _currentUserService.GetCurrentUserId();
+            var client = await _clientService.GetClientByIdAsync(currentUserId);
             if (client is null)
             {
                 return NotFound("Client not found!");
             }
 
             var clientProperty = client.Properties.Find(p => p._id == property._id);
+            if (clientProperty is null && !client.Role.Equals("Administrator"))
+            {
+                return BadRequest("You are not allowed to delete this property!");
+            }
+
             if (clientProperty != null)
             {
                 client.Properties.Remove(clientProperty);
             }
-
+            
             await _propertyService.RemovePropertyAsync(idProperty);
-            await _clientService.UpdateClientAsync(idClient, client);
+            await _clientService.UpdateClientAsync(currentUserId, client);
 
             return NoContent();
         }
