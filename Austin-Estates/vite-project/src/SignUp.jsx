@@ -16,6 +16,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 import { UserContext } from './context/UserContext';
+import { register } from './api/auth';
 
 
 function Copyright(props) {
@@ -45,41 +46,30 @@ export default function SignUp() {
   const [errorMessage, setErrorMessage] = React.useState('');
 
   const handleSubmit = async (event) => {
-   event.preventDefault();
-   const data = new FormData(event.currentTarget);
-   const email = data.get('email');
-   const password = data.get('password');
-   const firstName = data.get('firstName');
-   const lastName = data.get('lastName');
-   const username = firstName + " " + lastName
-   const role = "User"
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    const email = data.get('email');
+    const password = data.get('password');
+    const firstName = data.get('firstName');
+    const lastName = data.get('lastName');
 
-   const response = await fetch('http://localhost:5100/api/Client/Register', {
-     method: 'POST',
-     headers: {
-       'Content-Type': 'application/json',
-       'Origin': 'http://localhost:5173',
-     },
-     body: JSON.stringify({ firstName,lastName, username, email, password, role }),
-   });
+    try { 
+      const data = await register(firstName, lastName, email, password)
 
-   if (!response.ok) {
-    const errorData = await response.text();
-    console.error('Error response from server:', errorData);
-    setErrorMessage('Registration failed');
-    setErrorOpen(true);
-    throw new Error(`HTTP error! status: ${response.status}`);
-   } else {
-    setSuccessMessage('Registered successfully! Redirecting to homepage');
-    setSuccessOpen(true);
-     const jsonResponse = await response.json();
-     const token = jsonResponse.token;
-     localStorage.setItem('token', token);
-     setUser({ firstName,lastName, email, password, token, userData: jsonResponse.user });
-     setTimeout(() => {
-      navigate('/explore');
-    }, 2500);
-   }
+      setSuccessMessage('Registered successfully! Redirecting to homepage');
+      setSuccessOpen(true);
+      const token = data.token;
+      localStorage.setItem('token', token);
+      setUser({ firstName,lastName, email, password, token, userData: data.user });
+      setTimeout(() => {
+        navigate('/explore');
+      }, 1500);
+    }
+    catch (e) {
+      setErrorMessage('Registration failed: ' + e.message);
+      setErrorOpen(true);
+      throw e;
+    }
   };
 
   return (

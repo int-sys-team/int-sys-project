@@ -9,6 +9,7 @@ import PropertyContext from '../context/PropertyContext';
 import { StreamHandler } from '../utils/StreamHandler';
 import { Card } from '@mui/material';
 import { useTheme } from '@emotion/react';
+import { AI_API_URL, API_URL } from '../utils/config';
 
 export default function PropertyDescriptionForm() {
   const [description, setDescription] = React.useState('');
@@ -34,7 +35,7 @@ export default function PropertyDescriptionForm() {
 		try {
       let newDescription='';
 			setDescription('');
-			let stream = new StreamHandler('http://127.0.0.1:5000/llm/description');
+			let stream = new StreamHandler(`${AI_API_URL}/llm/description`);
 			stream.invoke(
 				{
 					data: propertyData,

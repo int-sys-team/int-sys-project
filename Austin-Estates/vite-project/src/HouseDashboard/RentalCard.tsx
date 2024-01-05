@@ -31,6 +31,7 @@ import {
 } from '@mui/icons-material';
 import { useCompareProperties } from '../hooks/useCompareProperties';
 import { UserContext } from '../context/UserContext';
+import { addToWishlist, removeFromWishlist } from '../api/wishlist';
 
 type RentalCardProps = {
 	_id: string;
@@ -81,6 +82,9 @@ export default function RentalCard(props: RentalCardProps) {
 	const userData = user?.userData;
 	const token = user?.token;
 
+	const isLoggedIn = !!userData;
+	const isFavorited = isLoggedIn && userData.wishes.includes(_id)
+
 	const handleCardClick = () => {
 		window.scrollTo(0, 0);
 		navigate(`/explore/blog/${_id}`, {
@@ -88,27 +92,16 @@ export default function RentalCard(props: RentalCardProps) {
 		});
 	};
 
-	const addToWishlist = async (propertyId: string) => {
-		try {
-			const response = await fetch(
-				`http://localhost:5100/api/Client/AddWish/${userData.id}/${_id}`,
-				{
-					method: 'POST',
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				}
-			);
-			if (!response.ok) {
-				console.log(response);
-				return;
-			}
-			const data = await response.json();
-			setUser({ ...user, userData: data });
-		} catch (e) {
-			console.log(e);
+	const onFavoriteButtonClicked = async () => {
+		let data = userData
+		if(isFavorited) {
+			data = await removeFromWishlist(_id, user.token);
 		}
-	};
+		else {
+			data = await addToWishlist(_id, user.token);
+		}
+        setUser({ ...user, userData: data });
+	}
 
 	return (
 		<Card
@@ -221,16 +214,16 @@ export default function RentalCard(props: RentalCardProps) {
 						</Typography>
 					</div>
 					<Box sx={{ display: 'flex', flexDirection: 'row-reverse' }}>
-						{userData && (
+						{isLoggedIn && (
 							<IconButton
 								variant="plain"
 								size="sm"
 								color={
-									userData.wishes.includes(_id)
+									isFavorited
 										? 'danger'
 										: 'neutral'
 								}
-								onClick={() => {addToWishlist(_id)}}
+								onClick={() => {onFavoriteButtonClicked()}}
 								sx={{
 									display: { xs: 'none', sm: 'flex' },
 									borderRadius: '50%',

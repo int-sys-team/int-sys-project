@@ -15,6 +15,7 @@ import { CircularProgress, Typography } from '@mui/joy';
 import PropertyComparison from './PropertyComparison';
 import PropertyMap from './PropertyMap';
 import { UserContext } from '../context/UserContext';
+import { getPropertyById } from '../api/properties'
 
 const locations = [
 	{ name: 'Location 1', lat: 37.7749, lon: -122.4194 },
@@ -38,17 +39,6 @@ export default function PropertyWishlist(props) {
 	};
 
 	const getWishlist = async (page: number = 0, count: number = 10) => {
-		const getPropertyById = async (id: string) => {
-			const response = await fetch(
-				`http://localhost:5100/api/Property/GetPropertyById/${id}`
-			);
-			if (!response.ok) {
-				console.log(response);
-				return;
-			}
-			const data = await response.json();
-			return data;
-		};
 		try {
 			const wishlist = await Promise.all(
 				user.userData.wishes.map(async (id: string) => {

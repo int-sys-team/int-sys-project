@@ -3,7 +3,11 @@
 import React from 'react';
 import { Grid, Typography, Button, Box } from '@mui/material';
 import { Balance } from '@mui/icons-material';
+import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded';
 import { useCompareProperties } from '../hooks/useCompareProperties';
+import { UserContext } from '../context/UserContext';
+import { addToWishlist, removeFromWishlist } from '../api/wishlist';
+
 
 const Hero = (props) => {
 	const {
@@ -27,6 +31,22 @@ const Hero = (props) => {
 	} = props.property;
 
 	const { properties, compareProperties } = useCompareProperties();
+	const { user, setUser } = React.useContext(UserContext);
+	const userData = user?.userData;
+
+	const isLoggedIn = !!userData;
+	const isFavorited = isLoggedIn && userData.wishes.includes(_id)
+
+	const onFavoriteButtonClicked = async () => {
+		let data = userData
+		if(isFavorited) {
+			data = await removeFromWishlist(_id, user.token);
+		}
+		else {
+			data = await addToWishlist(_id, user.token);
+		}
+        setUser({ ...user, userData: data });
+	}
 
 	return (
 		<Box
@@ -50,7 +70,7 @@ const Hero = (props) => {
 			>
 				<Grid item xs={12} md={7}>
 					<Typography variant="h3" fontWeight={700} sx={{ mb: 3 }}>
-						{title ? title : 'Nije fetchovan title'}
+						{title ? title : streetAddress}
 					</Typography>
 					<Typography variant="h6" sx={{ mb: 3 }}>
 						{description}
@@ -81,9 +101,23 @@ const Hero = (props) => {
 					>
 						Compare
 					</Button>
+					{isLoggedIn &&
+						<Button
+							variant={
+								isFavorited ? 'contained' : 'outlined'
+							}
+							color="primary"
+							xs={6}
+							startIcon={<FavoriteRoundedIcon />}
+							sx={{ ml: 3, fontSize: '18px' }}
+							onClick={() => onFavoriteButtonClicked()}
+						>
+							{isFavorited? 'Unfavorite' : 'Favorite'}
+						</Button>
+					}
 				</Grid>
 				<Grid item xs={12} md={5}>
-					<img src={homeImage} alt="My Team" sx={{ width: '100%' }} />
+					<img src={homeImage} alt="House Image" sx={{ width: '100%' }} />
 				</Grid>
 			</Grid>
 		</Box>

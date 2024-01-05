@@ -23,6 +23,7 @@ import { useCompareProperties } from '../hooks/useCompareProperties';
 import RentalCard from './RentalCard';
 import { Typography } from '@mui/material';
 import { StreamHandler } from '../utils/StreamHandler';
+import { AI_API_URL, API_URL } from '../utils/config';
 
 const getDataFromProperty = (property) => {
 	return {
@@ -67,7 +68,7 @@ export default function PropertyComparison() {
 				content: '',
 			}];
 			setConversation(newConversation);
-			let stream = new StreamHandler('http://127.0.0.1:5000/llm/compare');
+			let stream = new StreamHandler(`${AI_API_URL}/llm/compare`);
 			stream.invoke(
 				{
 					option1: getDataFromProperty(properties[0]),

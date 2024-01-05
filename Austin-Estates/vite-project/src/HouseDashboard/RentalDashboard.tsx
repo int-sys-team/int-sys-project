@@ -14,12 +14,8 @@ import { useNavigate } from 'react-router-dom';
 import { CircularProgress } from '@mui/joy';
 import PropertyComparison from './PropertyComparison';
 import PropertyMap from './PropertyMap';
-
-const locations = [
-	{ name: 'Location 1', lat: 37.7749, lon: -122.4194 },
-	{ name: 'Location 2', lat: 34.0522, lon: -118.2437 },
-	// Add more locations as needed
-];
+import { getProperties } from '../api/properties';
+import { AI_API_URL, API_URL } from '../utils/config';
 
 export default function RentalDashboard(props) {
 	const { category, title, rareFind = false, liked = false, image } = props;
@@ -27,24 +23,6 @@ export default function RentalDashboard(props) {
 
 	const [properties, setProperties] = useState<any[]>([]);
 	const [loading, setLoading] = useState<boolean>(false);
-
-	const handleClick = () => {
-		navigate('/blog', {
-			state: { title, category, image, rareFind, liked },
-		});
-	};
-
-	const getProperties = async (page: number = 0, count: number = 10) => {
-		const response = await fetch(
-			`http://127.0.0.1:5000/db/properties?page=${page}&count=${count}`
-		);
-		if (!response.ok) {
-			console.log(response);
-			return;
-		}
-		const data = await response.json();
-		return data;
-	};
 
 	useEffect(() => {
 		try {
@@ -64,7 +42,7 @@ export default function RentalDashboard(props) {
 		try {
 			setLoading(true);
 			const response = await fetch(
-				'http://127.0.0.1:5000/llm/properties',
+				`${AI_API_URL}/llm/properties`,
 				{
 					method: 'POST',
 					headers: {

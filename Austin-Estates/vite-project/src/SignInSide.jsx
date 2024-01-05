@@ -16,7 +16,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { UserContext } from './context/UserContext';
-
+import { login } from './api/auth';
 
 
 function Copyright(props) {
@@ -57,35 +57,23 @@ export default function SignInSide() {
     const data = new FormData(event.currentTarget);
     const email = data.get('email');
     const password = data.get('password');
-    // TODO: change username for email and remove username
-    const username = email
  
-    const response = await fetch('http://localhost:5100/api/Client/Login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Origin': 'http://localhost:5173',
-      },
-      //body: JSON.stringify({ email, password }),
-      body: JSON.stringify({ username, password }),
-    });
- 
-    if (!response.ok) {
-      const errorData = await response.text();
-      console.error('Error response from server:', errorData);
-      setMessage('Invalid email or password');
-      setOpen(true);
-      throw new Error(`HTTP error! status: ${response.status}`);
-    } else {
+    try {
+      const data = await login(email, password);
+
       setSuccessMessage('Logged in successfully! Redirecting to homepage');
       setSuccessOpen(true);
-      const jsonResponse = await response.json();
-      const token = jsonResponse.token;
+
+      const token = data.token;
       localStorage.setItem('token', token);
-      setUser({ email, password, token,userData:jsonResponse.user });
+      setUser({ email, password, token, userData:data.user });
+
       setTimeout(() => {
         navigate('/explore');
-      }, 2500);
+      }, 1500);
+    } catch (e) {
+      setMessage('Failed to login: ' + e.message);
+      setOpen(true);
     }
   };
 
