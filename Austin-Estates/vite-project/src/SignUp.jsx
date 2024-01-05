@@ -75,7 +75,7 @@ export default function SignUp() {
      const jsonResponse = await response.json();
      const token = jsonResponse.token;
      localStorage.setItem('token', token);
-     setUser({ firstName,lastName, email, password, token });
+     setUser({ firstName,lastName, email, password, token, userData: jsonResponse.user });
      setTimeout(() => {
       navigate('/explore');
     }, 2500);

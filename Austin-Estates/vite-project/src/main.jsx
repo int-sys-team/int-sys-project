@@ -14,6 +14,7 @@ import 'leaflet/dist/leaflet.css';
 import RentalDashboard from './HouseDashboard/RentalDashboard';
 import Checkout from './HouseSelling/Checkout';
 import { UserProvider } from './context/UserProvider';
+import PropertyWishlist from './HouseDashboard/PropertyWishlist';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
 	<ComparisonProvider>
@@ -23,12 +24,19 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 					<Route path="/explore/signup" element={<SignUp />} />
 					<Route path="/explore/signin" element={<SignInSide />} />
 					<Route path="/explore/aboutus" element={<AboutUsPage />} />
-					
+
 					<Route
 						path="/explore"
 						element={<Paperbase Page={RentalDashboard} />}
 					/>
-					<Route path="/explore/blog/:id" element={<Paperbase Page={Blog} />} />
+					<Route
+						path="/myFavorites"
+						element={<Paperbase Page={PropertyWishlist} />}
+					/>
+					<Route
+						path="/explore/blog/:id"
+						element={<Paperbase Page={Blog} />}
+					/>
 					<Route
 						path="/newPost"
 						element={<Paperbase Page={Checkout} />}

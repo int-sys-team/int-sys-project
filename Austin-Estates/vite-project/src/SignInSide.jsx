@@ -82,7 +82,7 @@ export default function SignInSide() {
       const jsonResponse = await response.json();
       const token = jsonResponse.token;
       localStorage.setItem('token', token);
-      setUser({ email, password, token });
+      setUser({ email, password, token,userData:jsonResponse.user });
       setTimeout(() => {
         navigate('/explore');
       }, 2500);

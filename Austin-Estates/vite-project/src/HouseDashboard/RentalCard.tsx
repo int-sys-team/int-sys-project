@@ -30,6 +30,7 @@ import {
 	Thermostat,
 } from '@mui/icons-material';
 import { useCompareProperties } from '../hooks/useCompareProperties';
+import { UserContext } from '../context/UserContext';
 
 type RentalCardProps = {
 	_id: string;
@@ -49,7 +50,7 @@ type RentalCardProps = {
 	price?: number;
 	city?: string;
 	streetAddress?: string;
-	onClick: () => void; 
+	onClick: () => void;
 };
 
 export default function RentalCard(props: RentalCardProps) {
@@ -76,13 +77,38 @@ export default function RentalCard(props: RentalCardProps) {
 	const navigate = useNavigate();
 	const [isLiked, setIsLiked] = React.useState(liked);
 	const { properties, compareProperties } = useCompareProperties();
+	const { user,setUser } = React.useContext(UserContext);
+	const userData = user?.userData;
+	const token = user?.token;
 
 	const handleCardClick = () => {
-		window.scrollTo(0, 0); 
+		window.scrollTo(0, 0);
 		navigate(`/explore/blog/${_id}`, {
-		  state: { ...props },
+			state: { ...props },
 		});
-	  };
+	};
+
+	const addToWishlist = async (propertyId: string) => {
+		try {
+			const response = await fetch(
+				`http://localhost:5100/api/Client/AddWish/${userData.id}/${_id}`,
+				{
+					method: 'POST',
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
+			if (!response.ok) {
+				console.log(response);
+				return;
+			}
+			const data = await response.json();
+			setUser({ ...user, userData: data });
+		} catch (e) {
+			console.log(e);
+		}
+	};
 
 	return (
 		<Card
@@ -96,7 +122,7 @@ export default function RentalCard(props: RentalCardProps) {
 					borderColor:
 						'var(--joy-palette-neutral-outlinedDisabledBorder)',
 				},
-				minWidth: '50%'
+				minWidth: '50%',
 			}}
 		>
 			<CardOverflow
@@ -160,7 +186,7 @@ export default function RentalCard(props: RentalCardProps) {
 								variant="plain"
 								size="sm"
 								color={isLiked ? 'danger' : 'neutral'}
-								onClick={() => setIsLiked((prev) => !prev)}
+								onClick={() => {setIsLiked((prev) => !prev)}}
 								sx={{
 									display: { xs: 'flex', sm: 'none' },
 									ml: 'auto',
@@ -195,23 +221,31 @@ export default function RentalCard(props: RentalCardProps) {
 						</Typography>
 					</div>
 					<Box sx={{ display: 'flex', flexDirection: 'row-reverse' }}>
-						<IconButton
-							variant="plain"
-							size="sm"
-							color={isLiked ? 'danger' : 'neutral'}
-							onClick={() => setIsLiked((prev) => !prev)}
-							sx={{
-								display: { xs: 'none', sm: 'flex' },
-								borderRadius: '50%',
-							}}
-						>
-							<FavoriteRoundedIcon />
-						</IconButton>
+						{userData && (
+							<IconButton
+								variant="plain"
+								size="sm"
+								color={
+									userData.wishes.includes(_id)
+										? 'danger'
+										: 'neutral'
+								}
+								onClick={() => {addToWishlist(_id)}}
+								sx={{
+									display: { xs: 'none', sm: 'flex' },
+									borderRadius: '50%',
+								}}
+							>
+								<FavoriteRoundedIcon />
+							</IconButton>
+						)}
 						<IconButton
 							variant="plain"
 							size="sm"
 							color={
-								properties.map(p=>p._id).includes(_id) ? 'warning' : 'neutral'
+								properties.map((p) => p._id).includes(_id)
+									? 'warning'
+									: 'neutral'
 							}
 							onClick={() => compareProperties(props)} // Add this line
 							sx={{
@@ -313,7 +347,13 @@ export default function RentalCard(props: RentalCardProps) {
 					>
 						4.0
 					</Typography>*/}
-					 <Button component="a" startDecorator={<OpenInNew />} size = 'sm' variant='soft' onClick={handleCardClick}>
+					<Button
+						component="a"
+						startDecorator={<OpenInNew />}
+						size="sm"
+						variant="soft"
+						onClick={handleCardClick}
+					>
 						Details
 					</Button>
 					{price && (
