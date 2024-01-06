@@ -15,13 +15,7 @@ import { CircularProgress, Typography } from '@mui/joy';
 import PropertyComparison from './PropertyComparison';
 import PropertyMap from './PropertyMap';
 import { UserContext } from '../context/UserContext';
-import { getPropertyById } from '../api/properties'
-
-const locations = [
-	{ name: 'Location 1', lat: 37.7749, lon: -122.4194 },
-	{ name: 'Location 2', lat: 34.0522, lon: -118.2437 },
-	// Add more locations as needed
-];
+import { getWishlist } from '../api/wishlist'
 
 export default function PropertyWishlist(props) {
 	const { category, title, rareFind = false, liked = false, image } = props;
@@ -38,26 +32,11 @@ export default function PropertyWishlist(props) {
 		});
 	};
 
-	const getWishlist = async (page: number = 0, count: number = 10) => {
-		try {
-			const wishlist = await Promise.all(
-				user.userData.wishes.map(async (id: string) => {
-					return await getPropertyById(id);
-				})
-			);
-			return { properties: wishlist };
-		} catch (e) {
-			console.log(e);
-			return { properties: [] };
-		}
-	};
-
 	useEffect(() => {
 		try {
 			setLoading(true);
-			getWishlist().then((data) => {
-				console.log(data);
-				setProperties(data.properties);
+			getWishlist(user.token).then((data) => {
+				setProperties(data.wishes);
 			});
 		} catch (e) {
 			console.log(e);

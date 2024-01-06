@@ -1,13 +1,22 @@
 // UserProvider.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { UserContext } from './UserContext';
 
-export const UserProvider = ({ children }) => {
- const [user, setUser] = useState(null);
+function getInitialState() {
+  const user = localStorage.getItem('user')
+  return user ? JSON.parse(user) : null
+}
 
- return (
-  <UserContext.Provider value={{ user, setUser }}>
-    {children}
-  </UserContext.Provider>
- );
+export const UserProvider = ({ children }) => {
+  const [user, setUser] = useState(getInitialState());
+
+  useEffect(() => {
+    localStorage.setItem('user', JSON.stringify(user))
+  }, [user])
+
+  return (
+    <UserContext.Provider value={{ user, setUser }}>
+      {children}
+    </UserContext.Provider>
+  );
 };
