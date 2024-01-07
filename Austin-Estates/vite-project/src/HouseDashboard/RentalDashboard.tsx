@@ -108,9 +108,13 @@ export default function RentalDashboard(props) {
 					{properties.length>0&&<PropertyMap 
 						locations={properties.map((property) => {
 							return {
-								name: property.streetAddress,
+								id: property._id,
+								name: property.description.slice(0, 30),
+								address: property.streetAddress,
 								lat: property.latitude,
 								lon: property.longitude,
+								image: property.homeImage,
+								price: property.price,
 							};
 						})}
 					/>}
