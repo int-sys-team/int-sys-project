@@ -1,6 +1,7 @@
 ﻿using EstatesAPI.Models;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -36,6 +37,55 @@ namespace EstatesAPI.Services
             var property = await _propertyCollection.Find(x => x._id == id).FirstOrDefaultAsync();
 
             return property;
+        }
+
+        public async Task<List<Property>> GetPropertiesOrderedByPriceAsync(int page, int count)
+        {
+            var filter = Builders<Property>.Filter.Empty;
+            var properties = await _propertyCollection
+                                        .Find(filter)
+                                        .SortBy(p => p.price)
+                                        .Skip((page-1)*count)
+                                        .Limit(count)
+                                        .ToListAsync();
+
+            return properties;
+        }
+
+        public async Task<List<Property>> GetPropertiesOrderedByLatestSaleDateAsync(int page, int count)
+        {
+            var filter = Builders<Property>.Filter.Empty;
+            var properties = await _propertyCollection
+                                        .Find(filter)
+                                        .SortBy(p => p.latest_saledate)
+                                        .Skip((page - 1) * count)
+                                        .Limit(count)
+                                        .ToListAsync();
+
+            return properties;
+        }
+
+        public async Task<List<Property>> FilterProperties(int zipcode, DateTime startDate, DateTime endDate, double startPrice, double endPrice)
+        {
+            var filterBuilder = Builders<Property>.Filter;
+
+            //var filter = filterBuilder.Eq(p => p.zipcode, zipcode)
+            //      & filterBuilder.Gte(p => p.latest_saledate, startDate)
+            //      & filterBuilder.Lte(p => p.latest_saledate, endDate)
+            //      & filterBuilder.Gte(p => p.price, startPrice)
+            //      & filterBuilder.Lte(p => p.price, endPrice);
+            var filter = filterBuilder.Eq(p => p.zipcode, zipcode)
+                  | (filterBuilder.Gte(p => p.latest_saledate, startDate) & filterBuilder.Lte(p => p.latest_saledate, endDate))
+                  | (filterBuilder.Gte(p => p.price, startPrice) & filterBuilder.Lte(p => p.price, endPrice));
+
+
+            var properties = await _propertyCollection
+                                        .Find(filter)
+                                        .ToListAsync();
+                                        //.Find(p => p.zipcode == zipcode && p.latest_saledate >= startDate && p.latest_saledate <= endDate
+                                        //           && p.price >= startPrice && p.price <= endPrice)
+
+            return properties;
         }
 
         public async Task AddPropertyAsync(Property newProperty)

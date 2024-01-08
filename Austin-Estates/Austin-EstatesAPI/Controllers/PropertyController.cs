@@ -2,8 +2,8 @@
 using EstatesAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MongoDB.Bson;
 using MongoDB.Driver;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -53,6 +53,78 @@ namespace EstatesAPI.Controllers
             }
 
             return Ok(property);
+        }
+
+        [HttpGet]
+        [Route("GetPropertiesOrderedByPrice/{page}/{count}")]
+        public async Task<IActionResult> GetPropertiesOrderedByPrice(int page, int count)
+        {
+            if (page < 1 || count < 0)
+            {
+                return BadRequest("Invalid data");
+            }
+
+            var properties = await _propertyService.GetPropertiesOrderedByPriceAsync(page, count);
+
+            if (properties is null)
+            {
+                return NotFound();
+            }
+
+            return Ok(properties);
+        }
+
+        [HttpGet]
+        [Route("GetPropertiesOrderedByLatestSaleDate/{page}/{count}")]
+        public async Task<IActionResult> GetPropertiesOrderedByLatestSaleDate(int page, int count)
+        {
+            if (page < 1 || count < 0)
+            {
+                return BadRequest("Invalid data");
+            }
+
+            var properties = await _propertyService.GetPropertiesOrderedByLatestSaleDateAsync(page, count);
+
+            if (properties is null)
+            {
+                return NotFound();
+            }
+
+            return Ok(properties);
+        }
+
+        [HttpGet]
+        [Route("FilterProperties/{zipcode}/{startDate}/{endDate}/{startPrice}/{endPrice}")]
+        public async Task<IActionResult> FilterProperties(int zipcode, DateTime startDate, DateTime endDate, double startPrice, double endPrice)
+        {
+            if (zipcode < 0)
+            {
+                return BadRequest("Invalid zipcode!");
+            }
+
+            if (startPrice  < 0 || endPrice < 0)
+            {
+                return BadRequest("Invalid price!");
+            }
+
+            if (startPrice > endPrice)
+            {
+                return BadRequest("End price can't be less that start price!");
+            }
+
+            if (startDate > endDate)
+            {
+                return BadRequest("End date can't be less that start date!");
+            }
+
+            var properties = await _propertyService.FilterProperties(zipcode, startDate, endDate, startPrice, endPrice);
+
+            if (properties is null)
+            {
+                return NotFound();
+            }
+
+            return Ok(properties);
         }
 
         // Post:
