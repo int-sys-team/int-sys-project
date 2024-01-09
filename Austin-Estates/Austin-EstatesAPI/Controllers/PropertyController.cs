@@ -94,30 +94,41 @@ namespace EstatesAPI.Controllers
         }
 
         [HttpGet]
-        [Route("FilterProperties/{zipcode}/{yearBuilt}/{startPrice}/{endPrice}")]
-        public async Task<IActionResult> FilterProperties(int zipcode, int yearBuilt, double startPrice, double endPrice)
+        [Route("FilterProperties")]
+        public async Task<IActionResult> FilterProperties([FromQuery] int? zipcode, [FromQuery] int? startYearBuilt, [FromQuery] int? endYearBuilt, [FromQuery] double? startPrice, [FromQuery] double? endPrice)
         {
-            if (zipcode < 0)
+            if (zipcode.HasValue && zipcode < 0)
             {
                 return BadRequest("Invalid zipcode!");
             }
 
-            if (startPrice  < 0 || endPrice < 0)
+            if (startPrice.HasValue && endPrice.HasValue)
             {
-                return BadRequest("Invalid price!");
+                if ( startPrice  < 0 || endPrice < 0)
+                {
+                    return BadRequest("Invalid price!");
+                }
+
+                if (startPrice > endPrice)
+                {
+                    return BadRequest("End price can't be less that start price!");
+                }
             }
 
-            if (startPrice > endPrice)
+            if (startYearBuilt.HasValue && endYearBuilt.HasValue)
             {
-                return BadRequest("End price can't be less that start price!");
+                if (startYearBuilt <= 0 || endYearBuilt <= 0)
+                {
+                    return BadRequest("Invalid build year!");
+                }
+
+                if (startYearBuilt > endYearBuilt)
+                {
+                    return BadRequest("End build year can't be less that start build year!");
+                }
             }
 
-            if (yearBuilt <= 0)
-            {
-                return BadRequest("Invalid built year!");
-            }
-
-            var properties = await _propertyService.FilterProperties(zipcode, yearBuilt, startPrice, endPrice);
+            var properties = await _propertyService.FilterProperties(zipcode, startYearBuilt, endYearBuilt, startPrice, endPrice);
 
             if (properties is null)
             {

@@ -65,14 +65,25 @@ namespace EstatesAPI.Services
             return properties;
         }
 
-        public async Task<List<Property>> FilterProperties(int zipcode, int yearBuilt, double startPrice, double endPrice)
+        public async Task<List<Property>> FilterProperties(int? zipcode, int? startYearBuilt, int? endYearBuilt, double? startPrice, double? endPrice)
         {
             var filterBuilder = Builders<Property>.Filter;
+            var filter = filterBuilder.Empty;
 
-            var filter = filterBuilder.Eq(p => p.zipcode, zipcode)
-                  | filterBuilder.Eq(p => p.yearBuilt, yearBuilt)
-                  | (filterBuilder.Gte(p => p.price, startPrice) & filterBuilder.Lte(p => p.price, endPrice));
+            if (zipcode.HasValue)
+            {
+                filter &= filterBuilder.Eq(p => p.zipcode, zipcode.Value);
+            }
 
+            if (startYearBuilt.HasValue && endYearBuilt.HasValue)
+            {
+                filter &= filterBuilder.Gte(p => p.yearBuilt, startYearBuilt.Value) & filterBuilder.Lte(p => p.yearBuilt, endYearBuilt.Value);
+            }
+
+            if (startPrice.HasValue && endPrice.HasValue)
+            {
+                filter &= filterBuilder.Gte(p => p.price, startPrice.Value) & filterBuilder.Lte(p => p.price, endPrice.Value);
+            }
 
             var properties = await _propertyCollection
                                         .Find(filter)
