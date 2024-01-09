@@ -94,8 +94,8 @@ namespace EstatesAPI.Controllers
         }
 
         [HttpGet]
-        [Route("FilterProperties/{zipcode}/{startDate}/{endDate}/{startPrice}/{endPrice}")]
-        public async Task<IActionResult> FilterProperties(int zipcode, DateTime startDate, DateTime endDate, double startPrice, double endPrice)
+        [Route("FilterProperties/{zipcode}/{yearBuilt}/{startPrice}/{endPrice}")]
+        public async Task<IActionResult> FilterProperties(int zipcode, int yearBuilt, double startPrice, double endPrice)
         {
             if (zipcode < 0)
             {
@@ -112,12 +112,12 @@ namespace EstatesAPI.Controllers
                 return BadRequest("End price can't be less that start price!");
             }
 
-            if (startDate > endDate)
+            if (yearBuilt <= 0)
             {
-                return BadRequest("End date can't be less that start date!");
+                return BadRequest("Invalid built year!");
             }
 
-            var properties = await _propertyService.FilterProperties(zipcode, startDate, endDate, startPrice, endPrice);
+            var properties = await _propertyService.FilterProperties(zipcode, yearBuilt, startPrice, endPrice);
 
             if (properties is null)
             {
