@@ -43,3 +43,36 @@ export const getPropertyById = async (id: string) => {
     const data = await response.json();
     return data;
 };
+
+export const getPropertiesOrderedByLatestSaleDate = async (page: number = 1, count: number = 10) => {
+    const response = await fetch(
+        `${API_URL}/api/Property/GetPropertiesOrderedByLatestSaleDate/${page}/${count}`
+    );
+    if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    const data = await response.json();
+    return data;
+};
+
+export const getPropertiesOrderedByPrice = async (page: number = 1, count: number = 10) => {
+    const response = await fetch(
+        `${API_URL}/api/Property/getPropertiesOrderedByPrice/${page}/${count}`
+    );
+    if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    const data = await response.json();
+    return data;
+};
+
+export const filterProperties = async (zipcode: string, yearBuilt: number, startPrice: number, endPrice: number) => {
+    const response = await fetch(
+        `${API_URL}/api/Property/FilterProperties/${zipcode}/${yearBuilt}/${startPrice}/${endPrice}`
+    );
+    if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    const data = await response.json();
+    return data;
+};

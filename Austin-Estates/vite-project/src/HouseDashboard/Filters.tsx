@@ -17,7 +17,11 @@ function valueText(value: number) {
   return `$${value.toLocaleString('en-US')}`;
 }
 
-export default function Filters() {
+interface FiltersProps {
+  onSelect: (order: string) => void;
+ }
+
+export default function Filters({ onSelect }: FiltersProps) {
   const [open, setOpen] = React.useState(false);
   return (
     <Stack
@@ -36,7 +40,7 @@ export default function Filters() {
       >
         Filters
       </Button>
-      <OrderSelector />
+      <OrderSelector onSelect={onSelect} />
       <Drawer open={open} onClose={() => setOpen(false)}>
         <Stack useFlexGap spacing={3} sx={{ p: 2 }}>
           <DialogTitle>Filters</DialogTitle>

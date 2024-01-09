@@ -19,7 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import { CircularProgress } from '@mui/joy';
 import PropertyComparison from './PropertyComparison';
 import PropertyMap from './PropertyMap';
-import { getProperties } from '../api/properties';
+import { getProperties, getPropertiesOrderedByLatestSaleDate, getPropertiesOrderedByPrice } from '../api/properties';
 import { AI_API_URL, API_URL } from '../utils/config';
 
 interface PaginationProps {
@@ -92,7 +92,7 @@ interface PaginationProps {
    
 		  <BoxJ sx={{ flex: 1 }} />
    
-		  {Array.from({ length: totalPages }, (_, i) => i).map((page) => (
+		  {Array.from({ length: totalPages }, (_, i) => i+1).map((page) => (
 			<IconButton
 			  key={page}
 			  size="sm"
@@ -100,7 +100,7 @@ interface PaginationProps {
 			  color="neutral"
 			  onClick={() => setCurrentPage(page)}
 			>
-			  {page+1}
+			  {page}
 			</IconButton>
 		  ))}
    
@@ -129,10 +129,13 @@ export default function RentalDashboard(props) {
 	const [loading, setLoading] = useState<boolean>(false);
 
 	const [currentPage, setCurrentPage] = useState(1);
+	
  	const itemsPerPage = 3;
 
-	 const [displayedProperties, setDisplayedProperties] = useState<any[]>([]);
+	const [displayedProperties, setDisplayedProperties] = useState<any[]>([]);
 
+	let [GlobalOrder, setGlobalOrder] = useState<string>("Initial")
+	let GlobalStartIndex;
 
 	const nextPage = () => {
 		setCurrentPage((prevPage) => prevPage + 1);
@@ -144,24 +147,20 @@ export default function RentalDashboard(props) {
 
 	useEffect(() => {
 		setDisplayedProperties(properties.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage));
-	}, [currentPage]);
+	}, [currentPage, GlobalOrder]);
 
 	useEffect(() => {
 		try {
 		   setLoading(true);
-		   const startIndex = currentPage * itemsPerPage;
-		   //const endIndex = startIndex + itemsPerPage;
-		   getProperties().then((data) => {
-			   console.log(data);
-			   setProperties(data.properties); 
-			   setDisplayedProperties(data.properties.slice(startIndex, startIndex + 3)); //koliko zelimo item-a po page-u
-		   });
+		   GlobalStartIndex = currentPage * itemsPerPage;
+		   handleOrderSelect(GlobalOrder)
+		   
 		} catch (e) {
 		   console.log(e);
 		} finally {
 		   setLoading(false);
 		}
-	   }, [currentPage]);
+	   }, [currentPage, GlobalOrder]);
 
 	const naturalQueryProperties = async (query: string) => {
 		try {
@@ -193,6 +192,27 @@ export default function RentalDashboard(props) {
 		}
 	};
 
+	const handleOrderSelect = async (order: string) => {
+	
+		if (order === "Price") {
+		  	const data = await getPropertiesOrderedByPrice();
+		  	setProperties(data);
+			  setGlobalOrder(order)
+		  
+		} else if (order === "Latest Date") {
+		  	const data = await getPropertiesOrderedByLatestSaleDate();
+		  	setProperties(data);
+			  setGlobalOrder(order)
+		}
+		else{
+			const data = await getProperties();
+			console.log(data)
+			setProperties(data.properties);
+			setGlobalOrder("yoo")
+		}
+		
+	};
+
 	return (
 		<CssVarsProvider disableTransitionOnChange>
 			<CssBaseline />
@@ -200,7 +220,7 @@ export default function RentalDashboard(props) {
 			<Box
 				component="main"
 				sx={{
-					height: 'calc(95vh - 55px)', // 55px is the height of the NavBar
+					height: 'calc(95vh - 55px)', 
 					display: 'grid',
 					gridTemplateColumns: { xs: 'auto', md: '60% 40%' },
 					gridTemplateRows: 'auto 1fr auto',
@@ -251,7 +271,7 @@ export default function RentalDashboard(props) {
 					<Box sx={{ display: 'flex', width: '100%', gap:1 }}>
 						{/* <PropertyComparison /> */}
 						<Box sx={{flexGrow:1}}>
-							<Filters />
+							<Filters onSelect={handleOrderSelect}/>
 						</Box>
 					</Box>
 					{loading ? (

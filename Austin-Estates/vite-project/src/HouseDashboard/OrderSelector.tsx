@@ -5,7 +5,11 @@ import MenuItem from '@mui/joy/MenuItem';
 import ArrowDropDown from '@mui/icons-material/ArrowDropDown';
 import Dropdown from '@mui/joy/Dropdown';
 
-export default function OrderSelector() {
+interface OrderSelectorProps {
+  onSelect: (order: string) => void;
+ }
+
+export default function OrderSelector({ onSelect }: OrderSelectorProps) {
   return (
     <Dropdown>
       <MenuButton
@@ -17,9 +21,8 @@ export default function OrderSelector() {
         Order by
       </MenuButton>
       <Menu sx={{ minWidth: 120 }}>
-        <MenuItem>Price</MenuItem>
-        <MenuItem>Date</MenuItem>
-        <MenuItem>Rating</MenuItem>
+        <MenuItem onClick={() => onSelect("Price")}>Price</MenuItem>
+        <MenuItem onClick={() => onSelect("Latest Date")}>Latest Date</MenuItem>
       </Menu>
     </Dropdown>
   );
