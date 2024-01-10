@@ -19,7 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import { CircularProgress } from '@mui/joy';
 import PropertyComparison from './PropertyComparison';
 import PropertyMap from './PropertyMap';
-import { getProperties, getPropertiesOrderedByLatestSaleDate, getPropertiesOrderedByPrice } from '../api/properties';
+import { filterProperties, getProperties, getPropertiesOrderedByLatestSaleDate, getPropertiesOrderedByPrice } from '../api/properties';
 import { AI_API_URL, API_URL } from '../utils/config';
 
 interface PaginationProps {
@@ -122,7 +122,9 @@ interface PaginationProps {
    }
 
 export default function RentalDashboard(props) {
-	const { category, title, rareFind = false, liked = false, image } = props;
+	//const { category, title, rareFind = false, liked = false, image } = props;
+	let zipcode: Number, startYear: Number, endYear: Number, startPrice: Number, endPrice: Number;
+
 	const navigate = useNavigate();
 
 	const [properties, setProperties] = useState<any[]>([]);
@@ -147,7 +149,7 @@ export default function RentalDashboard(props) {
 
 	useEffect(() => {
 		setDisplayedProperties(properties.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage));
-	}, [currentPage, GlobalOrder]);
+	}, [currentPage]);
 
 	useEffect(() => {
 		try {
@@ -181,7 +183,6 @@ export default function RentalDashboard(props) {
 				console.log(response);
 				return;
 			}
-			console.log(response);
 			const data = await response.json();
 			console.log(data);
 			setProperties(data.properties);
@@ -193,24 +194,33 @@ export default function RentalDashboard(props) {
 	};
 
 	const handleOrderSelect = async (order: string) => {
-	
 		if (order === "Price") {
 		  	const data = await getPropertiesOrderedByPrice();
 		  	setProperties(data);
-			  setGlobalOrder(order)
+			setGlobalOrder(order)
 		  
 		} else if (order === "Latest Date") {
 		  	const data = await getPropertiesOrderedByLatestSaleDate();
 		  	setProperties(data);
-			  setGlobalOrder(order)
+			setGlobalOrder(order)
 		}
 		else{
 			const data = await getProperties();
-			console.log(data)
 			setProperties(data.properties);
 			setGlobalOrder("yoo")
 		}
 		
+	};
+
+	const handleChosenSelect = async (zipcode: number | undefined | null, startYear: number, endYear: number, startPrice: number, endPrice: number)=> {
+		const data = await filterProperties(zipcode, startYear, endYear, startPrice, endPrice)
+		console.log(data)
+		if(data.length <= 1)
+			alert("No results found using those filters")
+		setProperties(data);
+		setDisplayedProperties(properties.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage));
+	
+	
 	};
 
 	return (
@@ -236,12 +246,7 @@ export default function RentalDashboard(props) {
 					}}
 				>
 					<HeaderSection />
-					<Search
-						onSearch={(query: string) => {
-							console.log(query);
-							naturalQueryProperties(query);
-						}}
-					/>
+					<Search onSearch={(query: string) => {naturalQueryProperties(query);}} />
 				</Stack>
 				<Box
 					sx={{
@@ -271,7 +276,7 @@ export default function RentalDashboard(props) {
 					<Box sx={{ display: 'flex', width: '100%', gap:1 }}>
 						{/* <PropertyComparison /> */}
 						<Box sx={{flexGrow:1}}>
-							<Filters onSelect={handleOrderSelect}/>
+							<Filters onSelect={handleOrderSelect} onChosen={handleChosenSelect}/>
 						</Box>
 					</Box>
 					{loading ? (

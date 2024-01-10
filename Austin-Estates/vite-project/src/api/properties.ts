@@ -66,13 +66,22 @@ export const getPropertiesOrderedByPrice = async (page: number = 1, count: numbe
     return data;
 };
 
-export const filterProperties = async (zipcode: string, yearBuilt: number, startPrice: number, endPrice: number) => {
-    const response = await fetch(
-        `${API_URL}/api/Property/FilterProperties/${zipcode}/${yearBuilt}/${startPrice}/${endPrice}`
-    );
+export const filterProperties = async (zipcode: number | undefined | null, startYearBuilt: number = 1905, endYearBuilt: number = 2012, startPrice: number = 0, endPrice: number = 5000000) => {
+    let apiUrl = `${API_URL}/api/Property/FilterProperties`;
+   
+    const params = new URLSearchParams();
+    if (zipcode) params.append('zipcode', String(zipcode));
+    params.append('startYearBuilt', String(startYearBuilt));
+    params.append('endYearBuilt', String(endYearBuilt));
+    params.append('startPrice', String(startPrice));
+    params.append('endPrice', String(endPrice));
+   
+    apiUrl += '?' + params.toString();
+   
+    const response = await fetch(apiUrl);
     if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
     }
     const data = await response.json();
     return data;
-};
+   };

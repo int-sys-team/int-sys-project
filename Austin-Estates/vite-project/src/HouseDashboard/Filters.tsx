@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
 import Drawer from '@mui/joy/Drawer';
@@ -6,12 +6,19 @@ import DialogTitle from '@mui/joy/DialogTitle';
 import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
 import Input from '@mui/joy/Input';
+import TextField from '@mui/material/TextField';
 import ModalClose from '@mui/joy/ModalClose';
 import Stack from '@mui/joy/Stack';
 import Slider, { sliderClasses } from '@mui/joy/Slider';
 import FilterAltOutlined from '@mui/icons-material/FilterAltOutlined';
-import CountrySelector from './CountrySelector';
+import ZipSelector from './ZipSelector';
 import OrderSelector from './OrderSelector';
+
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import InputLabel from '@mui/material/InputLabel';
+import Tooltip from '@mui/material/Tooltip';
+import { InfoOutlined } from '@mui/icons-material';
 
 function valueText(value: number) {
   return `$${value.toLocaleString('en-US')}`;
@@ -19,10 +26,24 @@ function valueText(value: number) {
 
 interface FiltersProps {
   onSelect: (order: string) => void;
+  onChosen: (zipcode: number|undefined|null, startYear: number, endYear: number, startPrice: number, endPrice: number) => void;
  }
 
-export default function Filters({ onSelect }: FiltersProps) {
-  const [open, setOpen] = React.useState(false);
+export default function Filters({ onSelect, onChosen }: FiltersProps) {
+  const [open, setOpen] = useState(false);
+  const [selectedZip, setSelectedZip] = useState<number | null>(null);
+  const [startYear, setStartYear] = useState<number>(1905);
+  const [endYear, setEndYear] = useState<number>(2012);
+  const [startPrice, setStartPrice] = useState<number>(0);
+  const [endPrice, setEndPrice] = useState<number>(5000000);
+
+
+  useEffect(() => {
+    if (!open) {
+      onChosen(selectedZip, startYear, endYear, startPrice, endPrice);
+    }
+   }, [open]);
+
   return (
     <Stack
       useFlexGap
@@ -45,7 +66,7 @@ export default function Filters({ onSelect }: FiltersProps) {
         <Stack useFlexGap spacing={3} sx={{ p: 2 }}>
           <DialogTitle>Filters</DialogTitle>
           <ModalClose />
-          <CountrySelector />
+          <ZipSelector onChange={setSelectedZip} />
           <Box
             sx={{
               display: 'grid',
@@ -54,38 +75,38 @@ export default function Filters({ onSelect }: FiltersProps) {
               gap: 1,
             }}
           >
-            <FormLabel htmlFor="filters-start-date">Start date</FormLabel>
-            <div />
-            <FormLabel htmlFor="filters-end-date">End date</FormLabel>
-
-            <Input
-              id="filters-start-date"
-              type="date"
-              placeholder="Jan 6 - Jan 13"
-              aria-label="Date"
+            <FormLabel htmlFor="filters-start-date">Start year built</FormLabel>
+            <Input 
+            type="number" 
+            placeholder="Type in here…" 
+            variant="outlined" 
+            color="primary" 
+            onChange={(event) => setStartYear(Number(event.target.value))}
             />
-            <Box sx={{ alignSelf: 'center' }}>-</Box>
-            <Input
-              id="filters-end-date"
-              type="date"
-              placeholder="Jan 6 - Jan 13"
-              aria-label="Date"
+            <div />
+            <FormLabel htmlFor="filters-end-date">End year built</FormLabel>
+            <Input 
+            type="number" 
+            placeholder="Type in here…" 
+            variant="outlined" 
+            color="primary" 
+            onChange={(event) => setEndYear(Number(event.target.value))}
             />
           </Box>
-          <FormControl>
+          <FormControl sx={{ px: 2.7 }}>
             <FormLabel>Price range</FormLabel>
             <Slider
-              defaultValue={[2000, 4900]}
-              step={100}
-              min={0}
-              max={10000}
+              defaultValue={[330000, 550000]}
+              step={10000}
+              min={100000}
+              max={1000000}
               getAriaValueText={valueText}
               valueLabelDisplay="auto"
               valueLabelFormat={valueText}
               marks={[
-                { value: 0, label: '$0' },
-                { value: 5000, label: '$5,000' },
-                { value: 10000, label: '$10,000' },
+                { value: 100000, label: '$100,000' },
+                { value: 500000, label: '$500,000' },
+                { value: 1000000, label: '$1,000,000' },
               ]}
               sx={{
                 [`& .${sliderClasses.markLabel}[data-index="0"]`]: {
@@ -93,7 +114,11 @@ export default function Filters({ onSelect }: FiltersProps) {
                 },
                 [`& .${sliderClasses.markLabel}[data-index="2"]`]: {
                   transform: 'translateX(-100%)',
-                },
+                }
+              }}
+              onChange={(event, newValue) => {
+                setStartPrice(newValue[0]);
+                setEndPrice(newValue[1]);
               }}
             />
           </FormControl>
