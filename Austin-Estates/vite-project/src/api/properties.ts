@@ -31,6 +31,16 @@ export const getSimilarProperties = async (targetPropertyId: string) => {
         console.error('Error fetching similar properties:', error.message);
     }
 };
+export const getAllProperties = async () => {
+    const response = await fetch(
+        `${API_URL}/api/Property/GetAllProperties`
+    );
+    if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    const data = await response.json();
+    return data;
+};
 
 
 export const getPropertyById = async (id: string) => {

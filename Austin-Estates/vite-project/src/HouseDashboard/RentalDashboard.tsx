@@ -19,7 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import { CircularProgress } from '@mui/joy';
 import PropertyComparison from './PropertyComparison';
 import PropertyMap from './PropertyMap';
-import { filterProperties, getProperties, getPropertiesOrderedByLatestSaleDate, getPropertiesOrderedByPrice } from '../api/properties';
+import { filterProperties, getAllProperties, getProperties, getPropertiesOrderedByLatestSaleDate, getPropertiesOrderedByPrice } from '../api/properties';
 import { AI_API_URL, API_URL } from '../utils/config';
 
 interface PaginationProps {
@@ -147,22 +147,28 @@ export default function RentalDashboard(props) {
 		setCurrentPage((prevPage) => prevPage - 1);
 	   };
 
+	   console.log("INIŠALLL!!!")
 	useEffect(() => {
-		setDisplayedProperties(properties.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage));
-	}, [currentPage]);
 
-	useEffect(() => {
-		try {
-		   setLoading(true);
-		   GlobalStartIndex = currentPage * itemsPerPage;
-		   handleOrderSelect(GlobalOrder)
+		console.log("INIŠALLLL setDisplayedProperties!!!")
+		console.log("current page: "+currentPage)
+		handleOrderSelect(GlobalOrder)
+		setDisplayedProperties(properties.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage));
+	}, [currentPage, GlobalOrder]);
+
+	// useEffect(() => {
+	// 	try {
+
+	// 		console.log("INIŠALLLL handleOrderSelect!!!")
+	// 	   setLoading(true);
+	// 	   GlobalStartIndex = currentPage * itemsPerPage;
 		   
-		} catch (e) {
-		   console.log(e);
-		} finally {
-		   setLoading(false);
-		}
-	   }, [currentPage, GlobalOrder]);
+	// 	} catch (e) {
+	// 	   console.log(e);
+	// 	} finally {
+	// 	   setLoading(false);
+	// 	}
+	//    }, [currentPage, GlobalOrder]);
 
 	const naturalQueryProperties = async (query: string) => {
 		try {
@@ -195,18 +201,23 @@ export default function RentalDashboard(props) {
 
 	const handleOrderSelect = async (order: string) => {
 		if (order === "Price") {
+			console.log("PRICE")
 		  	const data = await getPropertiesOrderedByPrice();
 		  	setProperties(data);
 			setGlobalOrder(order)
 		  
 		} else if (order === "Latest Date") {
+			console.log("LATEST DATE")
 		  	const data = await getPropertiesOrderedByLatestSaleDate();
 		  	setProperties(data);
 			setGlobalOrder(order)
 		}
 		else{
-			const data = await getProperties();
-			setProperties(data.properties);
+			console.log("PROPERTIES")
+			const data = await getAllProperties();
+			console.log("RETURNED")
+			console.log(data)
+			setProperties(data);
 			setGlobalOrder("yoo")
 		}
 		

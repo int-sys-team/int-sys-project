@@ -19,6 +19,7 @@ import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
 import Tooltip from '@mui/material/Tooltip';
 import { InfoOutlined } from '@mui/icons-material';
+import { margin } from '@mui/system';
 
 function valueText(value: number) {
   return `$${value.toLocaleString('en-US')}`;
@@ -37,12 +38,15 @@ export default function Filters({ onSelect, onChosen }: FiltersProps) {
   const [startPrice, setStartPrice] = useState<number>(0);
   const [endPrice, setEndPrice] = useState<number>(5000000);
 
-
-  useEffect(() => {
-    if (!open) {
-      onChosen(selectedZip, startYear, endYear, startPrice, endPrice);
-    }
-   }, [open]);
+  const filerProperties = () => {
+    console.log(selectedZip)
+    console.log(startYear)
+    console.log(endYear)
+    console.log(startPrice)
+    console.log(endPrice)
+    onChosen(selectedZip, startYear, endYear, startPrice, endPrice);
+    setOpen(false);
+  }
 
   return (
     <Stack
@@ -122,6 +126,9 @@ export default function Filters({ onSelect, onChosen }: FiltersProps) {
               }}
             />
           </FormControl>
+        <Button onClick={filerProperties} style={{marginTop:"25px", width:"50%", alignSelf:"center"}}>
+          Filter
+        </Button>
         </Stack>
       </Drawer>
     </Stack>
