@@ -19,7 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import { CircularProgress } from '@mui/joy';
 import PropertyComparison from './PropertyComparison';
 import PropertyMap from './PropertyMap';
-import { filterProperties, getAllProperties, getProperties, getPropertiesOrderedByLatestSaleDate, getPropertiesOrderedByPrice } from '../api/properties';
+import { filterProperties, getAllProperties, getPropertiesOrderedByLatestSaleDate, getPropertiesOrderedByPrice } from '../api/properties';
 import { AI_API_URL, API_URL } from '../utils/config';
 
 interface PaginationProps {
@@ -122,53 +122,33 @@ interface PaginationProps {
    }
 
 export default function RentalDashboard(props) {
-	//const { category, title, rareFind = false, liked = false, image } = props;
-	let zipcode: Number, startYear: Number, endYear: Number, startPrice: Number, endPrice: Number;
-
-	const navigate = useNavigate();
-
 	const [properties, setProperties] = useState<any[]>([]);
 	const [loading, setLoading] = useState<boolean>(false);
-
 	const [currentPage, setCurrentPage] = useState(1);
-	
- 	const itemsPerPage = 3;
-
 	const [displayedProperties, setDisplayedProperties] = useState<any[]>([]);
-
 	let [GlobalOrder, setGlobalOrder] = useState<string>("Initial")
-	let GlobalStartIndex;
+	
+	const itemsPerPage = 3;
 
-	const nextPage = () => {
-		setCurrentPage((prevPage) => prevPage + 1);
-	   };
-	  
-	const prevPage = () => {
-		setCurrentPage((prevPage) => prevPage - 1);
-	   };
+	const nextPage = () => setCurrentPage((prevPage) => prevPage + 1); 
+	const prevPage = () => setCurrentPage((prevPage) => prevPage - 1);
 
-	   console.log("INIŠALLL!!!")
 	useEffect(() => {
-
-		console.log("INIŠALLLL setDisplayedProperties!!!")
-		console.log("current page: "+currentPage)
 		handleOrderSelect(GlobalOrder)
-		setDisplayedProperties(properties.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage));
+		
+	},[])
+
+	useEffect(() => {
+	try
+	{
+		setLoading(true);
+		setDisplayedProperties(properties.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)); 
+	} catch (e) {
+		console.log(e);
+	} finally {
+		setLoading(false);
+	}
 	}, [currentPage, GlobalOrder]);
-
-	// useEffect(() => {
-	// 	try {
-
-	// 		console.log("INIŠALLLL handleOrderSelect!!!")
-	// 	   setLoading(true);
-	// 	   GlobalStartIndex = currentPage * itemsPerPage;
-		   
-	// 	} catch (e) {
-	// 	   console.log(e);
-	// 	} finally {
-	// 	   setLoading(false);
-	// 	}
-	//    }, [currentPage, GlobalOrder]);
 
 	const naturalQueryProperties = async (query: string) => {
 		try {
@@ -190,7 +170,6 @@ export default function RentalDashboard(props) {
 				return;
 			}
 			const data = await response.json();
-			console.log(data);
 			setProperties(data.properties);
 		} catch (e) {
 			console.log(e);
@@ -201,43 +180,35 @@ export default function RentalDashboard(props) {
 
 	const handleOrderSelect = async (order: string) => {
 		if (order === "Price") {
-			console.log("PRICE")
-		  	const data = await getPropertiesOrderedByPrice();
+		  	const data = await getPropertiesOrderedByPrice(); 
 		  	setProperties(data);
 			setGlobalOrder(order)
-		  
 		} else if (order === "Latest Date") {
-			console.log("LATEST DATE")
-		  	const data = await getPropertiesOrderedByLatestSaleDate();
+		  	const data = await getPropertiesOrderedByLatestSaleDate(); 
 		  	setProperties(data);
 			setGlobalOrder(order)
 		}
 		else{
-			console.log("PROPERTIES")
 			const data = await getAllProperties();
-			console.log("RETURNED")
-			console.log(data)
 			setProperties(data);
 			setGlobalOrder("yoo")
 		}
+		setCurrentPage(1) 
 		
 	};
 
 	const handleChosenSelect = async (zipcode: number | undefined | null, startYear: number, endYear: number, startPrice: number, endPrice: number)=> {
 		const data = await filterProperties(zipcode, startYear, endYear, startPrice, endPrice)
-		console.log(data)
-		if(data.length <= 1)
+		if(data.length <= 0)
 			alert("No results found using those filters")
-		setProperties(data);
-		setDisplayedProperties(properties.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage));
-	
-	
+		setProperties(data);  
+		setGlobalOrder(GlobalOrder+' ') //it needs to constantly change/rerender after selecting parameters from filter drawer
+		setCurrentPage(1)
 	};
 
 	return (
 		<CssVarsProvider disableTransitionOnChange>
 			<CssBaseline />
-
 			<Box
 				component="main"
 				sx={{

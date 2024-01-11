@@ -39,11 +39,6 @@ export default function Filters({ onSelect, onChosen }: FiltersProps) {
   const [endPrice, setEndPrice] = useState<number>(5000000);
 
   const filerProperties = () => {
-    console.log(selectedZip)
-    console.log(startYear)
-    console.log(endYear)
-    console.log(startPrice)
-    console.log(endPrice)
     onChosen(selectedZip, startYear, endYear, startPrice, endPrice);
     setOpen(false);
   }

@@ -1,16 +1,5 @@
 import { API_URL, AI_API_URL } from '../utils/config'
 
-export const getProperties = async (page: number = 0, count: number = 10) => {
-    const response = await fetch(
-        `${AI_API_URL}/db/properties?page=${page}&count=${count}`
-    );
-    if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-    const data = await response.json();
-    return data;
-};
-
 export const getSimilarProperties = async (targetPropertyId: string) => {
     try {
         const response = await fetch(`${AI_API_URL}/similar`, {
@@ -53,8 +42,8 @@ export const getPropertyById = async (id: string) => {
     const data = await response.json();
     return data;
 };
-
-export const getPropertiesOrderedByLatestSaleDate = async (page: number = 1, count: number = 10) => {
+           
+export const getPropertiesOrderedByLatestSaleDate = async (page: number = 1, count: number = 100 /*HARDCODE*/) => {
     const response = await fetch(
         `${API_URL}/api/Property/GetPropertiesOrderedByLatestSaleDate/${page}/${count}`
     );
@@ -65,7 +54,7 @@ export const getPropertiesOrderedByLatestSaleDate = async (page: number = 1, cou
     return data;
 };
 
-export const getPropertiesOrderedByPrice = async (page: number = 1, count: number = 10) => {
+export const getPropertiesOrderedByPrice = async (page: number = 1, count: number = 100 /*HARDCODE*/) => {
     const response = await fetch(
         `${API_URL}/api/Property/getPropertiesOrderedByPrice/${page}/${count}`
     );
