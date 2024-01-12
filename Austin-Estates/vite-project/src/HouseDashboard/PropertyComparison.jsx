@@ -185,7 +185,7 @@ export default function PropertyComparison() {
 									}}
 									src={
 										message.sender === 'agent'
-											? '../public/llama.jpeg'
+											? '/llama.jpeg'
 											: ''
 									}
 								></Avatar>

@@ -41,5 +41,5 @@ def update_property(property):
 test_connection()
 
 if __name__ == '__main__':
-    print([doc for doc in find_properties({'room_count': {'$lt': 3}, 'type': {
-        '$eq': 'apartment'}, 'price': {'$lte': 200000}})])
+    print([doc for doc in find_properties(
+        {'numOfBedrooms': 3, 'numOfBathrooms': 3, 'livingAreaSqFt': {'$gte': 1500}, 'price': {'$gt': 0}})])

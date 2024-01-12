@@ -15,6 +15,7 @@ import RentalDashboard from './HouseDashboard/RentalDashboard';
 import Checkout from './HouseSelling/Checkout';
 import { UserProvider } from './context/UserProvider';
 import PropertyWishlist from './HouseDashboard/PropertyWishlist';
+import MyProperties from './HouseDashboard/MyProperties';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
 	<ComparisonProvider>
@@ -32,6 +33,10 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 					<Route
 						path="/myFavorites"
 						element={<Paperbase Page={PropertyWishlist} />}
+					/>
+					<Route
+						path="/myProperties"
+						element={<Paperbase Page={MyProperties} />}
 					/>
 					<Route
 						path="/explore/blog/:id"

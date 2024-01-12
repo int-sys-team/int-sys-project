@@ -128,7 +128,7 @@ export default function RentalDashboard(props) {
 	const [displayedProperties, setDisplayedProperties] = useState<any[]>([]);
 	let [GlobalOrder, setGlobalOrder] = useState<string>("Initial")
 	
-	const itemsPerPage = 3;
+	const itemsPerPage = 10;
 
 	const nextPage = () => setCurrentPage((prevPage) => prevPage + 1); 
 	const prevPage = () => setCurrentPage((prevPage) => prevPage - 1);
@@ -170,7 +170,9 @@ export default function RentalDashboard(props) {
 				return;
 			}
 			const data = await response.json();
+			console.log(data);
 			setProperties(data.properties);
+			setDisplayedProperties(data.properties);
 		} catch (e) {
 			console.log(e);
 		} finally {
