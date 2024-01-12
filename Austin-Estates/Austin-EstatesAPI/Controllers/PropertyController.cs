@@ -42,6 +42,21 @@ namespace EstatesAPI.Controllers
         }
 
         [HttpGet]
+        [Route("GetAllUserProperties")]
+        [Authorize(Roles = "Administrator,User")]
+        public async Task<IActionResult> GetAllUserProperties()
+        {
+            var currentUserId = _currentUserService.GetCurrentUserId();
+            var client = await _clientService.GetClientByIdAsync(currentUserId);
+            if (client is null)
+            {
+                return NotFound("Client not found!");
+            }
+
+            return Ok(client.Properties);
+        }
+
+        [HttpGet]
         [Route("GetPropertyById/{id:length(24)}")]
         public async Task<IActionResult> GetPropertyById(string id)
         {
