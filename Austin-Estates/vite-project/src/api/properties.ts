@@ -109,3 +109,21 @@ export const getUserProperties = async (userToken:string) => {
 	const data = await response.json();
 	return data;
 };
+
+export const predictPropertyPrice = async (property: any) => {
+	const response = await fetch(
+		`${AI_API_URL}/price`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({data: property}),
+		}
+	)
+
+	if (!response.ok) {
+		throw new Error(`HTTP error! Status: ${response.status}`);
+	}
+	const data = await response.json();
+	return data.price;
+}

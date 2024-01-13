@@ -36,12 +36,13 @@ export default function PropertyDetailsForm() {
 				<Grid item xs={12} md={6}>
 					<TextField
 						required
-						id="lotSizeSquareFt"
-						name="lotSizeSquareFt"
+						id="lotSizeSqFt"
+						name="lotSizeSqFt"
 						label="Lot Size Square Feet"
 						fullWidth
-						variant="filled"
+						variant="standard"
 						onChange={handleFieldChange}
+						value={propertyData.lotSizeSqFt}
 					/>
 				</Grid>
 				<Grid item xs={12} md={6}>
@@ -51,8 +52,9 @@ export default function PropertyDetailsForm() {
 						name="livingAreaSqFt"
 						label="Living Area Square Feet"
 						fullWidth
-						variant="filled"
+						variant="standard"
 						onChange={handleFieldChange}
+						value={propertyData.livingAreaSqFt}
 					/>
 				</Grid>
 				<Grid item xs={12} md={6}>
@@ -62,6 +64,7 @@ export default function PropertyDetailsForm() {
 								id="hasGarage"
 								name="hasGarage"
 								onChange={handleCheckboxChange}
+								value={propertyData.hasGarage}
 							/>
 						}
 						label="Has Garage"
@@ -74,6 +77,7 @@ export default function PropertyDetailsForm() {
 								id="hasView"
 								name="hasView"
 								onChange={handleCheckboxChange}
+								value={propertyData.hasView}
 							/>
 						}
 						label="Has View"
@@ -86,6 +90,7 @@ export default function PropertyDetailsForm() {
 								id="hasCooling"
 								name="hasCooling"
 								onChange={handleCheckboxChange}
+								value={propertyData.hasCooling}
 							/>
 						}
 						label="Has Cooling"
@@ -98,6 +103,7 @@ export default function PropertyDetailsForm() {
 								id="hasHeating"
 								name="hasHeating"
 								onChange={handleCheckboxChange}
+								value={propertyData.hasHeating}
 							/>
 						}
 						label="Has Heating"
@@ -114,6 +120,7 @@ export default function PropertyDetailsForm() {
 						variant="standard"
 						onChange={handleFieldChange}
 						inputProps={{ min: '0' }}
+						value={propertyData.numOfBedrooms}
 					/>
 				</Grid>
 				<Grid item xs={12} md={6}>
@@ -127,19 +134,49 @@ export default function PropertyDetailsForm() {
 						variant="standard"
 						onChange={handleFieldChange}
 						inputProps={{ min: '0' }}
+						value={propertyData.numOfBathrooms}
 					/>
 				</Grid>
 				<Grid item xs={12} md={6}>
 					<TextField
 						required
-						id="numOfParkingSpaces"
-						name="numOfParkingSpaces"
-						label="How many parking spaces"
+						id="parkingSpaces"
+						name="parkingSpaces"
+						label="Number of parking spaces"
 						type="number"
 						fullWidth
 						variant="standard"
 						onChange={handleFieldChange}
 						inputProps={{ min: '0' }}
+						value={propertyData.parkingSpaces}
+					/>
+				</Grid>
+				<Grid item xs={12} md={6}>
+					<TextField
+						required
+						id="numOfStories"
+						name="numOfStories"
+						type="number"
+						label="Number of floors"
+						fullWidth
+						variant="standard"
+						onChange={handleFieldChange}
+						inputProps={{ min: '0' }}
+						value={propertyData.numOfStories}
+					/>
+				</Grid>
+				<Grid item xs={12} md={6}>
+					<TextField
+						required
+						id="numOfSchools"
+						name="numOfSchools"
+						type="number"
+						label="Number of nearby schools"
+						fullWidth
+						variant="standard"
+						onChange={handleFieldChange}
+						inputProps={{ min: '0' }}
+						value={propertyData.numOfSchools}
 					/>
 				</Grid>
 				<Grid item xs={12} md={6}>
@@ -153,6 +190,7 @@ export default function PropertyDetailsForm() {
 						variant="standard"
 						onChange={handleFieldChange}
 						inputProps={{ min: '0' }}
+						value={propertyData.yearBuilt}
 					/>
 				</Grid>
 				{/* <Grid item xs={12}>

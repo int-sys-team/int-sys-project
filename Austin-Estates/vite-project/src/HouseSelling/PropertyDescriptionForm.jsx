@@ -10,10 +10,10 @@ import { StreamHandler } from '../utils/StreamHandler';
 import { Card } from '@mui/material';
 import { useTheme } from '@emotion/react';
 import { AI_API_URL, API_URL } from '../utils/config';
+import {predictPropertyPrice} from '../api/properties';
 
 export default function PropertyDescriptionForm() {
   const [description, setDescription] = React.useState('');
-  const [price, setPrice] = React.useState('');
   const [responding, setResponding] = React.useState(false);
 
   const { propertyData, setPropertyData } = useContext(PropertyContext);
@@ -25,49 +25,54 @@ export default function PropertyDescriptionForm() {
     });
   };
 
-  	const generateDescription = async () => {
-		console.log(propertyData);
-		if (responding) return;
-		if (!propertyData) return;
+  const generateDescription = async () => {
+    console.log(propertyData);
+    if (responding) return;
+    if (!propertyData) return;
     if(Object.keys(propertyData).length === 0) return;
 
-		setResponding(true);
-		try {
+    setResponding(true);
+    try {
       let newDescription='';
-			setDescription('');
-			let stream = new StreamHandler(`${AI_API_URL}/llm/description`);
-			stream.invoke(
-				{
-					data: propertyData,
-					stream: true,
-				},
-				(chunk) => {
-					console.log(chunk);
-					if (chunk === '###DONE###') {
-						setPropertyData({
-							...propertyData,
-							['description']: newDescription,
-						});
+      setDescription('');
+      let stream = new StreamHandler(`${AI_API_URL}/llm/description`);
+      stream.invoke(
+        {
+          data: propertyData,
+          stream: true,
+        },
+        (chunk) => {
+          console.log(chunk);
+          if (chunk === '###DONE###') {
+            setPropertyData({
+              ...propertyData,
+              ['description']: newDescription,
+            });
             setResponding(false);
             console.log(propertyData)
-						return;
-					}
+            return;
+          }
           newDescription+=chunk;
-					setDescription(newDescription);
-				}
-			);
-		} catch (err) {
-			console.log(err);
-			setResponding(false);
-		}
-	};
+          setDescription(newDescription);
+        }
+      );
+    } catch (err) {
+      console.log(err);
+      setResponding(false);
+    }
+  };
 
   const generatePrice = () => {
-    // Here you can call your AI function to generate a price
-    console.log(propertyData)
-    setPrice('Generated price...');
+    setPropertyData({...propertyData, price: "Generating price..."})
+
+    const property = {}
+    Object.keys(propertyData).map(key => {
+      property[key] = Number(propertyData[key])
+    })
+    predictPropertyPrice(property).then(price => {
+      setPropertyData({...propertyData, price})
+    });
   };
-  const theme=useTheme();
 
   return (
 		<>
@@ -84,6 +89,7 @@ export default function PropertyDescriptionForm() {
 						fullWidth
 						variant="standard"
 						onChange={handleFieldChange}
+            value={propertyData.imageLink}
 					/>
 				</Grid>
 				<Grid item xs={12}>
@@ -95,6 +101,7 @@ export default function PropertyDescriptionForm() {
 						fullWidth
 						variant="standard"
 						onChange={handleFieldChange}
+            value={propertyData.propertyTitle}
 					/>
 				</Grid>
 				<Grid item xs={12}>
@@ -133,7 +140,7 @@ export default function PropertyDescriptionForm() {
 						id="price"
 						name="price"
 						label="Price"
-						value={price}
+						value={propertyData.price}
 						variant="outlined"
 						onChange={handleFieldChange}
             sx={{

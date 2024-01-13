@@ -33,6 +33,11 @@ export default function PropertyWishlist(props) {
 	};
 
 	useEffect(() => {
+		if(!user) {
+			navigate('/login')
+			return
+		}
+
 		try {
 			setLoading(true);
 			getWishlist(user.token).then((data) => {
@@ -43,7 +48,7 @@ export default function PropertyWishlist(props) {
 		} finally {
 			setLoading(false);
 		}
-	}, []);
+	}, [user]);
 
 	return (
 		<CssVarsProvider disableTransitionOnChange>

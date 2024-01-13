@@ -35,6 +35,7 @@ export default function PropertyAddressForm() {
             autoComplete="location-longitude"
             variant="standard"
             onChange={handleFieldChange}
+            value={propertyData.longitude}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -46,6 +47,7 @@ export default function PropertyAddressForm() {
             autoComplete="location-latitude"
             variant="standard"
             onChange={handleFieldChange}
+            value={propertyData.latitude}
           />
         </Grid>
         {/* <Grid item xs={12}>
@@ -64,18 +66,20 @@ export default function PropertyAddressForm() {
             autoComplete="shipping address-line"
             variant="standard"
             onChange={handleFieldChange}
+            value={propertyData.address}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
             required
-            id="city"
-            name="city"
-            label="Austin"
+            id="zipcode"
+            name="zipcode"
+            label="Zip / Postal code"
             fullWidth
-            autoComplete="shipping address-level2"
+            autoComplete="shipping postal-code"
             variant="standard"
             onChange={handleFieldChange}
+            value={propertyData.zipcode}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -86,30 +90,7 @@ export default function PropertyAddressForm() {
             fullWidth
             variant="standard"
             onChange={handleFieldChange}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            required
-            id="zip"
-            name="zip"
-            label="Zip / Postal code"
-            fullWidth
-            autoComplete="shipping postal-code"
-            variant="standard"
-            onChange={handleFieldChange}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            required
-            id="country"
-            name="country"
-            label="Country"
-            fullWidth
-            autoComplete="shipping country"
-            variant="standard"
-            onChange={handleFieldChange}
+            value={propertyData.state}
           />
         </Grid>
         {/* <Grid item xs={12}>

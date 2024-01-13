@@ -5,6 +5,7 @@ import Paper from '@mui/material/Paper';
 import Slide from '@mui/material/Slide';
 import PropertyContext from '../context/PropertyContext';
 
+const toYesNo = (bool) => bool? 'yes' : 'no'
 
 export default function PropertyReview() {
   const { propertyData } = useContext(PropertyContext);
@@ -55,10 +56,10 @@ export default function PropertyReview() {
             </Typography>
             <Typography gutterBottom>Lot Size Square Feet: {propertyData.lotSizeSquareFt}</Typography>
             <Typography gutterBottom>Living Area Square Feet: {propertyData.livingAreaSqFt}</Typography>
-            <Typography gutterBottom>Has garage?: {propertyData.hasGarage}</Typography>
-            <Typography gutterBottom>Has view?: {propertyData.hasView}</Typography>
-            <Typography gutterBottom>Has cooling?: {propertyData.hasCooling}</Typography>
-            <Typography gutterBottom>Has heating?: {propertyData.hasHeating}</Typography>
+            <Typography gutterBottom>Has garage? {toYesNo(propertyData.hasGarage)}</Typography>
+            <Typography gutterBottom>Has view? {toYesNo(propertyData.hasView)}</Typography>
+            <Typography gutterBottom>Has cooling? {toYesNo(propertyData.hasCooling)}</Typography>
+            <Typography gutterBottom>Has heating? {toYesNo(propertyData.hasHeating)}</Typography>
             <Typography gutterBottom>Number of bedrooms: {propertyData.numOfBedrooms}</Typography>
             <Typography gutterBottom>Number of bathrooms: {propertyData.numOfBathrooms}</Typography>
             <Typography gutterBottom>Number of parking spaces: {propertyData.numOfParkingSpaces}</Typography>

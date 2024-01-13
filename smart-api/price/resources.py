@@ -29,39 +29,19 @@ class PriceRegressor(Resource):
                       type: number
                     longitude:
                       type: number
-                    garageSpaces:
-                      type: integer
-                    hasAssociation:
-                      type: integer
                     hasCooling:
                       type: integer
                     hasGarage:
                       type: integer
                     hasHeating:
                       type: integer
-                    hasSpa:
-                      type: integer
                     hasView:
                       type: integer
-                    homeType:
-                      type: string
                     parkingSpaces:
                       type: integer
                     yearBuilt:
                       type: integer
                     numOfPhotos:
-                      type: integer
-                    accessibility:
-                      type: integer
-                    numOfAppliances:
-                      type: integer
-                    numOfParkingFeatures:
-                      type: integer
-                    patioporch:
-                      type: integer
-                    security:
-                      type: integer
-                    waterfront:
                       type: integer
                     lotSizeSqFt:
                       type: number

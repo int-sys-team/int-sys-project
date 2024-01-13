@@ -17,22 +17,9 @@ import PropertyDescriptionForm from './PropertyDescriptionForm';
 
 import PropertyContext from '../context/PropertyContext';
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Mozda neki ukras ovde
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
-
 const steps = ['Address', 'Details', 'Description', 'PropertyReview'];
 
-function getStepContent(step) {
+function StepContainer({step}) {
   switch (step) {
     case 0:
       return <PropertyAddressForm />;
@@ -47,8 +34,45 @@ function getStepContent(step) {
   }
 }
 
+const NextBackButtons = ({activeStep, onBack, onNext}) => (
+  <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+    {activeStep !== 0 && (
+      <Button onClick={onBack} sx={{ mt: 3, ml: 1 }}>
+        Back
+      </Button>
+    )}
+
+    <Button
+      variant="contained"
+      onClick={onNext}
+      sx={{ mt: 3, ml: 1 }}
+    >                                
+      {activeStep === steps.length - 1 ? 'Submit property' : 'Next'}
+    </Button>
+  </Box>
+)
+
+const defaultProperty = {
+    zipcode: '',
+    latitude: '',
+    longitude: '',
+    hasCooling: false,
+    hasGarage: false,
+    hasHeating: false,
+    hasView: false,
+    parkingSpaces: '',
+    yearBuilt: '',
+    numOfPhotos: '1',
+    lotSizeSqFt: '',
+    livingAreaSqFt: '',
+    numOfSchools: '',
+    numOfBathrooms: '',
+    numOfBedrooms: '',
+    numOfStories: ''
+}
+
 export default function Checkout() {
-  const [propertyData, setPropertyData] = useState({});
+  const [propertyData, setPropertyData] = useState(defaultProperty);
   const [activeStep, setActiveStep] = React.useState(0);
 
 
@@ -97,26 +121,15 @@ export default function Checkout() {
             </React.Fragment>
           ) : (
             <React.Fragment>
-              {getStepContent(activeStep)}
-              <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                {activeStep !== 0 && (
-                  <Button onClick={handleBack} sx={{ mt: 3, ml: 1 }}>
-                    Back
-                  </Button>
-                )}
-
-                <Button
-                  variant="contained"
-                  onClick={handleNext}
-                  sx={{ mt: 3, ml: 1 }}
-                >                                
-                  {activeStep === steps.length - 1 ? 'Submit property' : 'Next'}
-                </Button>
-              </Box>
+              <StepContainer step={activeStep} />
+              <NextBackButtons 
+                activeStep={activeStep} 
+                onBack={handleBack}
+                onNext={handleNext}
+              />
             </React.Fragment>
           )}
         </Paper>
-        <Copyright />
       </Container>
     </>
     </PropertyContext.Provider>

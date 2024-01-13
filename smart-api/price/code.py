@@ -2,7 +2,6 @@ import joblib
 import pandas as pd
 import numpy as np
 
-# TODO Get relative to this file?
 price_model = joblib.load('./price/model.pkl')
 
 param_order = price_model.feature_names_in_
