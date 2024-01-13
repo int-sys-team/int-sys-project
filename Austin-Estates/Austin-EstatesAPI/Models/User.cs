@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace EstatesAPI.Models
 {
-    public class Person
+    public class User
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
@@ -34,13 +34,13 @@ namespace EstatesAPI.Models
 
         public List<string> Wishes { get; set; }
 
-        public List<Property> Properties { get; set; }
+        public List<string> Properties { get; set; }
 
 
-        public Person()
+        public User()
         {
             Wishes = new List<string>();
-            Properties = new List<Property>();
+            Properties = new List<string>();
         }
     }
 }

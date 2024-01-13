@@ -61,6 +61,7 @@ namespace EstatesAPI.Models
         public int zip_rank { get; set; }
         public double median_zip { get; set; }
         public double pr_sqft { get; set; }
+        public string userId { get; set; }
     }
 }
 

@@ -174,12 +174,13 @@ namespace EstatesAPI.Controllers
 
             if (client.Properties is null)
             {
-                client.Properties = new List<Property>();
+                client.Properties = new List<string>();
             }
 
-            client.Properties.Add(newProperty);
-
+            newProperty.userId = currentUserId;
             await _propertyService.AddPropertyAsync(newProperty);
+
+            client.Properties.Add(newProperty._id);
             await _clientService.UpdateClientAsync(currentUserId, client);
 
             return CreatedAtAction(nameof(GetPropertyById), new { id = newProperty._id }, newProperty);
@@ -209,13 +210,14 @@ namespace EstatesAPI.Controllers
             {
                 return NotFound("Client not found!");
             }
-            var clientProperty = client.Properties.Find(p => p._id == property._id);
+            var clientProperty = client.Properties.Find(p => p == property._id);
             if (clientProperty is null && !client.Role.Equals("Administrator"))
             {
                 return BadRequest("You are not allowed to edit this property!");
             }
 
             updatedProperty._id = property._id;
+            updatedProperty.userId = currentUserId;
 
             await _propertyService.UpdatePropertyAsync(idProperty, updatedProperty);
 
@@ -248,7 +250,7 @@ namespace EstatesAPI.Controllers
                 return NotFound("Client not found!");
             }
 
-            var clientProperty = client.Properties.Find(p => p._id == property._id);
+            var clientProperty = client.Properties.Find(p => p == property._id);
             if (clientProperty is null && !client.Role.Equals("Administrator"))
             {
                 return BadRequest("You are not allowed to delete this property!");

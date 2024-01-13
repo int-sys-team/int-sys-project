@@ -37,7 +37,7 @@ namespace EstatesAPI.Controllers
         [AllowAnonymous]
         [HttpPost]
         [Route("Register")]
-        public async Task<ActionResult> Register([FromBody] Person user)
+        public async Task<ActionResult> Register([FromBody] User user)
         {
             var userExist = Authenticate(user.Email);
 
@@ -171,7 +171,7 @@ namespace EstatesAPI.Controllers
         //[HttpPost]
         //[Route("AddClient")]
         //[Authorize(Roles = "Administrator")]
-        //public async Task<IActionResult> AddClient([FromBody] Person newClient)
+        //public async Task<IActionResult> AddClient([FromBody] User newClient)
         //{
         //    if (newClient == null)
         //    {
@@ -260,7 +260,7 @@ namespace EstatesAPI.Controllers
         [HttpPut]
         [Route("EditClient")]
         [Authorize(Roles = "Administrator,User")]
-        public async Task<IActionResult> UpdateClient(Person updatedClient)
+        public async Task<IActionResult> UpdateClient(User updatedClient)
         {
             var currentUserId = _currentUserService.GetCurrentUserId();
             var client = await _clientService.GetClientByIdAsync(currentUserId);
@@ -298,14 +298,14 @@ namespace EstatesAPI.Controllers
 
         //private
 
-        private Person Authenticate(string email)
+        private User Authenticate(string email)
         {
             var client =  _clientService.GetClientByEmail(email);
 
             return client;
         }
 
-        private string Generate(Person user)
+        private string Generate(User user)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
