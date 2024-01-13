@@ -1,5 +1,8 @@
 import * as React from 'react';
-import { useNavigate } from 'react-router-dom';
+import {
+  useNavigate,
+  Link as RouterLink
+} from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -18,19 +21,6 @@ import Snackbar from '@mui/material/Snackbar';
 import { UserContext } from './context/UserContext';
 import { register } from './api/auth';
 
-
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Our Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
 
 // TODO remove, this demo shouldn't need to reset the theme.
 
@@ -151,14 +141,17 @@ export default function SignUp() {
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link
+                  component={RouterLink}
+                  to="/login"
+                  variant="body2"
+                >
                   Already have an account? Sign in
                 </Link>
               </Grid>
             </Grid>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 5 }} />
       </Container>
       <Snackbar 
         open={successOpen} 

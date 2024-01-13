@@ -27,7 +27,7 @@ export const register = async (firstName: string, lastName: string, email: strin
 }
 
 export const login = async (email: string, password: string) => {
-    const response = await fetch(`${API_URL}/api/Client/Login`, {
+    const response = await fetch(`${API_URL}/api/Client/LogIn`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -44,4 +44,19 @@ export const login = async (email: string, password: string) => {
 
     const data = await response.json();
     return data;
+}
+
+export const logout = async (userToken: string) => {
+    const response = await fetch(`${API_URL}/api/Client/LogOut`, {
+        method: 'POST',
+        headers: {
+            Authorization: `Bearer ${userToken}`,
+        },
+    });
+
+    if (!response.ok) {
+        const errorData = await response.text();
+        console.error('Error response from server:', errorData);
+        throw new Error(errorData);
+    }
 }

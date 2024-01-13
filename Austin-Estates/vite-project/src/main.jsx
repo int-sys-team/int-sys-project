@@ -16,15 +16,16 @@ import Checkout from './HouseSelling/Checkout';
 import { UserProvider } from './context/UserProvider';
 import PropertyWishlist from './HouseDashboard/PropertyWishlist';
 import MyProperties from './HouseDashboard/MyProperties';
+import Profile from './HouseDashboard/Profile';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
 	<ComparisonProvider>
 		<UserProvider>
 			<Router>
 				<Routes>
-					<Route path="/explore/signup" element={<SignUp />} />
-					<Route path="/explore/signin" element={<SignInSide />} />
-					<Route path="/explore/aboutus" element={<AboutUsPage />} />
+					<Route path="/signup" element={<SignUp />} />
+					<Route path="/login" element={<SignInSide />} />
+					<Route path="/aboutus" element={<AboutUsPage />} />
 
 					<Route
 						path="/explore"
@@ -37,6 +38,10 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 					<Route
 						path="/myProperties"
 						element={<Paperbase Page={MyProperties} />}
+					/>
+					<Route
+						path="/profile/:id"
+						element={<Paperbase Page={Profile} />}
 					/>
 					<Route
 						path="/explore/blog/:id"
