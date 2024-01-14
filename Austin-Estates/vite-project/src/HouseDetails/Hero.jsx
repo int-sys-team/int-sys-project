@@ -7,6 +7,7 @@ import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded';
 import { useCompareProperties } from '../hooks/useCompareProperties';
 import { UserContext } from '../context/UserContext';
 import { addToWishlist, removeFromWishlist } from '../api/wishlist';
+import {useNavigate} from 'react-router-dom';
 
 
 const Hero = (props) => {
@@ -28,16 +29,19 @@ const Hero = (props) => {
 		price,
 		city,
 		streetAddress,
+    userId
 	} = props.property;
 
 	const { properties, compareProperties } = useCompareProperties();
 	const { user, setUser } = React.useContext(UserContext);
 	const userData = user?.userData;
 
+  const navigate = useNavigate();
+
 	const isLoggedIn = !!userData;
 	const isFavorited = isLoggedIn && userData.wishes.includes(_id)
 
-	const onFavoriteButtonClicked = async () => {
+	const handleFavorite = async () => {
 		let data = userData
 		if(isFavorited) {
 			data = await removeFromWishlist(_id, user.token);
@@ -47,6 +51,11 @@ const Hero = (props) => {
 		}
         setUser({ ...user, userData: data });
 	}
+
+  const handleContact = () => {
+    if(userId)
+      navigate(`/profile/${userId}`);
+  }
 
 	return (
 		<Box
@@ -80,6 +89,7 @@ const Hero = (props) => {
 						color="primary"
 						sx={{ width: '250px', fontSize: '18px' }}
 						xs={6}
+            onClick={handleContact}
 					>
 						Contact this seller
 					</Button>
@@ -110,7 +120,7 @@ const Hero = (props) => {
 							xs={6}
 							startIcon={<FavoriteRoundedIcon />}
 							sx={{ ml: 3, fontSize: '18px' }}
-							onClick={() => onFavoriteButtonClicked()}
+							onClick={() => handleFavorite()}
 						>
 							{isFavorited? 'Unfavorite' : 'Favorite'}
 						</Button>

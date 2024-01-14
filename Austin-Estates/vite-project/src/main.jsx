@@ -17,6 +17,7 @@ import { UserProvider } from './context/UserProvider';
 import PropertyWishlist from './HouseDashboard/PropertyWishlist';
 import MyProperties from './HouseDashboard/MyProperties';
 import Profile from './HouseDashboard/Profile';
+import SellerList from './Sellers/SellerList';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
 	<ComparisonProvider>
@@ -50,6 +51,10 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 					<Route
 						path="/newPost"
 						element={<Paperbase Page={Checkout} />}
+					/>
+					<Route
+						path="/sellers"
+						element={<Paperbase Page={SellerList} />}
 					/>
 					<Route path="/" element={<App />} />
 				</Routes>
