@@ -18,14 +18,13 @@ export default function PropertyDetailsForm() {
   };
 
   const handleCheckboxChange = (event) => {
-    // TODO OBAVEZNO - kad se submituje da se true false prebaci u yes/no
-    // ne moze ovde jer nece da se sacuvaju uneti podaci
+	console.log(event.target.checked);
     setPropertyData({
       ...propertyData,
       [event.target.name]: event.target.checked,
     });
-    console.log(propertyData);
   }
+  console.log(propertyData)
 
   return (
 		<>
@@ -65,6 +64,7 @@ export default function PropertyDetailsForm() {
 								name="hasGarage"
 								onChange={handleCheckboxChange}
 								value={propertyData.hasGarage}
+								checked={propertyData.hasGarage}
 							/>
 						}
 						label="Has Garage"
@@ -78,6 +78,7 @@ export default function PropertyDetailsForm() {
 								name="hasView"
 								onChange={handleCheckboxChange}
 								value={propertyData.hasView}
+								checked={propertyData.hasView}
 							/>
 						}
 						label="Has View"
@@ -91,6 +92,7 @@ export default function PropertyDetailsForm() {
 								name="hasCooling"
 								onChange={handleCheckboxChange}
 								value={propertyData.hasCooling}
+								checked={propertyData.hasCooling}
 							/>
 						}
 						label="Has Cooling"
@@ -104,6 +106,7 @@ export default function PropertyDetailsForm() {
 								name="hasHeating"
 								onChange={handleCheckboxChange}
 								value={propertyData.hasHeating}
+								checked={propertyData.hasHeating}
 							/>
 						}
 						label="Has Heating"

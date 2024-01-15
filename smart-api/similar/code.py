@@ -87,5 +87,6 @@ def similar_properties(id:str):
     top = data.nlargest(RESULT_COUNT, 'score')
     # Convert ObjectIds to str so encoding works
     top['_id'] = top['_id'].astype(str)
+    top['userId'] = top['userId'].astype(str)
     return top.to_dict(orient='records')
 

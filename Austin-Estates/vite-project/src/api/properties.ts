@@ -127,3 +127,23 @@ export const predictPropertyPrice = async (property: any) => {
 	const data = await response.json();
 	return data.price;
 }
+
+export const addProperty = async (property: any, userToken: string) => {
+	console.log(userToken);
+	const response = await fetch(
+		`${API_URL}/api/Property/AddProperty`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${userToken}`,
+			},
+			body: JSON.stringify(property),
+		}
+	)
+
+	if (!response.ok) {
+		throw new Error(`HTTP error! Status: ${response.status}`);
+	}
+	const data = await response.json();
+	return data;
+}

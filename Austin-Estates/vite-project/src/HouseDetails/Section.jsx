@@ -13,22 +13,14 @@ import { useTheme } from '@mui/system';
 
 const Section = (props) => {
 	const {
-		_id,
-		description,
 		homeType,
-		homeImage,
-		liked,
-		rareFind,
-		title,
 		hasCooling,
-		hasHeating,
 		hasSpa,
 		numOfBedrooms,
 		numOfBathrooms,
 		livingAreaSqFt,
 		parkingSpaces,
 		price,
-		city,
 		streetAddress,
 	} = props.property;
 
