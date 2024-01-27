@@ -43,7 +43,6 @@ const categories = [
 	{
 		id: 'Sell',
 		children: [
-			{ name: 'My Properties', id: 'myProperties', icon: <ListAlt /> },
 			{ name: 'New Post', id: 'newPost', icon: <AddHomeWork /> },
 			//{ id: 'Test Lab', icon: <PhonelinkSetupIcon /> },
 		],

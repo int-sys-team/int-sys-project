@@ -37,10 +37,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 						element={<Paperbase Page={PropertyWishlist} />}
 					/>
 					<Route
-						path="/myProperties"
-						element={<Paperbase Page={MyProperties} />}
-					/>
-					<Route
 						path="/profile/:id"
 						element={<Paperbase Page={Profile} />}
 					/>

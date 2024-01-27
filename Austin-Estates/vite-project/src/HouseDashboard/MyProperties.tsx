@@ -66,9 +66,10 @@ export default function MyProperties(props) {
 					{properties.length > 0 && (
 						<PropertyMap
 							locations={properties.map((property) => {
+								console.log(property)
 								return {
 									id: property._id,
-									name: property.description.slice(0, 30),
+									name: property.description?.slice(0, 30),
 									address: property.streetAddress,
 									lat: property.latitude,
 									lon: property.longitude,
