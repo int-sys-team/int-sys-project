@@ -57,6 +57,37 @@ namespace EstatesAPI.Controllers
         }
 
         [HttpGet]
+        [Route("GetAllPropertiesOfUser/{id:length(24)}")]
+        [Authorize(Roles = "Administrator,User")]
+        public async Task<IActionResult> GetAllPropertiesOfUser(string id)
+        {
+            if (id is null)
+            {
+                return BadRequest("Invalid data");
+            }
+
+            var client = await _clientService.GetClientByIdAsync(id);
+            if (client is null)
+            {
+                return NotFound("Client not found!");
+            }
+
+            //var properties = new List<Property>();
+            //foreach (var property in client.Properties)
+            //{
+            //    var userProperty = await _propertyService.GetPropertyByIdAsync(property);
+            //    if (userProperty != null)
+            //    {
+            //        properties.Add(userProperty);
+            //    }
+            //}
+
+            var properties = await _propertyService.GetAllUserPropertiesAsync(client.Id);
+
+            return Ok(properties);
+        }
+
+        [HttpGet]
         [Route("GetPropertyById/{id:length(24)}")]
         public async Task<IActionResult> GetPropertyById(string id)
         {

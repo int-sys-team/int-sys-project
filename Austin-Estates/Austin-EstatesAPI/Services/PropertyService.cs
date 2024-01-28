@@ -39,6 +39,14 @@ namespace EstatesAPI.Services
             return property;
         }
 
+        public async Task<List<Property>> GetAllUserPropertiesAsync(string userId)
+        {
+
+            var properties = await _propertyCollection.Find(x => x.userId == userId).ToListAsync();
+
+            return properties;
+        }
+
         public async Task<List<Property>> GetPropertiesOrderedByPriceAsync(int page, int count)
         {
             var filter = Builders<Property>.Filter.Empty;

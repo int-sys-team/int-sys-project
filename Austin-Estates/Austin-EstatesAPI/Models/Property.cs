@@ -30,7 +30,7 @@ namespace EstatesAPI.Models
         public int yearBuilt { get; set; }
         public double orig_price { get; set; }
         public int numPriceChanges { get; set; }
-        public DateTime latest_saledate { get; set; }
+        public string latest_saledate { get; set; }
         public int latest_salemonth { get; set; }
         public int latest_saleyear { get; set; }
         public string latestPriceSource { get; set; }
