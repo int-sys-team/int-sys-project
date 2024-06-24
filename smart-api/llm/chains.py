@@ -4,11 +4,8 @@ from llm.prompt_templates import description_generator_prompt, property_fetcher_
 from llm.output_parsers import DescriptionParser, PropertyQueryParser
 import dotenv
 
-
-
 dotenv.load_dotenv()
 
-#cohere_api_key = 'c9tVKlSKo1rS7uNt9IohDmiKhveELCqsMXBJRV4N'  # Add your API key
 ollama = ChatCohere() # its needs to be cohere_api_key
 
 description_generator = description_generator_prompt | ollama | DescriptionParser()
