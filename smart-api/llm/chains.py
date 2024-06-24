@@ -1,12 +1,15 @@
+from langchain_cohere import ChatCohere
 from langchain.chat_models import ChatOllama
 from llm.prompt_templates import description_generator_prompt, property_fetcher_prompt, get_comparison_prompt_template
 from llm.output_parsers import DescriptionParser, PropertyQueryParser
+import dotenv
 
 
-OLLAMA_BASE_URL = 'http://localhost:11434'
-OLLAMA_MODEL_NAME = 'llama2'
 
-ollama = ChatOllama(base_url=OLLAMA_BASE_URL, model_name=OLLAMA_MODEL_NAME)
+dotenv.load_dotenv()
+
+#cohere_api_key = 'c9tVKlSKo1rS7uNt9IohDmiKhveELCqsMXBJRV4N'  # Add your API key
+ollama = ChatCohere() # its needs to be cohere_api_key
 
 description_generator = description_generator_prompt | ollama | DescriptionParser()
 property_fetcher = property_fetcher_prompt | ollama | PropertyQueryParser()

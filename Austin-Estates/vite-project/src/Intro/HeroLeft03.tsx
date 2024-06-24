@@ -66,12 +66,9 @@ export default function HeroLeft03() {
           <a href="https://github.com/matija-speletic" target="_blank" rel="noopener noreferrer">
             <Avatar src="https://github.com/matija-speletic.png"/>
           </a>
-          <a href="https://github.com/15Milica" target="_blank" rel="noopener noreferrer">
-            <Avatar src="https://github.com/15Milica.png"/>
-          </a>
         </AvatarGroup>
         <Typography textColor="text.secondary">
-        This site was crafted exclusively by a team of <b>5</b> developers,<br />
+        This site was crafted exclusively by a team of <b>4</b> developers,<br />
         Showcasing our collaborative skills in bringing ideas to life!
         </Typography>
       </Box>

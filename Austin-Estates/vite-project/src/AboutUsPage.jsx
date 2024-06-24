@@ -173,12 +173,6 @@ export default function AboutUsPage(props) {
                 description="Aleksa, our team leader, the Top G, is the driving force behind A-Estates. His leadership and strategic planning have been key in turning our vision into reality."
               />
               <TeamMember
-                role="Head Front Developer"
-                name="Milica Stojanović"
-                imageUrl="https://github.com/15Milica.png"
-                description="Milica, our head front developer, is responsible for the sleek and intuitive user interface of Estates. Her eye for design and user experience makes A-Estates a joy to use."
-              />
-              <TeamMember
                 role="LLM Developer"
                 name="Matija Speletic"
                 imageUrl="https://github.com/matija-speletic.png"

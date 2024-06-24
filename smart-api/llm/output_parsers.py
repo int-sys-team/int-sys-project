@@ -12,16 +12,15 @@ OPERATOR_MAPPING={
     '$ne:': '"$ne":',
 }
 
+ERROR_MESSAGE = {"error": "OLLAMA returned an error"}
+UNSUPPORTED_OPERATORS = ['$sort']
+
 class DescriptionParser(BaseOutputParser):
     def __init__(self):
         super().__init__()
 
     def parse(self, output):
-        start = output.find('\n')
-        if start != -1:
-            output = output[start:]
-        output = output.replace('\n', '')
-        output = output.replace('"', '')
+        output = output.split('\n', 1)[-1].replace('\n', '').replace('"', '')
         return output
 
 
@@ -33,11 +32,20 @@ class PropertyQueryParser(BaseOutputParser):
         start = output.find('{')
         end = output.rfind('}')
         if start == -1 or end == -1:
-            return {"error": "OLLAMA returned an error"}
+            return ERROR_MESSAGE
+
         output = output[start:end+1]
-        for operator in OPERATOR_MAPPING:
-            output = output.replace(operator, OPERATOR_MAPPING[operator])
+
         try:
-            return json.loads(output)
+            query = json.loads(output)
+            for op in UNSUPPORTED_OPERATORS:
+                query.pop(op, None)
+            # Example adjustment: Ensure numeric values are correctly interpreted
+            if "numOfBathrooms" in query and isinstance(query["numOfBathrooms"], str):
+                query["numOfBathrooms"] = int(query["numOfBathrooms"])
+            print("Generated MongoDB Query:", query)  # Log the query for debugging
+            return query
+        except json.JSONDecodeError:
+            return ERROR_MESSAGE
         except Exception as e:
-            return {"error": "OLLAMA returned an error"}
+            return {"error": str(e)}

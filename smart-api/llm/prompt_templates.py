@@ -19,7 +19,19 @@ property_fetcher_prompt = ChatPromptTemplate.from_messages(
 - numOfBedrooms: The number of bedrooms in the property 
 - numOfBathrooms: The number of bathrooms in the property
 - livingAreaSqFt: The area of the property in square feet 
-- price: The price of the property in dollars'''
+- price: The price of the property in dollars
+- city: The city where the property is located
+- streetAddress: The street address of the property
+- zipcode: The zipcode of the property
+- description: A brief description of the property
+- yearBuilt: The year the property was built
+- homeType: The type of home (e.g., Single Family)
+- price: The price of the property
+- numOfStories: The number of stories in the property
+- garageSpaces: The number of garage spaces
+- parkingSpaces: The number of parking spaces
+- lotSizeSqFt: The size of the lot in square feet
+'''
         ),
         HumanMessagePromptTemplate.from_template("{query}"),
     ]
