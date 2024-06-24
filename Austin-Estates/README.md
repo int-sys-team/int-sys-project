@@ -3,7 +3,6 @@ Student project done for Intelligent Systems subject at Faculty of Electronic En
 
 ## ✨ Contributors (Student, Index)
 
-* Milica Stojanović, 1701
 * Katarina Maksimović, 1599
 * Matija Špeletić, 1672
 * Aleksa Milić, 1610
@@ -28,7 +27,7 @@ Student project done for Intelligent Systems subject at Faculty of Electronic En
 > # Client start
 > cd ../Austin-EstatesApp
 > npm install
-> npm start
+> npm run dev
 
 > # Start mongoDB
 > mongo
