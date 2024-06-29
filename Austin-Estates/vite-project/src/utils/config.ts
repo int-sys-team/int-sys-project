@@ -6,5 +6,5 @@
 //export const FRONTEND_URL = 'http://localhost:5173'; // Change this to your actual frontend URL
 
 export const API_URL = 'https://nekretnine-ai.azurewebsites.net';
-export const AI_API_URL = 'https://nekretnine-ai.azurewebsites.net';
+export const AI_API_URL = 'https://just-work.azurewebsites.net';
 export const FRONTEND_URL = 'https://ai-nekretnine.azurewebsites.net'; // Change this to your actual frontend URL
