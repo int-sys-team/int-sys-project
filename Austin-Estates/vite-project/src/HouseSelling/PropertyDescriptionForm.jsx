@@ -25,40 +25,43 @@ export default function PropertyDescriptionForm() {
     });
   };
 
+  // Update the generateDescription function to extract only the description text
   const generateDescription = async () => {
     console.log(propertyData);
     if (responding) return;
     if (!propertyData) return;
-    if(Object.keys(propertyData).length === 0) return;
+    if (Object.keys(propertyData).length === 0) return;
 
     setResponding(true);
     try {
-      let newDescription='';
-      setDescription('');
-      let stream = new StreamHandler(`${AI_API_URL}/llm/description`);
-      stream.invoke(
-        {
-          data: propertyData,
-          stream: true,
-        },
-        (chunk) => {
-          console.log(chunk);
-          if (chunk === '###DONE###') {
-            setPropertyData({
-              ...propertyData,
-              ['description']: newDescription,
-            });
-            setResponding(false);
-            console.log(propertyData)
-            return;
-          }
-          newDescription+=chunk;
-          setDescription(newDescription);
-        }
-      );
+        let newDescription = '';
+        setDescription('');
+        let stream = new StreamHandler(`${AI_API_URL}/llm/description`);
+        stream.invoke(
+            {
+                data: propertyData,
+                stream: false,
+            },
+            (chunk) => {
+                console.log(chunk);
+                if (chunk === '###DONE###') {
+                    setPropertyData({
+                        ...propertyData,
+                        ['description']: newDescription,
+                    });
+                    setResponding(false);
+                    console.log(propertyData);
+                    return;
+                }
+                newDescription += chunk;
+                // Extract only the text from the response object
+                const extractedDescription = JSON.parse(newDescription).description;
+                setDescription(extractedDescription);
+            }
+        );
     } catch (err) {
-      console.log(err);
-      setResponding(false);
+        console.log(err);
+        setResponding(false);
     }
   };
 

@@ -53,7 +53,7 @@ const UserButtons = ({user, onLogOutClick}) => (
 			<IconButton color="inherit" sx={{ p: 0.5 }}>
 				<Avatar
 					component={Link}
-					to={`/profile/${user.userData.id}`}
+					to={`/profile/${user?.userData?.id}`} // Check if user.userData is defined
 					src="/static/images/avatar/1.jpg" //src={user.avatarUrl} //UKOLIKO IMAMO SLIKU KORISNIKA
 					alt={user.email.charAt(0)}
 					sx={{ textDecoration: 'none' }}

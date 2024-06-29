@@ -42,7 +42,7 @@ const Recommendation = (props) => {
           sx={{  pt: 2, minHeight: 0, overflow: 'auto'  }}
           direction="row"
         >
-          {similarHouses.map((house) => (
+          {similarHouses && similarHouses.map((house) => (
               <RentalCard key={house._id} {...house} />
           ))}
         </Stack>

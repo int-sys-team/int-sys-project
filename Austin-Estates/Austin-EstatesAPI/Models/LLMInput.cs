@@ -10,5 +10,6 @@ namespace EstatesAPI.Models
         public string data { get; set; }
 
         public bool stream { get; set; }
+
     }
 }

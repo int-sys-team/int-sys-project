@@ -79,6 +79,10 @@ namespace Server
                 options.AddPolicy("Cors", builder => {
 
                     builder.WithOrigins(new string[]{
+                    "https://ai-nekretnine.azurewebsites.net",
+                    "https://ai-nekretnine.azurewebsites.net/explore",
+                    "https://nekretnine-ai.azurewebsites.net",
+                    "https://nekretnine-ai.azurewebsites.net/explore",
                     "http://localhost:5500",
                     "https://localhost:3000",
                     "https://localhost:5500",
